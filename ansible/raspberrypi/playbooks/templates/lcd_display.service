@@ -1,0 +1,10 @@
+[Unit]
+Description=LCD Library
+
+[Service]
+WorkingDirectory=/opt/SKU_RM0004
+ExecStart=/opt/SKU_RM0004/display
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,20 @@
+---
+network:
+  version: 2
+  renderer: NetworkManager
+
+  ethernets:
+    eth0:
+      dhcp4: true
+      routes:
+         - to: default
+           via: 10.1.33.1
+      nameservers:
+        addresses:
+          - 10.1.100.53
+
+  vlans:
+    vlan20:
+      id: 20
+      link: eth0
+      addresses: ["{{ vpn_lan_address}}/24"]

@@ -1,0 +1,28 @@
+---
+raspberrypi:
+  vars:
+    ansible_user: dylan
+    ansible_ssh_private_key_file: ~/.ssh/id_ed25519
+    interface: eth0
+    default_gateway: 10.1.33.1
+    dns_servers: 10.1.100.53
+    domain_name: lan.robsonhome.cloud
+    storage_vlan_id: 101
+    storage_vlan_netmask: 255.255.255.0
+    storage_vlan_cidr: 24
+    ssd_drive: /dev/sda
+  children:
+    pi4s:
+      hosts:
+        k3s-pi4-master-01:
+          ansible_host: 10.1.33.30
+          vpn_lan_address: 10.1.20.30
+        # k3s-pi4-master-02:
+        #   ansible_host: 10.1.33.31
+        #   vpn_lan_address: 10.1.20.31
+        # k3s-pi4-master-03:
+        #   ansible_host: 10.1.33.32
+        #   vpn_lan_address: 10.1.33.32
+        # k3s-pi4-worker-01:
+        #   ansible_host: 10.1.33.36
+        #   vpn_lan_address: 10.1.20.36

@@ -1,0 +1,5 @@
+auto {{ interface }}.{{ storage_vlan_id }}
+iface {{ interface }}.{{ storage_vlan_id }} inet static
+   address {{ storage_vlan_address }}
+   netmask {{ storage_vlan_netmask }}
+   vlan-raw-device eth0

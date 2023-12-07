@@ -1,0 +1,6 @@
+---
+timezone: America/New_York
+user: dylan
+domain_name: lan.robsonhome.cloud
+default_gateway: 10.1.33.1
+ansible_python_interpreter: /usr/bin/python3

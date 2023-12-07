@@ -1,0 +1,26 @@
+---
+- name: Cluster fix ubuntu resolv.conf issues
+  hosts: all
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  tasks:
+    - name: Configure Netplan
+      notify: reboot
+      block:
+        - name: Create Netplan config
+          template:
+            src: templates/01-netcfg.yaml.j2
+            dest: /etc/netplan/01-netcfg.yaml
+            owner: root
+            group: root
+            mode: 0644
+        - name: Apply Netplan
+          shell: netplan apply
+
+
+  handlers:
+    - name: reboot
+      reboot:
+        msg: Rebooting nodes
+        reboot_timeout: 3600

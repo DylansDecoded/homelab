@@ -1,0 +1,69 @@
+---
+- name: Cluster Longhorn Disk Setup Playbook
+  hosts: all
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  tasks:
+    - name: Check for /var/lib/longhorn
+      stat:
+        path: /var/lib/longhorn
+      register: longhorn_lib
+
+    - name: Remove directory (var/lib/longhorn)
+      file:
+        path: /var/lib/longhorn
+        state: absent
+      when: longhorn_lib.stat.exists
+
+    - name: Check and unmount longhorn directory
+      ignore_errors: true
+      when: longhorn_disks | default([]) | length > 0
+      block:
+        - name: Check for longhorn directory mount point
+          stat:
+            path: "{{ longhorn_mount_point }}"
+          register: longhorn_dir
+
+        - name: Unmount longhorn directory
+          mount:
+            path: "{{ longhorn_mount_point }}"
+            state: unmounted
+          when: longhorn_dir.stat.exists
+
+    - name: Clean disks and format + mount
+      ignore_errors: true
+      when: longhorn_disks | default([]) | length > 0
+      block:
+        - name: wipe (wipefs)
+          command: "wipefs -a {{ longhorn_disks }}"
+
+        - name: wipe (sgdisk)
+          command: "sgdisk --zap-all {{ longhorn_disks }}"
+
+        - name: wipe (dd)
+          command: "dd if=/dev/zero of={{ longhorn_disks }} bs=1M count=100 oflag=direct,dsync"
+
+        - name: format disks ext4
+          filesystem:
+            fstype: ext4
+            dev: "{{ longhorn_disks }}"
+
+    - name: Get UUID of disks (blkid)
+      command: "blkid -s UUID -o value {{ longhorn_disks }}"
+      register: blkid
+
+    - name: Create mount point for longhorn
+      file:
+        path: "{{ longhorn_mount_point }}"
+        state: directory
+        mode: 0755
+
+
+    - name: Mount the disks to the longhorn mount point
+      mount:
+        path: "{{ longhorn_mount_point }}"
+        src: "UUID={{ blkid.stdout }}"
+        fstype: ext4
+        state: mounted
+        opts: defaults,noatime,nodiratime

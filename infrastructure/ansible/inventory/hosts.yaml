@@ -1,0 +1,50 @@
+all:
+  children:
+    kubernetes:
+      children:
+        master:
+          hosts:
+            k3s-pi4-master-01:
+              ansible_host: 10.1.33.30
+              ssd_disks: /dev/sda
+            k3s-pi4-master-02:
+              ansible_host: 10.1.33.31
+              ssd_disks: /dev/sda
+            k3s-pi4-master-03:
+              ansible_host: 10.1.33.32
+              ssd_disks: /dev/sda
+
+        worker:
+          hosts:
+            k3s-pve-worker-01:
+              ansible_host: 10.1.33.33
+              ssd_disks: /dev/sdb
+            k3s-pve-worker-02:
+              ansible_host: 10.1.33.34
+              ssd_disks: /dev/sdb
+            k3s-pve-worker-03:
+              ansible_host: 10.1.33.35
+              ssd_disks: /dev/sdb
+            k3s-pi4-worker-04:
+              ansible_host: 10.1.33.36
+              ssd_disks: /dev/sda
+
+    proxmox_cluster:
+      children:
+        proxmox:
+          hosts:
+            proxmox-01:
+              ansible_host:
+
+    raspberry_pi:
+      children:
+        pi4:
+          hosts:
+            raspberry-pi-4-01:
+              ansible_host: 10.1.33.30
+            raspberry-pi-4-02:
+              ansible_host: 10.1.33.31
+            raspberry-pi-4-03:
+              ansible_host: 10.1.33.32
+            raspberry-pi-4-04:
+              ansible_host: 10.1.33.36

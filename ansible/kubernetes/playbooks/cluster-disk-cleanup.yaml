@@ -1,0 +1,51 @@
+---
+- name: Cluster Longhorn Disk Setup Playbook
+  hosts: all
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  tasks:
+    - name: Check for /var/lib/longhorn
+      stat:
+        path: /var/lib/longhorn
+      register: longhorn_lib
+
+    - name: Remove directory (var/lib/longhorn)
+      file:
+        path: /var/lib/longhorn
+        state: absent
+      when: longhorn_lib.stat.exists
+
+    - name: Check and unmount longhorn directory
+      ignore_errors: true
+      when: ssd_disks | default([]) | length > 0
+      block:
+        - name: Check for longhorn directory mount point
+          stat:
+            path: "{{ longhorn_mount_point }}"
+          register: longhorn_dir
+
+        - name: Unmount longhorn directory
+          mount:
+            path: "{{ longhorn_mount_point }}"
+            state: unmounted
+          when: longhorn_dir.stat.exists
+
+    - name: Clean disks
+      ignore_errors: true
+      when: ssd_disks | default([]) | length > 0
+      block:
+        - name: wipe (wipefs) # noqa: no-changed-when
+          command: "wipefs -a {{ ssd_disks }}"
+
+        - name: Wipe (sgdisk) # noqa: no-changed-when
+          command: "sgdisk --zap-all {{ ssd_disks }}"
+
+        - name: Wipe (dd) # noqa: no-changed-when
+          command: "dd if=/dev/zero of={{ ssd_disks }} bs=1M count=100 oflag=direct,dsync"
+
+        - name: Wipe (partprobe) # noqa: no-changed-when
+          command: "partprobe {{ ssd_disks }}"
+
+
+
