@@ -6,45 +6,42 @@
   any_errors_fatal: true
   tasks:
 
-    # - name: cmdline and config.txt for Raspberry Pi
-    #   notify: reboot
-    #   block:
-    #     - name: Enable cgroup via boot commandline if not already enabled for Ubuntu on a Raspberry Pi
-    #       lineinfile:
-    #         path: /boot/firmware/cmdline.txt
-    #         backrefs: yes
-    #         regexp: '^((?!.*\bcgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory\b).*)$'
-    #         line: '\1 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory'
-    #         state: present
+    - name: cmdline and config.txt for Raspberry Pi
+      notify: reboot
+      block:
+        - name: Enable cgroup via boot commandline if not already enabled for Ubuntu on a Raspberry Pi
+          lineinfile:
+            path: /boot/firmware/cmdline.txt
+            backrefs: yes
+            regexp: '^((?!.*\bcgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory\b).*)$'
+            line: '\1 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory'
+            state: present
 
-    #     - name: Uncomment dtparam line in file to boot config
-    #       lineinfile:
-    #         dest: /boot/firmware/config.txt
-    #         regexp: '^#dtparam=i2c_arm=on'
-    #         line: 'dtparam=i2c_arm=on'
-    #         state: present
+        - name: Uncomment dtparam line in file to boot config
+          lineinfile:
+            dest: /boot/firmware/config.txt
+            regexp: '^#dtparam=i2c_arm=on'
+            line: 'dtparam=i2c_arm=on'
+            state: present
 
-    #     - name: add i2c baudrate to boot config
-    #       lineinfile:
-    #         dest: /boot/firmware/config.txt
-    #         create: yes
-    #         line: 'i2c_arm_baudrate=400000'
-    #         state: present
+        - name: add i2c baudrate to boot config
+          lineinfile:
+            dest: /boot/firmware/config.txt
+            create: yes
+            line: 'i2c_arm_baudrate=400000'
+            state: present
 
-    #     - name: add dtoverlay line to boot config
-    #       lineinfile:
-    #         dest: /boot/firmware/config.txt
-    #         create: yes
-    #         line: 'dtoverlay=gpio-shutdown,gpio_pin=4,active_low=1,gpio_pull=up'
-    #         state: present
+        - name: add dtoverlay line to boot config
+          lineinfile:
+            dest: /boot/firmware/config.txt
+            create: yes
+            line: 'dtoverlay=gpio-shutdown,gpio_pin=4,active_low=1,gpio_pull=up'
+            state: present
 
-    # - name: Update and Upgrade
-    #   notify: reboot
-    #   apt:
-    #     update_cache: yes
-    #     upgrade: yes
-    #     autoremove: yes
-    #     autoclean: yes
+        - name: Update and Upgrade
+          apt:
+            update_cache: yes
+            upgrade: yes
 
     - name: Install Package Modules
       apt:

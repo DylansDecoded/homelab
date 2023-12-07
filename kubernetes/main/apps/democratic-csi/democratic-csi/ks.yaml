@@ -11,7 +11,7 @@ spec:
       app: *app
   dependsOn:
     - name: external-secrets-stores
-  path: ./kubernetes/main/apps/democratic-csi/democratic-csi/truenas-nfs
+  path: ./kubernetes/main/apps/democratic-csi/democratic-csi/nfs
   prune: true
   sourceRef:
     kind: GitRepository

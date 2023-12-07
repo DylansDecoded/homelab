@@ -1,8 +1,9 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta1.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: home-assistant
+  name: &app home-assistant
 spec:
   interval: 30m
   chart:
@@ -25,31 +26,19 @@ spec:
     keepHistory: false
   dependsOn:
     - name: longhorn
-      namespace: longhorn-system
+      namespace: storage
   values:
     controllers:
       main:
         annotations:
           reloader.stakater.com/auto: "true"
-        initContainers:
-          init-db:
-            image:
-              repository: ghcr.io/onedr0p/postgres-init
-              tag: 15
-              pullPolicy: IfNotPresent
-            envFrom: &envFrom
-              - secretRef:
-                  name: home-assistant-secret
         containers:
           main:
             image:
               repository: ghcr.io/onedr0p/home-assistant
-              tag: 2023.11.3@sha256:7f0778711bf9bb84f2e51bf13fdd1974afe5142843b75ca975edbfb33d2cec11
+              tag: 2023.12.0@sha256:102a1333b324173739c88b0b0dd2924ab5a6e7d42934c37affa47fe5265620cb
             env:
-              TZ: America/New_York
-              POSTGRES_HOST: postgres16-rw.database.svc.cluster.local
-              POSTGRES_DB: home_assistant
-            envFrom: *envFrom
+              TZ: ${TIMEZONE}
             probes:
               liveness:
                 enabled: false
@@ -57,34 +46,63 @@ spec:
                 enabled: false
               startup:
                 enabled: false
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                cpu: 10m
-                memory: 128Mi
+                cpu: 50m
+                memory: 400Mi
               limits:
-                memory: 1Gi
+                memory: 700Mi
+          codeserver:
+            image:
+              repository: ghcr.io/coder/code-server
+              tag: 4.19.1
+            env:
+              TZ: ${TIMEZONE}
+            args:
+              - "/config"
+              - --auth
+              - "none"
+              - --user-data-dir
+              - "/config/.vscode"
+              - --extensions-dir
+              - "/config/.vscode"
+            volumeMounts:
+              - name: config
+                mountPath: /config
         pod:
           securityContext:
             runAsUser: 568
             runAsGroup: 568
-            runAsNonRoot: true
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
     service:
       main:
+        type: LoadBalancer
+        annotations:
+          io.cilium/lb-ipam-ips: "${SVC_HOME_ASSISTANT_ADDR}"
         ports:
           http:
             port: 8123
+      codeserver:
+        type: ClusterIP
+        controller: main
+        ports:
+          http:
+            enabled: true
+            port: 8080
     ingress:
       main:
         enabled: true
         className: external
         annotations:
-          external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
+          # gethomepage.dev/enabled: "true"
+          # gethomepage.dev/group: Home
+          # gethomepage.dev/name: Home-Assistant
+          # gethomepage.dev/icon: home-assistant.png
+          # gethomepage.dev/widget.type: homeassistant
+          # gethomepage.dev/widget.url: http://home-assistant.default:8123
+          # gethomepage.dev/widget.key: "{{HOMEPAGE_VAR_HASS_TOKEN}}"
+          external-dns.alpha.kubernetes.io/target: "external.robsonhome.cloud"
         hosts:
           - host: &host "{{ .Release.Name }}.robsonhome.cloud"
             paths:
@@ -96,6 +114,7 @@ spec:
           - host: &customHost hass.robsonhome.cloud
             paths:
               - path: /
+                pathType: Prefix
                 service:
                   name: main
                   port: http
@@ -104,11 +123,22 @@ spec:
               - *host
               - *customHost
 
+      codeserver:
+        enabled: true
+        className: internal
+        hosts:
+          - host: &host hass-code.robsonhome.cloud
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  name: codeserver
+                  port: http
+        tls:
+          - hosts:
+              - *host
+
     persistence:
       config:
         enabled: true
-        existingClaim: home-assistant
-        advancedMounts:
-          main:
-            main:
-              - path: /config
+        existingClaim: *app

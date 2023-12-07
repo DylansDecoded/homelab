@@ -73,14 +73,20 @@
       vars:
         stale_containers_state: disabled
 
-    - name: Copy custom containerd configuration
-      notify: Restart Kubernetes
-      ansible.builtin.copy:
-        src: files/config.toml.tmpl
-        dest: /var/lib/rancher/k3s/agent/etc/containerd/config.toml.tmpl
-        owner: root
-        group: root
-        mode: "0644"
+    - name: Restart Kubernetes
+      service:
+        name: k3s
+        state: restarted
+        enabled: true
+
+    # - name: Copy custom containerd configuration
+    #   notify: Restart Kubernetes
+    #   ansible.builtin.copy:
+    #     src: files/config.toml.tmpl
+    #     dest: /var/lib/rancher/k3s/agent/etc/containerd/config.toml.tmpl
+    #     owner: root
+    #     group: root
+    #     mode: "0644"
 
   handlers:
     - name: Restart Kubernetes

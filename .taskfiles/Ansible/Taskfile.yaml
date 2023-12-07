@@ -14,6 +14,13 @@ env:
   # K8S_AUTH_KUBECONFIG: "{{.ROOT_DIR}}/kubeconfig"
 
 tasks:
+  setup-pis:
+    desc: Set up Raspberry Pis
+    summary: |
+      Args:
+        playbook: Playbook to run (required)
+    cmd: ansible-playbook --inventory {{.ANSIBLE_DIR}}/raspberrypi/inventory/hosts.yaml {{.ANSIBLE_DIR}}/raspberrypi/playbooks/ubuntu-setup.yaml
+
   deps:
     desc: Set up Ansible dependencies for the environment
     cmds:

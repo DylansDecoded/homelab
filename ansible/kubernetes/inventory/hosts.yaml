@@ -7,10 +7,10 @@ kubernetes:
   children:
     master:
       hosts:
-        # k3s-pi4-master-01:
-        #   server_type: pi4
-        #   ansible_host: 10.1.33.30
-        #   ssd_disks: /dev/sda
+        k3s-pi4-master-01:
+          server_type: pi4
+          ansible_host: 10.1.33.30
+          ssd_disks: /dev/sda
 
         k3s-pi4-master-02:
           server_type: pi4

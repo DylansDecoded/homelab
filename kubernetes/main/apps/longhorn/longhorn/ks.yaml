@@ -30,7 +30,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   interval: 10m
-  path: ./kubernetes/main/apps/longhorn/longhorn/backups
+  path: ./kubernetes/main/apps/longhorn/longhorn/reoccuring-jobs
   prune: true
   sourceRef:
     kind: GitRepository
