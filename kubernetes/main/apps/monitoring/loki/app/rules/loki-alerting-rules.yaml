@@ -39,44 +39,44 @@ groups:
           app: "{{ $labels.app }}"
           summary: "{{ $labels.app }} is unable to reach MQTT"
 
-  - name: frigate
-    rules:
-      - alert: FrigateMQTTUnreachable
-        expr: |
-          sum(count_over_time({app="frigate"} |~ "(?i)unable to connect to mqtt server"[2m])) > 0
-        for: 2m
-        labels:
-          severity: critical
-          category: logs
-        annotations:
-          app: "{{ $labels.app }}"
-          summary: "{{ $labels.app }} is unable to reach MQTT"
+  # - name: frigate
+  #   rules:
+  #     - alert: FrigateMQTTUnreachable
+  #       expr: |
+  #         sum(count_over_time({app="frigate"} |~ "(?i)unable to connect to mqtt server"[2m])) > 0
+  #       for: 2m
+  #       labels:
+  #         severity: critical
+  #         category: logs
+  #       annotations:
+  #         app: "{{ $labels.app }}"
+  #         summary: "{{ $labels.app }} is unable to reach MQTT"
 
-  - name: autobrr
-    rules:
-      - alert: AutobrrNetworkUnhealthy
-        expr: |
-          sum by (app) (count_over_time({app="autobrr"} |~ "(?i)network unhealthy"[2m])) > 0
-        for: 2m
-        labels:
-          severity: critical
-          category: logs
-        annotations:
-          app: "{{ $labels.app }}"
-          summary: "{{ $labels.app }} has a unhealthy network"
+  # - name: autobrr
+  #   rules:
+  #     - alert: AutobrrNetworkUnhealthy
+  #       expr: |
+  #         sum by (app) (count_over_time({app="autobrr"} |~ "(?i)network unhealthy"[2m])) > 0
+  #       for: 2m
+  #       labels:
+  #         severity: critical
+  #         category: logs
+  #       annotations:
+  #         app: "{{ $labels.app }}"
+  #         summary: "{{ $labels.app }} has a unhealthy network"
 
-  - name: plex
-    rules:
-      - alert: PlexDatabaseBusy
-        expr: |
-          sum by (app) (count_over_time({app="plex"} |~ "(?i)retry busy DB"[2m])) > 0
-        for: 2m
-        labels:
-          severity: critical
-          category: logs
-        annotations:
-          app: "{{ $labels.app }}"
-          summary: "{{ $labels.app }} is experiencing database issues"
+  # - name: plex
+  #   rules:
+  #     - alert: PlexDatabaseBusy
+  #       expr: |
+  #         sum by (app) (count_over_time({app="plex"} |~ "(?i)retry busy DB"[2m])) > 0
+  #       for: 2m
+  #       labels:
+  #         severity: critical
+  #         category: logs
+  #       annotations:
+  #         app: "{{ $labels.app }}"
+  #         summary: "{{ $labels.app }} is experiencing database issues"
 
   - name: home-assistant
     rules:

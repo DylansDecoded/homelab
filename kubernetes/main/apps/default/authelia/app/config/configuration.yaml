@@ -33,6 +33,7 @@ session:
       domain: robsonhome.cloud
       authelia_url: https://auth.robsonhome.cloud
       default_redirection_url: https://robsonhome.cloud
+
   redis:
     host: redis.database.svc.cluster.local
     database_index: 14

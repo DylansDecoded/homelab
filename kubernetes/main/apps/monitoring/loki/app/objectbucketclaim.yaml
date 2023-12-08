@@ -6,5 +6,5 @@ metadata:
   name: loki-bucket-v2
   namespace: monitoring
 spec:
-  bucketName: loki-v2
-  storageClassName: ceph-bucket
+  bucketName: loki-bucket-v2
+  storageClassName: minio

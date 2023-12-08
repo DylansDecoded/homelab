@@ -53,7 +53,7 @@ spec:
       impersonationResourceNames: ["admin"]
       additionalRules:
         - apiGroups: ["infra.contrib.fluxcd.io"]
-          resources: ["terraforms"]
+          # resources: ["terraforms"]
           verbs: ["get", "list", "patch"]
     podAnnotations:
       secret.reloader.stakater.com/reload: cluster-user-auth
