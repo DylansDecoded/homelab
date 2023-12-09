@@ -10,7 +10,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/default/zwave-js-ui/app
+  path: ./kubernetes/main/apps/default/zwave-js-ui/app
   dependsOn:
     - name: node-feature-discovery-rules
   prune: true
