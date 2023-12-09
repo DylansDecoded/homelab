@@ -6,7 +6,7 @@ version: "3"
 # https://github.com/go-task/task/issues/1038
 
 env:
-  SOPS_AGE_KEY_FILE: "{{.ROOT_DIR}}/age.key"
+  SOPS_AGE_KEY_FILE: "./age.key"
 
 vars:
   KUBERNETES_DIR: "{{.ROOT_DIR}}/kubernetes"
