@@ -20,7 +20,7 @@ spec:
   wait: false
   dependsOn:
     - name: external-secrets-stores
-  # postBuild:
-  #   substitute:
-  #     APP: *app
-  #     VOLSYNC_CAPACITY: 5Gi
+  postBuild:
+    substitute:
+      APP: *app
+      VOLSYNC_CAPACITY: 5Gi
