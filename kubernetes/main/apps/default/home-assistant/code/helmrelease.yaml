@@ -1,15 +1,15 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta1.json
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: &app home-assistant
+  name: home-assistant-code
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
-      version: 2.3.0
+      version: 2.4.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -25,8 +25,8 @@ spec:
   uninstall:
     keepHistory: false
   dependsOn:
-    - name: longhorn
-      namespace: storage
+    - name: home-assistant
+      namespace: default
   values:
     controllers:
       main:
@@ -35,40 +35,26 @@ spec:
         containers:
           main:
             image:
-              repository: ghcr.io/onedr0p/home-assistant
-              tag: 2023.12.0@sha256:102a1333b324173739c88b0b0dd2924ab5a6e7d42934c37affa47fe5265620cb
-            env:
-              TZ: ${TIMEZONE}
-            probes:
-              liveness:
-                enabled: false
-              readiness:
-                enabled: false
-              startup:
-                enabled: false
-            resources:
-              requests:
-                cpu: 50m
-                memory: 400Mi
-              limits:
-                memory: 700Mi
-          codeserver:
-            image:
               repository: ghcr.io/coder/code-server
               tag: 4.19.1
             env:
-              TZ: ${TIMEZONE}
+              TZ: America/New_York
             args:
-              - "/config"
               - --auth
               - "none"
               - --user-data-dir
               - "/config/.vscode"
               - --extensions-dir
               - "/config/.vscode"
-            volumeMounts:
-              - name: config
-                mountPath: /config
+              - "--port"
+              - "80"
+              - /config
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 1Gi
         pod:
           securityContext:
             runAsUser: 568
@@ -79,13 +65,11 @@ spec:
       main:
         ports:
           http:
-            port: 8123
+            port: 80
     ingress:
       main:
         enabled: true
-        className: external
-        annotations:
-          external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
+        className: internal
         hosts:
           - host: &host "{{ .Release.Name }}.robsonhome.cloud"
             paths:
@@ -93,11 +77,9 @@ spec:
                 service:
                   name: main
                   port: http
-
-          - host: &customHost hass.robsonhome.cloud
+          - host: &customHost hass-code.robsonhome.cloud
             paths:
               - path: /
-                pathType: Prefix
                 service:
                   name: main
                   port: http
@@ -105,10 +87,7 @@ spec:
           - hosts:
               - *host
               - *customHost
-
     persistence:
       config:
         enabled: true
         existingClaim: home-assistant
-      tmp:
-        type: emptyDir
