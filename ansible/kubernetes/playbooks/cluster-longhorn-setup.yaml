@@ -18,7 +18,7 @@
 
     - name: Check and unmount longhorn directory
       ignore_errors: true
-      when: longhorn_disks | default([]) | length > 0
+      when: ssd_disks | default([]) | length > 0
       block:
         - name: Check for longhorn directory mount point
           stat:
@@ -33,24 +33,24 @@
 
     - name: Clean disks and format + mount
       ignore_errors: true
-      when: longhorn_disks | default([]) | length > 0
+      when: ssd_disks | default([]) | length > 0
       block:
         - name: wipe (wipefs)
-          command: "wipefs -a {{ longhorn_disks }}"
+          command: "wipefs -a {{ ssd_disks }}"
 
         - name: wipe (sgdisk)
-          command: "sgdisk --zap-all {{ longhorn_disks }}"
+          command: "sgdisk --zap-all {{ ssd_disks }}"
 
         - name: wipe (dd)
-          command: "dd if=/dev/zero of={{ longhorn_disks }} bs=1M count=100 oflag=direct,dsync"
+          command: "dd if=/dev/zero of={{ ssd_disks }} bs=1M count=100 oflag=direct,dsync"
 
         - name: format disks ext4
           filesystem:
             fstype: ext4
-            dev: "{{ longhorn_disks }}"
+            dev: "{{ ssd_disks }}"
 
     - name: Get UUID of disks (blkid)
-      command: "blkid -s UUID -o value {{ longhorn_disks }}"
+      command: "blkid -s UUID -o value {{ ssd_disks }}"
       register: blkid
 
     - name: Create mount point for longhorn

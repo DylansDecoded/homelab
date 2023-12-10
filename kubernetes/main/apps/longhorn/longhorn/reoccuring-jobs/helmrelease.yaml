@@ -53,7 +53,6 @@ spec:
             retain: 2
         filesystem-trim:
           - interval: 20m
-
       "Config":
         snapshot:
           - interval: 10m
@@ -63,7 +62,6 @@ spec:
             retain: 7
         filesystem-trim:
           - interval: 20m
-
       "Snapshot":
         options:
           storageclass:
