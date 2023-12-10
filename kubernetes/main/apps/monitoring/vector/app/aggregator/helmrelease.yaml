@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
+# yaml-language-server: $schema=https://kubernetes-schemas.robsonhome.cloud/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
@@ -65,7 +65,7 @@ spec:
         controller: main
         type: LoadBalancer
         annotations:
-          external-dns.alpha.kubernetes.io/hostname: vector.devbu.io
+          external-dns.alpha.kubernetes.io/hostname: vector.robsonhome.cloud
           io.cilium/lb-ipam-ips: 10.1.33.201
         ports:
           http:
