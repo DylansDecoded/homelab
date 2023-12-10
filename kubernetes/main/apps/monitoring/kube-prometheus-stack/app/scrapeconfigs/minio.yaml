@@ -1,0 +1,10 @@
+---
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: minio
+spec:
+  scheme: HTTP
+  staticConfigs:
+    - targets: ["s3.robsonhome.cloud"]
+  metricsPath: /minio/v2/metrics/cluster

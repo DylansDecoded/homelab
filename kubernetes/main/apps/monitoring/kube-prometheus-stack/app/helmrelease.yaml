@@ -123,7 +123,7 @@ spec:
         ingressClassName: internal
         pathType: Prefix
         hosts:
-          - &host prometheus.devbu.io
+          - &host prometheus.robsonhome.cloud
         tls:
           - hosts:
               - *host

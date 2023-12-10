@@ -10,4 +10,5 @@ spec:
     - targets:
         - 10.1.1.2:9100
         - 10.1.1.3:9100
+        -
   metricsPath: /metrics
