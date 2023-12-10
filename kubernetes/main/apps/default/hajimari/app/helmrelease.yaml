@@ -154,7 +154,7 @@ spec:
       data:
         enabled: true
         accessModes:
-          - ReadWriteOnce
+          - ReadWriteMany
         size: 1Gi
         storageClass: longhorn
 
