@@ -26,6 +26,15 @@ tasks:
     cmds:
       - task: .venv
 
+  list-drives:
+    desc: List drives in inventory
+    summary: |
+      Args:
+        inventory: Ansible inventory to use (required)
+    cmd:
+      ansible all --inventory {{.ANSIBLE_DIR}}/{{.inventory}}/inventory/hosts.yaml -m \
+      command -a "lsblk -o NAME,MOUNTPOINT"
+
   run:
     desc: Run an Ansible playbook for configuring a cluster
     summary: |
