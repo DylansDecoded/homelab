@@ -5,10 +5,12 @@ metadata:
   name: minio
 spec:
   ports:
-    - protocol: TCP
-      port: 9003
-    - protocol: TCP
-      port: 9004
+    - name: api
+      protocol: TCP
+      port: 9000
+    - name: console
+      protocol: TCP
+      port: 9001
 
 ---
 apiVersion: v1
@@ -17,9 +19,16 @@ metadata:
   name: minio
 subsets:
   - addresses:
-      - ip: 10.1.30.210
+      - ip: 10.1.30.200
     ports:
-      - port: 9001
+      - port:
+          name: api
+          protocol: TCP
+          port: 9000
+      - port:
+          name: console
+          protocol: TCP
+          port: 9001
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -37,30 +46,30 @@ spec:
               service:
                 name: minio
                 port:
-                  number: 9000
+                  name: console
 
   tls:
     - hosts:
         - *host
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: minio
-spec:
-  ingressClassName: internal
-  rules:
-    - host: &host s3.robsonhome.cloud
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: minio
-                port:
-                  number: 9001
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: minio
+# spec:
+#   ingressClassName: internal
+#   rules:
+#     - host: &host s3.robsonhome.cloud
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: minio
+#                 port:
+#                   name: console
 
-  tls:
-    - hosts:
-        - *host
+#   tls:
+#     - hosts:
+#         - *host
