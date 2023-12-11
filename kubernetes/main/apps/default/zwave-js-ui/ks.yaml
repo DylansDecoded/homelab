@@ -24,7 +24,4 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 10Gi
-      VOLSYNC_ACCESSMODES: ReadWriteMany
-      VOLSYNC_STORAGECLASS: longhorn
-      VOLSYNC_SNAPSHOTCLASS: longhorn-snapclass
+      VOLSYNC_CAPACITY: 1Gi

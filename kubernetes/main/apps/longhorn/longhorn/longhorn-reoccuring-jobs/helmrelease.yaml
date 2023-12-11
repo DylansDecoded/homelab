@@ -1,13 +1,17 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta1.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: longhorn-recurring-jobs
 spec:
-  targetNamespace: longhorn-system
+  targetNamespace: storage
   releaseName: longhorn-recurring-jobs
   upgrade:
     force: true # In case a StorageClass needs updating
+  dependsOn:
+    - name: longhorn
+      namespace: storage
   timeout: 120s
   chart:
     spec:
@@ -18,9 +22,6 @@ spec:
         name: tyzbit
         namespace: flux-system
   interval: 2m0s
-  dependsOn:
-    - name: longhorn
-      namespace: longhorn-system
   values:
     minuteStep: 5
     hourStep: 2
@@ -44,7 +45,7 @@ spec:
         filesystem-trim:
           - interval: 20m
 
-      "Media":
+      "Plex":
         snapshot:
           - interval: 10m
             retain: 6
@@ -53,6 +54,7 @@ spec:
             retain: 2
         filesystem-trim:
           - interval: 20m
+
       "Config":
         snapshot:
           - interval: 10m
@@ -62,6 +64,7 @@ spec:
             retain: 7
         filesystem-trim:
           - interval: 20m
+
       "Snapshot":
         options:
           storageclass:

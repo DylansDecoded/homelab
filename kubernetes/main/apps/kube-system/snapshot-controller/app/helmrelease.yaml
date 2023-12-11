@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: snapshot-controller
-      version: 2.0.2
+      version: 2.0.3
       sourceRef:
         kind: HelmRepository
         name: piraeus
@@ -26,7 +26,6 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
-  values:
-    controller:
-      serviceMonitor:
-        create: true
+  dependsOn:
+    - name: longhorn
+      namespace: longhorn-system

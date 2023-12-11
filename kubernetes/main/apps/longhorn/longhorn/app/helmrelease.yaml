@@ -26,15 +26,20 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    persistence:
-      defaultClass: true
-      defaultClassReplicaCount: 3
+    monitoring:
+      enabled: true
+      createPrometheusRules: true
     defaultSettings:
-      defaultDataPath: /mnt/longhorn/
-      backupTarget: s3://longhorn@us-east-1/backups
-      backupTargetCredentialSecret: longhorn-backup-secret
+      backupTarget: s3://longhorn@us-east-1/
+      backupTargetCredentialSecret: longhorn-secret
       defaultReplicaCount: 3
+      backupstorePollInterval: 0
+      createDefaultDiskLabeledNodes: true
+      defaultDataPath: /mnt/longhorn
       restoreVolumeRecurringJobs: true
+      # storageOverProvisioningPercentage: 100
+      storageMinimalAvailablePercentage: 5
+      concurrentAutomaticEngineUpgradePerNodeLimit: 3
       defaultLonghornStaticStorageClass: longhorn
     ingress:
       enabled: true
@@ -42,4 +47,3 @@ spec:
       host: &host longhorn.robsonhome.cloud
       tls: true
       tlsSecretName: *host
-      secureBackend: true
