@@ -8,9 +8,6 @@ spec:
   releaseName: longhorn-recurring-jobs
   upgrade:
     force: true # In case a StorageClass needs updating
-  dependsOn:
-    - name: longhorn
-      namespace: longhorn-system
   timeout: 120s
   chart:
     spec:
@@ -21,6 +18,9 @@ spec:
         name: tyzbit
         namespace: flux-system
   interval: 2m0s
+  dependsOn:
+    - name: longhorn
+      namespace: longhorn-system
   values:
     minuteStep: 5
     hourStep: 2
