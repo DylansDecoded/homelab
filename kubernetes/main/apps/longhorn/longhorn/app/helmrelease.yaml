@@ -36,10 +36,8 @@ spec:
       backupstorePollInterval: 0
       createDefaultDiskLabeledNodes: true
       defaultDataPath: /mnt/longhorn
-      restoreVolumeRecurringJobs: true
-      # storageOverProvisioningPercentage: 100
-      storageMinimalAvailablePercentage: 5
-      # concurrentAutomaticEngineUpgradePerNodeLimit: 3
+      storageOverProvisioningPercentage: 100
+      storageMinimalAvailablePercentage: 10
       defaultLonghornStaticStorageClass: longhorn
     ingress:
       enabled: true
