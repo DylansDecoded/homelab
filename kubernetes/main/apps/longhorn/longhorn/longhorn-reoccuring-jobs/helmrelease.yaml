@@ -9,9 +9,6 @@ spec:
   releaseName: longhorn-recurring-jobs
   upgrade:
     force: true # In case a StorageClass needs updating
-  dependsOn:
-    - name: longhorn
-      namespace: storage
   timeout: 120s
   chart:
     spec:
