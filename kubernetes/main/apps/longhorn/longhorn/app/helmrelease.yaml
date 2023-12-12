@@ -33,8 +33,6 @@ spec:
       backupTarget: s3://longhorn@us-east-1/
       backupTargetCredentialSecret: longhorn-backup-secret
       defaultReplicaCount: 3
-      backupstorePollInterval: 0
-      createDefaultDiskLabeledNodes: true
       defaultDataPath: /mnt/longhorn
       storageOverProvisioningPercentage: 100
       storageMinimalAvailablePercentage: 10
