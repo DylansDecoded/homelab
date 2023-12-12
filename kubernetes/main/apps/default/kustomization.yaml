@@ -12,5 +12,5 @@ resources:
   - ./miniflux/ks.yaml
   - ./mosquitto/ks.yaml
   - ./node-red/ks.yaml
-  - ./zigbee2mqtt/ks.yaml
-  - ./zwave-js-ui/ks.yaml
+  # - ./zigbee2mqtt/ks.yaml
+  # - ./zwave-js-ui/ks.yaml
