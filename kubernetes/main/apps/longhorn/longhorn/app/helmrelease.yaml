@@ -31,7 +31,7 @@ spec:
       createPrometheusRules: true
     defaultSettings:
       backupTarget: s3://longhorn@us-east-1/
-      backupTargetCredentialSecret: longhorn-secret
+      backupTargetCredentialSecret: longhorn-backup-secret
       defaultReplicaCount: 3
       backupstorePollInterval: 0
       createDefaultDiskLabeledNodes: true
@@ -39,7 +39,7 @@ spec:
       restoreVolumeRecurringJobs: true
       # storageOverProvisioningPercentage: 100
       storageMinimalAvailablePercentage: 5
-      concurrentAutomaticEngineUpgradePerNodeLimit: 3
+      # concurrentAutomaticEngineUpgradePerNodeLimit: 3
       defaultLonghornStaticStorageClass: longhorn
     ingress:
       enabled: true
