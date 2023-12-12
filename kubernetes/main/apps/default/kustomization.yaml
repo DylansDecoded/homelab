@@ -11,6 +11,6 @@ resources:
   - ./lldap/ks.yaml
   - ./miniflux/ks.yaml
   - ./mosquitto/ks.yaml
-  - ./node-red/ks.yaml
+  # - ./node-red/ks.yaml
   # - ./zigbee2mqtt/ks.yaml
   # - ./zwave-js-ui/ks.yaml

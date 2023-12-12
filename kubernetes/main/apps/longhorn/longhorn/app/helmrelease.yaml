@@ -26,17 +26,34 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    monitoring:
-      enabled: true
-      createPrometheusRules: true
+    persistence:
+      defaultClassReplicaCount: 2
+    annotations:
+      prometheus.io/scrape: "true"
     defaultSettings:
+      defaultDataPath: /mnt/longhorn
       backupTarget: s3://longhorn@us-east-1/
       backupTargetCredentialSecret: longhorn-backup-secret
-      defaultReplicaCount: 3
-      defaultDataPath: /mnt/longhorn
-      storageOverProvisioningPercentage: 100
-      storageMinimalAvailablePercentage: 10
+      taintToleration: node-role.kubernetes.io/master:NoSchedule
+      createDefaultDiskLabeledNodes: true
+      defaultReplicaCount: 2
       defaultLonghornStaticStorageClass: longhorn
+    longhornManager:
+      # Let the control plane nodes with
+      # disks mounted be available for
+      # scheduling.
+      tolerations:
+        - key: ""
+          operator: "Exists"
+          effect: "NoSchedule"
+    longhornDriver:
+      # Let the control plane nodes with
+      # disks mounted be available for
+      # scheduling.
+      tolerations:
+        - key: ""
+          operator: "Exists"
+          effect: "NoSchedule"
     ingress:
       enabled: true
       ingressClassName: internal
