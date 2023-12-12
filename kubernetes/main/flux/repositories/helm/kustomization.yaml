@@ -30,4 +30,5 @@ resources:
   - ./rook-ceph.yaml
   - ./stakater.yaml
   - ./tf-controller.yaml
+  - ./tyzbit.yaml
   - ./weaveworks.yaml
