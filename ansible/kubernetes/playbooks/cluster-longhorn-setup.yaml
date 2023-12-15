@@ -1,6 +1,6 @@
 ---
 - name: Cluster Longhorn Disk Setup Playbook
-  hosts: all
+  hosts: longhorn_nodes
   become: true
   gather_facts: true
   any_errors_fatal: true

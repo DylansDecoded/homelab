@@ -7,7 +7,6 @@ ingress:
     service: https://nginx-external-controller.networking.svc.cluster.local:443
     originRequest:
       originServerName: external.robsonhome.cloud
-
   - hostname: "*.robsonhome.cloud"
     service: https://nginx-external-controller.networking.svc.cluster.local:443
     originRequest:

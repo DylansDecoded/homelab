@@ -1,6 +1,6 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: &app cloudflared
@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.2.0
+      version: 2.4.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -38,7 +38,7 @@ spec:
           main:
             image:
               repository: docker.io/cloudflare/cloudflared
-              tag: 2023.10.0
+              tag: 2023.10.0@sha256:c18744ae1767c17c5562cc731c24e64a5a2f93f35c3dd6629b90dedaff6dff8f
             env:
               NO_AUTOUPDATE: "true"
               TUNNEL_CRED_FILE: /etc/cloudflared/creds/credentials.json
@@ -66,6 +66,10 @@ spec:
               readiness: *probes
               startup:
                 enabled: false
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 5m
@@ -76,6 +80,7 @@ spec:
           securityContext:
             runAsUser: 568
             runAsGroup: 568
+            runAsNonRoot: true
           topologySpreadConstraints:
             - maxSkew: 1
               topologyKey: kubernetes.io/hostname
@@ -95,7 +100,7 @@ spec:
       config:
         enabled: true
         type: configMap
-        name: cloudflared-configmap # overriden by kustomizeconfig
+        name: cloudflared-configmap
         globalMounts:
           - path: /etc/cloudflared/config/config.yaml
             subPath: config.yaml

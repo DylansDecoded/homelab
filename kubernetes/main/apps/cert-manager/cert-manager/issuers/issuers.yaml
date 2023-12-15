@@ -5,16 +5,16 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: admin@robsonhome.cloud
+    email: ${SECRET_CLOUDFLARE_EMAIL}
     privateKeySecretRef:
       name: letsencrypt-production
     solvers:
       - dns01:
           cloudflare:
-            email: dylan@robsonhome.cloud
+            email: ${SECRET_CLOUDFLARE_EMAIL}
             apiTokenSecretRef:
               name: cloudflare-secret
-              key: api-token
+              key: CLOUDFLARE_API_TOKEN
         selector:
           dnsZones:
             - robsonhome.cloud
@@ -26,16 +26,16 @@ metadata:
 spec:
   acme:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
-    email: admin@robsonhome.cloud
+    email: ${SECRET_CLOUDFLARE_EMAIL}
     privateKeySecretRef:
       name: letsencrypt-staging
     solvers:
       - dns01:
           cloudflare:
-            email: dylan@robsonhome.cloud
+            email: ${SECRET_CLOUDFLARE_EMAIL}
             apiTokenSecretRef:
               name: cloudflare-secret
-              key: api-token
+              key: CLOUDFLARE_API_TOKEN
         selector:
           dnsZones:
             - robsonhome.cloud

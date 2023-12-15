@@ -1,0 +1,41 @@
+---
+- name: Install required packages
+  apt:
+    pkg: unattended-upgrades, apt-listchanges, needrestart
+    state: latest
+    update_cache: yes
+
+- name: Configure unattended-upgrades
+  blockinfile:
+    dest: /etc/apt/apt.conf.d/50unattended-upgrades
+    block: |
+          Unattended-Upgrade::Automatic-Reboot "true";
+          Unattended-Upgrade::Automatic-Reboot-Time "{{ reboot_time }}";
+    marker: "// {mark} ANSIBLE MANAGED BLOCK - unattended_upgrades settings"
+    create: true
+    mode: "0644"
+    owner: root
+    group: root
+  register: unattended_upgrades_settings_set
+
+- name: Dpkg reconfigure
+  command:
+    cmd: dpkg-reconfigure -f noninteractive unattended-upgrades
+  register: dpkg_reconfigure_unattended_upgrades
+  when:
+    - unattended_upgrades_config_set.changed or
+      unattended_upgrades_settings_set.changed
+- name: Configure updates installation timing
+  lineinfile:
+    path: /lib/systemd/system/apt-daily-upgrade.timer
+    regexp: '^OnCalendar'
+    line: OnCalendar=*-*-* {{ install_time }}
+    state: present
+
+- name: Configure updates installation timing offset
+  lineinfile:
+    path: '/lib/systemd/system/apt-daily-upgrade.timer'
+    regexp: '^RandomizedDelaySec'
+    line: 'RandomizedDelaySec={{ reboot_offset}}'
+    state: present
+

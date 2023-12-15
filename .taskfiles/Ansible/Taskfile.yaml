@@ -19,7 +19,9 @@ tasks:
     summary: |
       Args:
         playbook: Playbook to run (required)
-    cmd: ansible-playbook --inventory {{.ANSIBLE_DIR}}/raspberrypi/inventory/hosts.yaml {{.ANSIBLE_DIR}}/raspberrypi/playbooks/ubuntu-setup.yaml
+    cmd: |
+      ansible-playbook --inventory {{.ANSIBLE_DIR}}/raspberrypi/inventory/hosts.yaml \
+      {{.ANSIBLE_DIR}}/raspberrypi/playbooks/{{.playbook}}.yaml {{.CLI_ARGS}}
 
   deps:
     desc: Set up Ansible dependencies for the environment
@@ -30,10 +32,12 @@ tasks:
     desc: List drives in inventory
     summary: |
       Args:
-        inventory: Ansible inventory to use (required)
-    cmd:
-      ansible all --inventory {{.ANSIBLE_DIR}}/{{.inventory}}/inventory/hosts.yaml -m \
-      command -a "lsblk -o NAME,MOUNTPOINT"
+        group: Ansible inventory group to use (required)
+        ansible_directory: Ansible inventory to use (required)
+
+    cmd: |
+      ansible {{.group}} --inventory {{.ANSIBLE_DIR}}/{{.ansible_directory}}/inventory/hosts.yaml -m \
+      command -a "lsblk -f" {{.CLI_ARGS}}
 
   run:
     desc: Run an Ansible playbook for configuring a cluster

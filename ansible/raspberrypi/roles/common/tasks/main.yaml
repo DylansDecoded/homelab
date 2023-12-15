@@ -1,0 +1,11 @@
+---
+- name: Update & Upgrade apt
+  apt:
+    update_cache: yes
+    upgrade: yes
+    cache_valid_time: 3600
+  register: apt_update
+
+- name: Setup Unattended Upgrades
+  include_role:
+    name: unattended-upgrades

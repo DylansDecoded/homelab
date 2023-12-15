@@ -1,0 +1,4 @@
+---
+- name: Install packages
+  apt:
+    pkg: ser2net,socat

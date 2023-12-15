@@ -2,43 +2,64 @@ kubernetes:
   vars:
     ansible_user: dylan
     ansible_ssh_private_key_file: ~/.ssh/id_ed25519
-    longhorn_mount_point: /mnt/data
     ansible_python_interpreter: /usr/bin/python3
+    longhorn_mount_point: /mnt/data
+
   children:
     master:
       hosts:
-        k3s-pve-master-01:
+        k3s-pi4-master-01:
           ansible_host: 10.1.33.30
-          ssd_disks: /dev/sdb
 
-        k3s-pve-master-02:
+        k3s-pi4-master-02:
+          ansible_host: 10.1.33.31
+
+        k3s-pi4-master-03:
           ansible_host: 10.1.33.32
-          ssd_disks: /dev/sda
-
-        k3s-pve-master-03:
-          ansible_host: 10.1.33.34
-          ssd_disks: /dev/sdb
 
     worker:
       hosts:
         k3s-pve-worker-01:
+          ansible_host: 10.1.33.33
+
+        k3s-pve-worker-02:
+          ansible_host: 10.1.33.34
+
+        k3s-pve-worker-03:
+          ansible_host: 10.1.33.35
+
+        k3s-pi4-worker-01:
+          ansible_host: 10.1.33.36
+
+        k3s-pi4-worker-02:
+          ansible_host: 10.1.33.37
+
+    longhorn_nodes:
+      hosts:
+        k3s-pi4-master-01:
+          ansible_host: 10.1.33.30
+          ssd_disks: /dev/sda
+
+        k3s-pi4-master-02:
           ansible_host: 10.1.33.31
           ssd_disks: /dev/sda
-        k3s-pve-worker-02:
+
+        k3s-pi4-master-03:
+          ansible_host: 10.1.33.32
+          ssd_disks: /dev/sda
+
+        k3s-pve-worker-01:
           ansible_host: 10.1.33.33
           ssd_disks: /dev/sdb
+
+        k3s-pve-worker-02:
+          ansible_host: 10.1.33.34
+          ssd_disks: /dev/sdb
+
         k3s-pve-worker-03:
           ansible_host: 10.1.33.35
           ssd_disks: /dev/sdb
-        # k3s-pi4-worker-01:
-        #   ansible_host: 10.1.33.36
-        #   ssd_disks: /dev/sda
-        # k3s-pi4-worker-02:
-        #   ansible_host: 10.1.33.37
-        #   ssd_disks: /dev/sda
-        # k3s-pi4-worker-03:
-        #   ansible_host: 10.1.33.38
-        #   ssd_disks: /dev/sda
-        # k3s-pi4-worker-04:
-        #   ansible_host: 10.1.33.39
-        #   ssd_disks: /dev/sda
+
+        k3s-pi4-worker-01:
+          ansible_host: 10.1.33.36
+          ssd_disks: /dev/sda

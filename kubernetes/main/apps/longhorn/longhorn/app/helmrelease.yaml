@@ -27,16 +27,16 @@ spec:
     keepHistory: false
   values:
     persistence:
-      defaultClassReplicaCount: 2
+      defaultClassReplicaCount: 3
     annotations:
       prometheus.io/scrape: "true"
     defaultSettings:
-      defaultDataPath: /mnt/longhorn
+      defaultDataPath: /mnt/data
       backupTarget: s3://longhorn@us-east-1/
+      # priorityClass: high-priority
       backupTargetCredentialSecret: longhorn-backup-secret
-      taintToleration: node-role.kubernetes.io/master:NoSchedule
-      createDefaultDiskLabeledNodes: true
-      defaultReplicaCount: 2
+      # taintToleration: node-role.kubernetes.io/master:NoSchedule
+      defaultReplicaCount: 3
       defaultLonghornStaticStorageClass: longhorn
     longhornManager:
       # Let the control plane nodes with
