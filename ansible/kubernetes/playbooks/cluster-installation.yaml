@@ -73,9 +73,9 @@
       vars:
         stale_containers_state: disabled
 
-    - name: Apply Label (longhorn nodes)
-      when: ssd_disks | default([]) | length > 0
-      command: "kubectl label nodes --overwrite {{ inventory_hostname }} node.longhorn.io/create-default-disk=true"
+    # - name: Apply Label (longhorn nodes)
+    #   when: ssd_disks | default([]) | length > 0
+    #   command: "kubectl label nodes --overwrite {{ inventory_hostname }} node.longhorn.io/create-default-disk=true"
 
 
     # - name: Helm controller
