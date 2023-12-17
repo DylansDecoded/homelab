@@ -39,7 +39,7 @@ tasks:
       ansible {{.group}} --inventory {{.ANSIBLE_DIR}}/{{.ansible_directory}}/inventory/hosts.yaml -m \
       command -a "lsblk -f" {{.CLI_ARGS}}
 
-  run:
+  run-kubernetes:
     desc: Run an Ansible playbook for configuring a cluster
     summary: |
       Args:
@@ -49,19 +49,19 @@ tasks:
     deps: ["deps"]
     cmd: |
       .venv/bin/ansible-playbook \
-        --inventory {{.ANSIBLE_DIR}}/{{.cluster}}/inventory/hosts.yaml \
-        {{.ANSIBLE_DIR}}/{{.cluster}}/playbooks/{{.playbook}}.yaml {{.CLI_ARGS}}
+        --inventory {{.ANSIBLE_KUBERNETES_DIR}}/{{.cluster}}/inventory/hosts.yaml \
+        {{.ANSIBLE_KUBERNETES_DIR}}/{{.cluster}}/playbooks/{{.playbook}}.yaml {{.CLI_ARGS}}
     preconditions:
       - { msg: "Argument (cluster) is required", sh: "test -n {{.cluster}}" }
       - { msg: "Argument (playbook) is required", sh: "test -n {{.playbook}}" }
       - { msg: "Venv not found", sh: "test -d {{.ROOT_DIR}}/.venv" }
       - {
           msg: "Inventory not found",
-          sh: "test -f {{.ANSIBLE_DIR}}/{{.cluster}}/inventory/hosts.yaml",
+          sh: "test -f {{.ANSIBLE_KUBERNETES_DIR}}/{{.cluster}}/inventory/hosts.yaml",
         }
       - {
           msg: "Playbook not found",
-          sh: "test -f {{.ANSIBLE_DIR}}/{{.cluster}}/playbooks/{{.playbook}}.yaml",
+          sh: "test -f {{.ANSIBLE_KUBERNETES_DIR}}/{{.cluster}}/playbooks/{{.playbook}}.yaml",
         }
 
   .venv:

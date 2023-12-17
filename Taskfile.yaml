@@ -11,6 +11,7 @@ env:
 vars:
   KUBERNETES_DIR: "{{.ROOT_DIR}}/kubernetes"
   ANSIBLE_DIR: "{{.ROOT_DIR}}/ansible"
+  ANSIBLE_KUBERNETES_DIR: "{{.ANSIBLE_DIR}}/kubernetes"
   TERRAFORM_DIR: "{{.ROOT_DIR}}/terraform"
 
 includes:
