@@ -6,10 +6,10 @@ metadata:
   name: mosquitto
   namespace: flux-system
 spec:
-  targetNamespace: home-automation
+  targetNamespace: default
   dependsOn:
     - name: external-secrets-stores
-  path: ./kubernetes/main/apps/home-automation/mosquitto/app
+  path: ./kubernetes/main/apps/default/mosquitto/app
   prune: true
   sourceRef:
     kind: GitRepository
