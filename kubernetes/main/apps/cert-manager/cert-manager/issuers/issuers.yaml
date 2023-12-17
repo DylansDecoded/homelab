@@ -1,3 +1,5 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.robsonhome.cloud/cert-manager.io/clusterissuer_v1.json
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
@@ -5,20 +7,21 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: ${SECRET_CLOUDFLARE_EMAIL}
+    email: dylan@robsonhome.cloud
     privateKeySecretRef:
       name: letsencrypt-production
     solvers:
       - dns01:
           cloudflare:
-            email: ${SECRET_CLOUDFLARE_EMAIL}
-            apiTokenSecretRef:
+            email: dylan@robsonhome.cloud
+            apiKeySecretRef:
               name: cloudflare-secret
-              key: CLOUDFLARE_API_TOKEN
+              key: CLOUDFLARE_API_KEY
         selector:
           dnsZones:
             - robsonhome.cloud
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.robsonhome.cloud/cert-manager.io/clusterissuer_v1.json
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
@@ -26,16 +29,16 @@ metadata:
 spec:
   acme:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
-    email: ${SECRET_CLOUDFLARE_EMAIL}
+    email: dylan@robsonhome.cloud
     privateKeySecretRef:
       name: letsencrypt-staging
     solvers:
       - dns01:
           cloudflare:
-            email: ${SECRET_CLOUDFLARE_EMAIL}
-            apiTokenSecretRef:
+            email: dylan@robsonhome.cloud
+            apiKeySecretRef:
               name: cloudflare-secret
-              key: CLOUDFLARE_API_TOKEN
+              key: CLOUDFLARE_API_KEY
         selector:
           dnsZones:
             - robsonhome.cloud
