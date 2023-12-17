@@ -67,3 +67,4 @@
         fstype: ext4
         state: mounted
         opts: defaults,noatime,nodiratime
+

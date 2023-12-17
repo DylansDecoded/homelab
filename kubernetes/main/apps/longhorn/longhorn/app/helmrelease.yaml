@@ -35,25 +35,8 @@ spec:
       backupTarget: s3://longhorn@us-east-1/
       # priorityClass: high-priority
       backupTargetCredentialSecret: longhorn-backup-secret
-      # taintToleration: node-role.kubernetes.io/master:NoSchedule
       defaultReplicaCount: 3
       defaultLonghornStaticStorageClass: longhorn
-    longhornManager:
-      # Let the control plane nodes with
-      # disks mounted be available for
-      # scheduling.
-      tolerations:
-        - key: ""
-          operator: "Exists"
-          effect: "NoSchedule"
-    longhornDriver:
-      # Let the control plane nodes with
-      # disks mounted be available for
-      # scheduling.
-      tolerations:
-        - key: ""
-          operator: "Exists"
-          effect: "NoSchedule"
     ingress:
       enabled: true
       ingressClassName: internal
