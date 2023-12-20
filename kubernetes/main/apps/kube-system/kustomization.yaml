@@ -7,6 +7,4 @@ resources:
   # Flux Kustomizations
   - ./cilium/ks.yaml
   - ./coredns/ks.yaml
-  - ./descheduler/ks.yaml
-  - ./external-secrets/ks.yaml
   - ./metrics-server/ks.yaml
