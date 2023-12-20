@@ -74,6 +74,3 @@
         state: mounted
         opts: defaults
 
-    - name: Apply label to Longhorn Nodes
-      command: kubectl label nodes --overwrite {{ inventory_hostname }} node.longhorn.io/create-default-disk=true
-
