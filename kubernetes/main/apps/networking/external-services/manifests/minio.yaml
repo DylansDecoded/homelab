@@ -45,29 +45,18 @@ spec:
                 name: minio
                 port:
                   name: console
+    - host: &customHost s3.robsonhome.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: minio
+                port:
+                  name: api
 
   tls:
     - hosts:
         - *host
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: minio
-# spec:
-#   ingressClassName: internal
-#   rules:
-#     - host: &host s3.robsonhome.cloud
-#       http:
-#         paths:
-#           - path: /
-#             pathType: Prefix
-#             backend:
-#               service:
-#                 name: minio
-#                 port:
-#                   name: console
-
-#   tls:
-#     - hosts:
-#         - *host
+        - *customHost
