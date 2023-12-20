@@ -2,15 +2,14 @@
 apiVersion: notification.toolkit.fluxcd.io/v1
 kind: Receiver
 metadata:
-  name: github-receiver
-  namespace: flux-system
+  name: homelab-ops
 spec:
   type: github
   events:
     - ping
     - push
   secretRef:
-    name: github-webhook-token
+    name: github-webhook-token-secret
   resources:
     - apiVersion: source.toolkit.fluxcd.io/v1
       kind: GitRepository
