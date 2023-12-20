@@ -53,7 +53,13 @@
       command: "blkid -s UUID -o value {{ ssd_disks }}"
       register: blkid
 
+    - name: Check for Mount Point
+      stat:
+        path: "{{ longhorn_mount_point }}"
+      register: mount_point
+
     - name: Create mount point for longhorn
+      when: not mount_point.stat.exists
       file:
         path: "{{ longhorn_mount_point }}"
         state: directory
@@ -66,5 +72,8 @@
         src: "UUID={{ blkid.stdout }}"
         fstype: ext4
         state: mounted
-        opts: defaults,noatime,nodiratime
+        opts: defaults
+
+    - name: Apply label to Longhorn Nodes
+      command: kubectl label nodes --overwrite {{ inventory_hostname }} node.longhorn.io/create-default-disk=true
 
