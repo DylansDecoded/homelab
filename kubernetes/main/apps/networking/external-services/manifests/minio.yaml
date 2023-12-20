@@ -21,14 +21,12 @@ subsets:
   - addresses:
       - ip: 10.1.30.200
     ports:
-      - port:
-          name: api
-          protocol: TCP
-          port: 9000
-      - port:
-          name: console
-          protocol: TCP
-          port: 9001
+      - name: api
+        protocol: TCP
+        port: 9000
+      - name: console
+        protocol: TCP
+        port: 9001
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
