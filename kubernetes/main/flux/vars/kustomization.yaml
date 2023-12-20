@@ -5,12 +5,10 @@ kind: Kustomization
 configMapGenerator:
   - name: cluster-settings
     namespace: flux-system
-    envs:
-      - ./cluster-settings.env
+    envs: ["./cluster-settings.env"]
 secretGenerator:
   - name: cluster-secrets
     namespace: flux-system
-    envs:
-      - ./cluster-secrets.secret.sops.env
+    envs: ["./cluster-secrets.secret.sops.env"]
 generatorOptions:
   disableNameSuffixHash: true

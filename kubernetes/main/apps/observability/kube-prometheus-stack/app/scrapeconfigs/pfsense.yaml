@@ -1,0 +1,22 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/monitoring.coreos.com/scrapeconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: pfsense-01
+  namespace: monitoring
+spec:
+  staticConfigs:
+    - targets: ["10.1.1.2:9100"]
+  metricsPath: /metrics
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/monitoring.coreos.com/scrapeconfig_v1alpha1.json
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: ScrapeConfig
+metadata:
+  name: pfsense-02
+  namespace: monitoring
+spec:
+  staticConfigs:
+    - targets: ["10.1.1.3:9100"]
+  metricsPath: /metrics
