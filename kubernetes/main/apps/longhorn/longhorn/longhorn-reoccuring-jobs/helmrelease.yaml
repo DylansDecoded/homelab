@@ -35,6 +35,35 @@ spec:
       reclaimPolicy: Retain
     groups:
       # Quoting isn't required, but improves readability
+      Default:
+        options:
+          storageclass:
+            # You may override these properties for the storage classes for this group
+            # This only takes effect if createStorageClasses is true
+            allowVolumeExpansion: true
+            reclaimPolicy: Delete
+          # You can specify longhorn-specific parameters under this key
+          parameters:
+            replicaAutoBalance: "best-effort"
+            dataLocality: "best-effort"
+            numberOfReplicas: "2"
+            staleReplicaTimeout: "30"
+        # At least one task type is required.
+        snapshot:
+          - interval: 10m
+            retain: 6
+            # You may override the defaultConcurrency on each interval specification
+            concurrency: 10
+        backup:
+          - interval: 1h
+            retain: 5
+          - interval: 6h
+            retain: 4
+        snapshot-cleanup:
+          # retain is unnecessary for snapshot-cleanup and snapshot-delete, it is ignored.
+          - interval: 1h
+        snapshot-delete:
+          - interval: 1h
       Config:
         options:
           storageclass:

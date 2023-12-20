@@ -32,9 +32,9 @@ spec:
       prometheus.io/scrape: "true"
     defaultSettings:
       defaultDataPath: /mnt/data
-      backupTarget: s3://longhorn@us-east-1/
-      # priorityClass: high-priority
+      backupTarget: s3://longhorn@us-east-1/backups
       backupTargetCredentialSecret: longhorn-backup-secret
+      createDefaultDiskLabeledNodes: true
       defaultReplicaCount: 3
       defaultLonghornStaticStorageClass: longhorn
     ingress:
