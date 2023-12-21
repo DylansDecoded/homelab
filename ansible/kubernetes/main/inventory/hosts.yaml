@@ -31,8 +31,8 @@ kubernetes:
         k3s-pi4-worker-01:
           ansible_host: 10.1.33.36
 
-        k3s-pi4-worker-02:
-          ansible_host: 10.1.33.37
+        # k3s-pi4-worker-02:
+        #   ansible_host: 10.1.33.37
 
     longhorn_nodes:
       hosts:
