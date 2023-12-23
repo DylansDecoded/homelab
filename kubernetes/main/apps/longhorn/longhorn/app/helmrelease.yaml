@@ -30,15 +30,12 @@ spec:
       enabled: true
       createPrometheusRules: true
     persistence:
-      defaultClass: true
-      defaultFsType: ext4
       defaultClassReplicaCount: 2
     defaultSettings:
       defaultDataPath: /mnt/data
       backupTarget: s3://longhorn@us-east-1/backups
       backupTargetCredentialSecret: longhorn-backup-secret
       defaultReplicaCount: 2
-      createDefaultDiskLabeledNodes: true
       defaultLonghornStaticStorageClass: longhorn
 
     ingress:
