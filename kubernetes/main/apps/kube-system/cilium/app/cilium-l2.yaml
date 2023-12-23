@@ -18,4 +18,4 @@ metadata:
   name: pool
 spec:
   cidrs:
-    - cidr: 10.1.33.0/24
+    - cidr: 10.1.30.0/24
