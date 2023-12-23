@@ -88,7 +88,7 @@ spec:
         controller: main
         type: LoadBalancer
         annotations:
-          io.cilium/lb-ipam-ips: 10.1.33.202
+          io.cilium/lb-ipam-ips: 10.1.30.219
         ports:
           bittorrent:
             enabled: true

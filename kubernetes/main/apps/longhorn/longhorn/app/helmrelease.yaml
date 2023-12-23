@@ -40,17 +40,11 @@ spec:
       defaultReplicaCount: 2
       createDefaultDiskLabeledNodes: true
       defaultLonghornStaticStorageClass: longhorn
-      restoreVolumeRecurringJobs: true
-      taintToleration:
-        - key: node-role.kubernetes.io/master
-          operator: Exists
-          effect: NoExecute
       defaultDataLocality: best-effort
-      storageOverProvisioningPercentage: 200
+      storageOverProvisioningPercentage: 100
       storageMinimalAvailablePercentage: 10
       storageReservedPercentageForDefaultDisk: 5
-      nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
-      concurrentAutomaticEngineUpgradePerNodeLimit: 1
+
     ingress:
       enabled: true
       ingressClassName: internal
