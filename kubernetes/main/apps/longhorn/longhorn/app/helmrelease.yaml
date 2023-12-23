@@ -29,17 +29,28 @@ spec:
     monitoring:
       enabled: true
       createPrometheusRules: true
+    persistence:
+      defaultClass: true
+      defaultFsType: ext4
+      defaultClassReplicaCount: 2
     defaultSettings:
       defaultDataPath: /mnt/data
       backupTarget: s3://longhorn@us-east-1/backups
       backupTargetCredentialSecret: longhorn-backup-secret
-      defaultReplicaCount: 3
-      backupstorePollInterval: 0
+      defaultReplicaCount: 2
       createDefaultDiskLabeledNodes: true
       defaultLonghornStaticStorageClass: longhorn
       restoreVolumeRecurringJobs: true
-      storageOverProvisioningPercentage: 100
-      storageMinimalAvailablePercentage: 1
+      taintToleration:
+        - key: node-role.kubernetes.io/master
+          operator: Exists
+          effect: NoExecute
+      defaultDataLocality: best-effort
+      storageOverProvisioningPercentage: 200
+      storageMinimalAvailablePercentage: 10
+      storageReservedPercentageForDefaultDisk: 5
+      nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
+      concurrentAutomaticEngineUpgradePerNodeLimit: 1
     ingress:
       enabled: true
       ingressClassName: internal
