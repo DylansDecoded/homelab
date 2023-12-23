@@ -20,7 +20,8 @@ spec:
   wait: false
   dependsOn:
     - name: external-secrets-stores
-  postBuild:
-    substitute:
-      APP: *app
-      VOLSYNC_CAPACITY: 1Gi
+    - name: node-feature-discovery-rules
+  # postBuild:
+  #   substitute:
+  #     APP: *app
+  #     VOLSYNC_CAPACITY: 1Gi

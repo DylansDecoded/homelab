@@ -26,17 +26,20 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    persistence:
-      defaultClassReplicaCount: 3
-    annotations:
-      prometheus.io/scrape: "true"
+    monitoring:
+      enabled: true
+      createPrometheusRules: true
     defaultSettings:
       defaultDataPath: /mnt/data
       backupTarget: s3://longhorn@us-east-1/backups
       backupTargetCredentialSecret: longhorn-backup-secret
-      createDefaultDiskLabeledNodes: true
       defaultReplicaCount: 3
+      backupstorePollInterval: 0
+      createDefaultDiskLabeledNodes: true
       defaultLonghornStaticStorageClass: longhorn
+      restoreVolumeRecurringJobs: true
+      storageOverProvisioningPercentage: 100
+      storageMinimalAvailablePercentage: 1
     ingress:
       enabled: true
       ingressClassName: internal

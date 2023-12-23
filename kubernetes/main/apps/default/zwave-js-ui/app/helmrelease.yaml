@@ -26,8 +26,8 @@ spec:
   dependsOn:
     - name: longhorn
       namespace: longhorn-system
-    - name: volsync
-      namespace: storage
+    # - name: volsync
+    #   namespace: storage
   values:
     controllers:
       main:

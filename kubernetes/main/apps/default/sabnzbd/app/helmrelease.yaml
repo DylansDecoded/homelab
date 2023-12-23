@@ -26,8 +26,6 @@ spec:
   dependsOn:
     - name: longhorn
       namespace: longhorn-system
-    - name: volsync
-      namespace: storage
   values:
     controllers:
       main:
@@ -119,7 +117,7 @@ spec:
         type: emptyDir
       media:
         type: nfs
-        server: expanse.turbo.ac
-        path: /eros/Media
+        server: ${TRUENAS_IP}
+        path: /mnt/tank/media
         globalMounts:
           - path: /media

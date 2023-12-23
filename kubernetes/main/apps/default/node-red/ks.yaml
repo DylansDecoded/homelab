@@ -20,10 +20,10 @@ spec:
   wait: false
   dependsOn:
     - name: external-secrets-stores
-  postBuild:
-    substitute:
-      APP: *app
-      VOLSYNC_CAPACITY: 5Gi
-      VOLSYNC_ACCESSMODE: ReadWriteMany
-      VOLSYNC_STORAGECLASS: longhorn
-      VOLSYNC_SNAPSHOTCLASS: longhorn-snapclass
+  # postBuild:
+  #   substitute:
+  #     APP: *app
+  #     VOLSYNC_CAPACITY: 5Gi
+  #     VOLSYNC_ACCESSMODE: ReadWriteMany
+  #     VOLSYNC_STORAGECLASS: longhorn
+  #     VOLSYNC_SNAPSHOTCLASS: longhorn-snapclass
