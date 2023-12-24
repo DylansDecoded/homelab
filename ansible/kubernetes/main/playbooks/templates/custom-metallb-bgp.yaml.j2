@@ -1,0 +1,17 @@
+---
+apiVersion: metallb.io/v1beta2
+kind: BGPPeer
+metadata:
+  name: peer
+  namespace: kube-system
+spec:
+  myASN: {{ metal_lb_bgp_my_asn }}
+  peerASN: {{ metal_lb_bgp_peer_asn }}
+  peerAddress: {{ metal_lb_bgp_peer_address }}
+
+---
+apiVersion: metallb.io/v1beta1
+kind: BGPAdvertisement
+metadata:
+  name: advertisement
+  namespace: kube-system
