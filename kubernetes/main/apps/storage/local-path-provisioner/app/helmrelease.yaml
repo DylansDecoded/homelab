@@ -25,7 +25,28 @@ spec:
     keepHistory: false
   values:
     fullnameOverride: local-path-provisioner
+    csiDriver:
+      name: "org.democratic-csi.local-hostpath"
+      attachRequired: false
+      storageCapacity: true # With storage capacity tracking, the scheduler filters out nodes which do not have enough capacity.
+      fsGroupPolicy: File # fsGroupChangePolicy
+
+    storageClasses:
+      - name: local-hostpath
+        defaultClass: false
+        reclaimPolicy: Delete
+        volumeBindingMode: WaitForFirstConsumer
+        # distributed support is not yet ready for expansion
+        allowVolumeExpansion: false
+
+    volumeSnapshotClasses:
+      - name: local-hostpath
+        deletionPolicy: Delete
+        parameters:
+          dummy: {}
+
     controller:
+      enabled: true
       strategy: node
       externalProvisioner:
         image: registry.k8s.io/sig-storage/csi-provisioner:v3.6.2
@@ -42,18 +63,10 @@ spec:
       externalAttacher:
         enabled: false
       externalSnapshotter:
-        enabled: false
-    csiDriver:
-      name: local-hostpath.cluster.local
-      storageCapacity: true
-      attachRequired: false
-      fsGroupPolicy: File
-    storageClasses:
-      - name: local-hostpath
-        defaultClass: false
-        reclaimPolicy: Delete
-        volumeBindingMode: WaitForFirstConsumer
-        allowVolumeExpansion: true
+        enabled: true
+        extraArgs:
+          - --leader-election=false
+          - --node-deployment=true
     driver:
       config:
         driver: local-hostpath
@@ -65,11 +78,14 @@ spec:
           dirPermissionsGroup: 0
     node:
       driver:
-        image: ghcr.io/democratic-csi/democratic-csi:v1.8.4
         extraVolumeMounts:
           - name: local-hostpath
             mountPath: *storagePath
             mountPropagation: Bidirectional
+      driverRegistrar:
+        enabled: true
+        image: registry.k8s.io/sig-storage/csi-node-driver-registrar:v2.9.2
+
       extraVolumes:
         - name: local-hostpath
           hostPath:
