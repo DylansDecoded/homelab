@@ -37,7 +37,8 @@ spec:
       backupTargetCredentialSecret: longhorn-backup-secret
       defaultReplicaCount: 3
       defaultLonghornStaticStorageClass: longhorn
-
+      createDefaultDiskLabeledNodes: true
+      storageMinimalAvailablePercentage: 10
     ingress:
       enabled: true
       ingressClassName: internal
