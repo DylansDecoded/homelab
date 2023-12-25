@@ -6,23 +6,23 @@ raspberrypi:
   children:
     pi4s:
       hosts:
-        k3s-pi4-master-01:
-          ansible_host: 10.1.33.30
-        k3s-pi4-master-02:
-          ansible_host: 10.1.33.31
-        k3s-pi4-master-03:
-          ansible_host: 10.1.33.32
-        # k3s-pi4-worker-01:
-        #   ansible_host: 10.1.33.36
+        # k3s-pi4-master-01:
+        #   ansible_host: 10.1.30.30
+        # k3s-pi4-master-02:
+        #   ansible_host: 10.1.30.31
+        # k3s-pi4-master-03:
+        #   ansible_host: 10.1.30.32
+        k3s-pi4-worker-01:
+          ansible_host: 10.1.30.36
         # k3s-pi4-worker-02:
-        #   ansible_host: 10.1.33.37
+        #   ansible_host: 10.1.30.37
     rack_pis:
       hosts:
-        k3s-pi4-master-01:
-          ansible_host: 10.1.33.30
-        k3s-pi4-master-02:
-          ansible_host: 10.1.33.31
-        k3s-pi4-master-03:
-          ansible_host: 10.1.33.32
-        # k3s-pi4-worker-01:
-        #   ansible_host: 10.1.33.36
+        # k3s-pi4-master-01:
+        #   ansible_host: 10.1.30.30
+        # k3s-pi4-master-02:
+        #   ansible_host: 10.1.30.31
+        # k3s-pi4-master-03:
+        #   ansible_host: 10.1.30.32
+        k3s-pi4-worker-01:
+          ansible_host: 10.1.30.36
