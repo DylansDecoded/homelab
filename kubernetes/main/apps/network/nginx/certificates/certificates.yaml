@@ -8,9 +8,10 @@ spec:
   issuerRef:
     name: letsencrypt-staging
     kind: ClusterIssuer
-  commonName: robsonhome.cloud
+  commonName: "*.robsonhome.cloud"
   dnsNames:
     - robsonhome.cloud
+    - home.robsonhome.cloud
     - "*.robsonhome.cloud"
 # ---
 # apiVersion: cert-manager.io/v1
