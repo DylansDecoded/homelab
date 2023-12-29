@@ -30,6 +30,19 @@
             name: linux-modules-extra-raspi
             state: present
 
+    - name: Configure Default User
+      include_task: tasks/configure_default_user.yaml
+
+    - name: Configure SSH
+      include_task: tasks/configure_ssh.yaml
+
+    - name: Configure unattended-upgrades
+      include_task: tasks/unattended_upgrades.yaml
+
+
+
+
+
   handlers:
   - name: reboot
     reboot:

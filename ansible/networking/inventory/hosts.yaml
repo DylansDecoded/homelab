@@ -1,0 +1,10 @@
+networking:
+  children:
+    dns-servers:
+      hosts:
+        dns-hidden-master:
+          ansible_host: 10.1.100.51
+        dns-slave-01:
+          ansible_host: 10.1.100.52
+        dns-slave-02:
+          ansible_host: 10.1.100.53

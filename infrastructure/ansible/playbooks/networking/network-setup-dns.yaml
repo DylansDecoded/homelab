@@ -1,0 +1,37 @@
+---
+- name: Setup Bind9
+  hosts: dns-servers
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  pre_tasks:
+     - name: Pausing for 2 seconds..
+       pause:
+        seconds: 2
+  tasks:
+    - name: Install Bind9 and related packages
+      apt:
+        name: "{{ packages }}"
+        state: present
+      vars:
+        packages:
+          - bind9
+          - bind9utils
+          - bind9-doc
+          - dnsutils
+          - bind9-host
+          - bind9-dnsutils
+
+    - name: Setup Master DNS Server
+      when:
+        - bind_master_server
+      template:
+        src: named.conf.local.j2
+        dest: /etc/bind/named.conf.local
+        owner: root
+        group: root
+        mode: 0644
+      notify:
+        - restart bind9
+
+
