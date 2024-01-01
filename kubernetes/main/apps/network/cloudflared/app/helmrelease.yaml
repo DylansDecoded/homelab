@@ -25,7 +25,7 @@ spec:
     keepHistory: false
   dependsOn:
     - name: nginx-external
-      namespace: networking
+      namespace: network
   values:
     controllers:
       main:
