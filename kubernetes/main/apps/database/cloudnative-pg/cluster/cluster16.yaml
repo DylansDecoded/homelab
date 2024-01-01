@@ -6,10 +6,10 @@ metadata:
   name: postgres16
 spec:
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.1-8
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.1-12
   primaryUpdateStrategy: unsupervised
   storage:
-    size: 20Gi
+    size: 10Gi
     storageClass: local-hostpath
   superuserSecret:
     name: cloudnative-pg-secret
@@ -31,6 +31,12 @@ spec:
       memory: "2Gi"
   monitoring:
     enablePodMonitor: true
+    podMonitorMetricRelabelings:
+      - sourceLabels: ["cluster"]
+        targetLabel: cnpg_cluster
+        action: replace
+      - regex: cluster
+        action: labeldrop
   backup:
     retentionPolicy: 30d
     barmanObjectStore:
@@ -41,7 +47,7 @@ spec:
         maxParallel: 8
       destinationPath: s3://cloudnative-pg/
       endpointURL: http://10.1.30.200:9000
-      serverName: postgres16-v2
+      serverName: &currentCluster postgres16-v2
       s3Credentials:
         accessKeyId:
           name: cloudnative-pg-secret
