@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.3.0
+      version: 2.4.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -29,8 +29,6 @@ spec:
       namespace: home-automation
     - name: longhorn
       namespace: longhorn-system
-    # - name: volsync
-    #   namespace: storage
   values:
     controllers:
       main:
@@ -40,10 +38,9 @@ spec:
           main:
             image:
               repository: ghcr.io/koenkk/zigbee2mqtt
-              tag: 1.33.2
-            securityContext:
-              privileged: true
+              tag: v1.35.0@sha256:11484861c807cc7920bfb034f772d6bc28645ddbc5291f67919868ad0c1cd92e
             env:
+              TZ: America/New_York
               ZIGBEE2MQTT_DATA: /config
               ZIGBEE2MQTT_CONFIG_ADVANCED_HOMEASSISTANT_DISCOVERY_TOPIC: homeassistant
               ZIGBEE2MQTT_CONFIG_ADVANCED_HOMEASSISTANT_LEGACY_ENTITY_ATTRIBUTES: "false"
@@ -51,59 +48,58 @@ spec:
               ZIGBEE2MQTT_CONFIG_ADVANCED_HOMEASSISTANT_STATUS_TOPIC: homeassistant/status
               ZIGBEE2MQTT_CONFIG_ADVANCED_LAST_SEEN: ISO_8601
               ZIGBEE2MQTT_CONFIG_ADVANCED_LEGACY_API: "false"
-              ZIGBEE2MQTT_CONFIG_ADVANCED_LOG_LEVEL: info
+              ZIGBEE2MQTT_CONFIG_ADVANCED_LEGACY_AVAILABILITY_PAYLOAD: "false"
+              ZIGBEE2MQTT_CONFIG_ADVANCED_LOG_LEVEL: info # debug
               ZIGBEE2MQTT_CONFIG_ADVANCED_LOG_OUTPUT: '["console"]'
               ZIGBEE2MQTT_CONFIG_AVAILABILITY_ACTIVE_TIMEOUT: 60
               ZIGBEE2MQTT_CONFIG_AVAILABILITY_PASSIVE_TIMEOUT: 2000
               ZIGBEE2MQTT_CONFIG_DEVICE_OPTIONS_LEGACY: "false"
               ZIGBEE2MQTT_CONFIG_DEVICE_OPTIONS_RETAIN: "true"
               ZIGBEE2MQTT_CONFIG_EXPERIMENTAL_NEW_API: "true"
+              ZIGBEE2MQTT_CONFIG_FRONTEND_PORT: &port 80
+              ZIGBEE2MQTT_CONFIG_FRONTEND_URL: https://zigbee.robsonhome.cloud
               ZIGBEE2MQTT_CONFIG_HOMEASSISTANT: "true"
-              ZIGBEE2MQTT_CONFIG_MQTT_BASE_TOPIC: zigbee2mqtt
               ZIGBEE2MQTT_CONFIG_MQTT_INCLUDE_DEVICE_INFORMATION: "true"
               ZIGBEE2MQTT_CONFIG_MQTT_KEEPALIVE: 60
               ZIGBEE2MQTT_CONFIG_MQTT_REJECT_UNAUTHORIZED: "true"
-              ZIGBEE2MQTT_CONFIG_MQTT_SERVER: mqtt://mosquitto.home-automation.svc.cluster.local
+              ZIGBEE2MQTT_CONFIG_MQTT_SERVER: mqtt://mosquitto.default.svc.cluster.local
               ZIGBEE2MQTT_CONFIG_MQTT_VERSION: 5
               ZIGBEE2MQTT_CONFIG_PERMIT_JOIN: "false"
               ZIGBEE2MQTT_CONFIG_SERIAL_BAUDRATE: 115200
-              ZIGBEE2MQTT_CONFIG_SERIAL_DISABLE_LED: false
-              ZIGBEE2MQTT_CONFIG_SERIAL_PORT: /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_e4ef47605298ec11b657aad044d80d13-if00-port0
+              ZIGBEE2MQTT_CONFIG_SERIAL_DISABLE_LED: "false"
+              ZIGBEE2MQTT_CONFIG_SERIAL_PORT: tcp://10.1.30.99:20108
             envFrom:
               - secretRef:
                   name: zigbee2mqtt-secret
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
             resources:
-              requests:
-                cpu: 10m
-                memory: 128Mi
-              limits:
+              limits: &resources
                 memory: 512Mi
+              requests:
+                <<: *resources
+                cpu: 10m
         pod:
           securityContext:
-            privileged: true
-          nodeSelector:
-            sonoff.feature.node.kubernetes.io/zigbee: "true"
+            runAsUser: 568
+            runAsGroup: 568
+            runAsNonRoot: true
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
     service:
       main:
         ports:
           http:
-            port: 8080
-          metrics:
-            enabled: true
-            port: 9000
+            port: *port
 
     ingress:
       main:
         enabled: true
         className: internal
         hosts:
-          - host: &host "{{ .Release.Name }}.robsonhome.cloud"
-            paths:
-              - path: /
-                service:
-                  name: main
-                  port: http
-          - host: &customHost "zigbee.robsonhome.cloud"
+          - host: &host "zigbee.robsonhome.cloud"
             paths:
               - path: /
                 service:
@@ -112,18 +108,8 @@ spec:
         tls:
           - hosts:
               - *host
-              - *customHost
 
     persistence:
       config:
         enabled: true
         existingClaim: zigbee2mqtt
-        globalMounts:
-          - path: /config
-      usb:
-        enabled: true
-        type: hostPath
-        hostPath: /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_e4ef47605298ec11b657aad044d80d13-if00-port0
-        hostPathType: CharDevice
-        globalMounts:
-          - path: /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_e4ef47605298ec11b657aad044d80d13-if00-port0

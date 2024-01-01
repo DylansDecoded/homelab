@@ -20,7 +20,6 @@ spec:
   wait: false
   dependsOn:
     - name: external-secrets-stores
-    - name: node-feature-discovery-rules
   # postBuild:
   #   substitute:
   #     APP: *app
