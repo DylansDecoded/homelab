@@ -113,3 +113,5 @@ spec:
       config:
         enabled: true
         existingClaim: zigbee2mqtt
+        globalMounts:
+          - path: /config
