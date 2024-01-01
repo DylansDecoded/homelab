@@ -1,5 +1,5 @@
 ---
-- name: Setup default user
+- name: Configure Default User
   block:
     - name: Create the default user
       user:
@@ -24,9 +24,15 @@
         validate: "visudo -cf %s"
         backup: yes
 
+    - name: Create the .ssh directory
+      command: "mkdir -p /home/{{default_user}}/.ssh"
+
+    - name: Create the authorized_keys file
+      command: "touch /home/{{default_user}}/.ssh/authorized_keys"
+
     - name: Copy authorized keys
       copy:
-        src: files/authorized_keys
+        src: files/ssh/authorized_keys
         dest: "/home/{{default_user}}/.ssh/authorized_keys"
         owner: "{{default_user}}"
         group: "{{default_user}}"

@@ -1,5 +1,5 @@
 ---
-- name: Unattended-upgrades
+- name: Configure Unattended-upgrades
   block:
     - name: Install unattended-upgrades
       apt:

@@ -31,17 +31,13 @@
             state: present
 
     - name: Configure Default User
-      include_task: tasks/configure_default_user.yaml
+      include_tasks: tasks/configure_default_user.yaml
 
     - name: Configure SSH
-      include_task: tasks/configure_ssh.yaml
+      include_tasks: tasks/configure_ssh.yaml
 
     - name: Configure unattended-upgrades
-      include_task: tasks/unattended_upgrades.yaml
-
-
-
-
+      include_tasks: tasks/configure_unattended_upgrades.yaml
 
   handlers:
   - name: reboot

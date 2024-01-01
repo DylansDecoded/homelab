@@ -1,0 +1,35 @@
+---
+- name: Setup Raspberry Pi Servers
+  hosts: pi3s
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  tasks:
+    - name: Configure defaults
+      block:
+        - name: Check for default user
+          stat:
+            path: /home/{{ default_user }}
+          register: default_user
+        - name: Create new user if not found ({{ default_user }})
+          user:
+            name: "{{ default_user }}"
+            shell: /bin/bash
+            password: "{{ default_user_password | password_hash('sha512') }}"
+            groups: sudo
+            append: yes
+            state: present
+          when: default_user.stat.exists == False
+        - name: Add default user to sudoers
+          lineinfile:
+            dest: /etc/sudoers
+            line: "{{ default_user }} ALL=(ALL) NOPASSWD: ALL"
+            validate: 'visudo -cf %s'
+          when: default_user.stat.exists == True
+
+        - name: Update & Upgrade apt
+          apt:
+            update_cache: yes
+          when: ansible_os_family == 'Debian'
+
+

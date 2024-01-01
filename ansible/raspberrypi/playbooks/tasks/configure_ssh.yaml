@@ -1,14 +1,13 @@
 ---
-- name: Setup SSH
+- name: Configure SSH
   block:
     - name: Copy sshd_config
       template:
-        src: templates/etc/ssh/sshd_config.j2
+        src: templates/sshd_conf.j2
         dest: /etc/ssh/sshd_config
         owner: root
         group: root
         mode: 0644
-        backup: yes
 
     - name: Restart sshd service
       service:

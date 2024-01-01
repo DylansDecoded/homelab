@@ -1,5 +1,0 @@
----
-# vars file for common
-reboot_offset: 15m
-install_time: 03:30
-reboot_time: 04:00
