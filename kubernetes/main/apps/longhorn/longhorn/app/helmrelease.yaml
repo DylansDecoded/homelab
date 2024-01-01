@@ -33,7 +33,7 @@ spec:
       defaultClassReplicaCount: 2
     defaultSettings:
       defaultDataPath: /mnt/data
-      backupTarget: s3://longhorn@us-east-1/
+      backupTarget: s3://longhorn@us-east-1/backups
       backupTargetCredentialSecret: longhorn-backup-secret
       defaultReplicaCount: 2
       defaultLonghornStaticStorageClass: longhorn
