@@ -34,13 +34,13 @@ kubernetes:
     longhorn_nodes:
       hosts:
         k3s-pve-worker-01:
-          ansible_host: 10.1.30.34
           ssd_disks: /dev/sdb
+          ansible_host: 10.1.30.34
 
         k3s-pve-worker-02:
-          ansible_host: 10.1.30.35
           ssd_disks: /dev/sdb
+          ansible_host: 10.1.30.35
 
         k3s-pi4-worker-01:
-          ansible_host: 10.1.30.36
           ssd_disks: /dev/sda
+          ansible_host: 10.1.30.36
