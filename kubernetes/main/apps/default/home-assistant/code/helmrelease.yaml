@@ -83,3 +83,5 @@ spec:
       config:
         enabled: true
         existingClaim: home-assistant
+        globalMounts:
+          - name: config
