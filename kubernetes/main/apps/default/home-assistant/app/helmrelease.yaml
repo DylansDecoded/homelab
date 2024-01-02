@@ -96,5 +96,8 @@ spec:
       config:
         enabled: true
         existingClaim: home-assistant
+        globalMounts:
+          - name: config
+            mountPath: /config
       tmp:
         type: emptyDir
