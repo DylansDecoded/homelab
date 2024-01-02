@@ -73,21 +73,17 @@ spec:
             port: *port
           websocket:
             port: 3000
+
     serviceMonitor:
       main:
         enabled: true # requires https://github.com/kvaster/zwavejs-prom
+
     ingress:
       main:
         enabled: true
         className: internal
         hosts:
-          - host: &host "{{ .Release.Name }}.robsonhome.cloud"
-            paths:
-              - path: /
-                service:
-                  name: main
-                  port: http
-          - host: &customHost "zwave.robsonhome.cloud"
+          - host: &host "zwave.robsonhome.cloud"
             paths:
               - path: /
                 service:
@@ -96,7 +92,6 @@ spec:
         tls:
           - hosts:
               - *host
-              - *customHost
     persistence:
       config:
         enabled: true
