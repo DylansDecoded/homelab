@@ -17,8 +17,9 @@ resources:
   # - ./media-browser/ks.yaml
   # - ./miniflux/ks.yaml
   - ./mosquitto/ks.yaml
+  - ./node-red/ks.yaml
   # - ./overseerr/ks.yaml
-  # - ./plex/ks.yaml
+  - ./plex/ks.yaml
   # - ./prowlarr/ks.yaml
   # - ./qbittorrent/ks.yaml
   # - ./radarr/ks.yaml
@@ -26,10 +27,10 @@ resources:
   # - ./rtlamr2mqtt/ks.yaml
   # - ./sabnzbd/ks.yaml
   # - ./shlink/ks.yaml
-  # - ./smtp-relay/ks.yaml
+  - ./smtp-relay/ks.yaml
   # - ./sonarr/ks.yaml
   # - ./tautulli/ks.yaml
   # - ./thelounge/ks.yaml
   # - ./unpackerr/ks.yaml
-  # - ./zigbee2mqtt/ks.yaml
+  - ./zigbee2mqtt/ks.yaml
   - ./zwave-js-ui/ks.yaml

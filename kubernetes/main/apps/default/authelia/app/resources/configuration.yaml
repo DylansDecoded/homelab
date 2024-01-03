@@ -33,7 +33,6 @@ session:
       domain: robsonhome.cloud
       authelia_url: https://auth.robsonhome.cloud
       default_redirection_url: https://robsonhome.cloud
-
   redis:
     host: redis.database.svc.cluster.local
     database_index: 14
@@ -50,10 +49,9 @@ session:
 notifier:
   disable_startup_check: true
   smtp:
-    address: "smtp://protonmail.ch:587"
-    username: "${AUTHELIA_NOTIFIER_SMTP_USERNAME}"
-    password: "${AUTHELIA_NOTIFIER_SMTP_PASSWORD}"
-    sender: "${AUTHELIA_NOTIFIER_SMTP_SENDER}"
+    address: smtp-relay.default.svc.cluster.local:25
+    sender: Authelia <authelia@buhl.casa>
+    disable_require_tls: true
 
 totp:
   disable: false
@@ -75,33 +73,17 @@ access_control:
 identity_providers:
   oidc:
     cors:
-      endpoints:
-        ["authorization", "token", "revocation", "introspection", "userinfo"]
+      endpoints: ["authorization", "token", "revocation", "introspection"]
       allowed_origins_from_client_redirect_uris: true
     clients:
-      - id: nodered
+      - id: node-red
         description: Node-RED
-        secret: ${NODE_RED_OAUTH_CLIENT_SECRET}
-        public: false
-        authorization_policy: two_factor
-        pre_configured_consent_duration: 1y
-        scopes:
-          - openid
-          - profile
-          - groups
-          - email
-        redirect_uris:
-          - https://nr.robsonhome.cloud/auth/strategy/callback
-          - https://nodered.robsonhome.cloud/auth/strategy/callback
-        userinfo_signed_response_alg: none
-      - id: weave-gitops
-        description: Weave GitOps
-        secret: "${WEAVE_GITOPS_OAUTH_CLIENT_SECRET}"
+        secret: "${NODE_RED_OAUTH_CLIENT_SECRET}"
         public: false
         authorization_policy: two_factor
         pre_configured_consent_duration: 1y
         scopes: ["openid", "profile", "groups", "email"]
-        redirect_uris: ["https://gitops.robsonhome.cloud/oauth2/oidc/callback"]
+        redirect_uris: ["https://nr.robsonhome.cloud/auth/oidc/callback"]
         userinfo_signed_response_alg: none
       - id: grafana
         description: Grafana
@@ -122,3 +104,12 @@ identity_providers:
         redirect_uris:
           ["https://miniflux.robsonhome.cloud/oauth2/oidc/callback"]
         userinfo_signed_response_alg: none
+      - id: weave-gitops
+        description: Weave GitOps
+        secret: "${WEAVE_GITOPS_OAUTH_CLIENT_SECRET}"
+        public: false
+        authorization_policy: two_factor
+        pre_configured_consent_duration: 1y
+        scopes: ["openid", "profile", "groups", "email"]
+        redirect_uris: ["https://wego.robsonhome.cloud/oauth2/callback"]
+        userinfo_signing_algorithm: none
