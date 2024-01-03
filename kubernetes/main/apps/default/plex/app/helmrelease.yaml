@@ -36,12 +36,10 @@ spec:
         containers:
           main:
             image:
-              repository: docker.io/linuxserver/plex
-              tag: 1.32.8
+              repository: ghcr.io/onedr0p/plex7639-fb6452ebf@sha256:637fe10cef736f249d96cb004c12f81646c81ca17ddce22374ea8782aa6646c2
+              tag: 1.32.8.7639-fb6452ebf@sha256:637fe10cef736f249d96cb004c12f81646c81ca17ddce22374ea8782aa6646c2
             env:
               TZ: America/New_York
-              NVIDIA_VISIBLE_DEVICES: all
-              NVIDIA_DRIVER_CAPABILITIES: compute,video,utility
             probes:
               liveness: &probes
                 enabled: true
@@ -61,6 +59,13 @@ spec:
               allowPrivilegeEscalation: true
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
+            resources:
+              limits: &resources
+                nvidia.com/gpu: 1
+                memory: 16Gi
+              requests:
+                <<: *resources
+                cpu: 100m
         pod:
           nodeSelector:
             nvidia-gpu.feature.node.kubernetes.io/nvidia-gpu: "true"
@@ -75,7 +80,7 @@ spec:
       main:
         type: LoadBalancer
         annotations:
-          io.cilium/lb-ipam-ips: 10.1.30.250
+          io.cilium/lb-ipam-ips: 10.1.30.210
         ports:
           http:
             port: 32400
@@ -84,10 +89,10 @@ spec:
         enabled: true
         className: external
         annotations:
-          external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
+          external-dns.alpha.kubernetes.io/target: external.devbu.io
           nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         hosts:
-          - host: &host "plex.robsonhome.cloud"
+          - host: &host "{{ .Release.Name }}.devbu.io"
             paths:
               - path: /
                 service:
