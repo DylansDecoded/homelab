@@ -88,12 +88,14 @@ spec:
       data:
         enabled: true
         existingClaim: *app
-      settings:
+        advancedMounts:
+          main:
+            main:
+              - path: /data
+      config-file:
         type: configMap
         name: node-red-configmap
         globalMounts:
           - path: /data/settings.js
             subPath: settings.js
             readOnly: true
-      tmp:
-        type: emptyDir
