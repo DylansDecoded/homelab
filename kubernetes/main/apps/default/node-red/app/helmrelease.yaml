@@ -40,6 +40,13 @@ spec:
             image:
               repository: docker.io/nodered/node-red
               tag: 3.1.3
+            env:
+              TZ: ${TIMEZONE}
+              # NODE_RED_OAUTH_ISSUER_URL: https://auth.robsonhome.cloud
+              # NODE_RED_OAUTH_AUTH_URL: https://auth.robsonhome.cloud/api/oidc/authorization
+              # NODE_RED_OAUTH_CALLBACK_URL: https://nr.robsonhome.cloud/auth/oidc/callback
+              # NODE_RED_OAUTH_TOKEN_URL: http://auth.robsonhome.cloud/api/oidc/token
+              # NODE_RED_OAUTH_USER_URL: http://auth.robsonhome.cloud/api/oidc/userinfo
             envFrom:
               - secretRef:
                   name: node-red-secret
@@ -72,7 +79,6 @@ spec:
         tls:
           - hosts:
               - *host
-
     persistence:
       data:
         enabled: true
