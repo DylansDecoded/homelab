@@ -89,10 +89,10 @@ spec:
         enabled: true
         className: external
         annotations:
-          external-dns.alpha.kubernetes.io/target: external.devbu.io
+          external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
           nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         hosts:
-          - host: &host "{{ .Release.Name }}.devbu.io"
+          - host: &host "{{ .Release.Name }}.robsonhome.cloud"
             paths:
               - path: /
                 service:
