@@ -76,10 +76,8 @@ spec:
     persistence:
       data:
         enabled: true
-        existingClaim: node-red
-        globalMounts:
-          - path: /data
-      config-file:
+        existingClaim: *app
+      settings:
         type: configMap
         name: node-red-configmap
         globalMounts:
