@@ -77,10 +77,8 @@ spec:
       data:
         enabled: true
         existingClaim: node-red
-        advancedMounts:
-          main:
-            main:
-              - path: /data
+        globalMounts:
+          - path: /data
       config-file:
         type: configMap
         name: node-red-configmap
