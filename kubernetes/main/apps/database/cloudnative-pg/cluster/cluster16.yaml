@@ -9,7 +9,7 @@ spec:
   imageName: ghcr.io/cloudnative-pg/postgresql:16.1-12
   primaryUpdateStrategy: unsupervised
   storage:
-    size: 10Gi
+    size: 5Gi
     storageClass: local-hostpath
   superuserSecret:
     name: cloudnative-pg-secret
@@ -46,8 +46,8 @@ spec:
         compression: bzip2
         maxParallel: 8
       destinationPath: s3://cloudnative-pg/
-      endpointURL: http://10.1.30.200:9000
-      serverName: &currentCluster postgres16-v2
+      endpointURL: https://s3.turbo.ac
+      serverName: postgres16-v2
       s3Credentials:
         accessKeyId:
           name: cloudnative-pg-secret
@@ -63,7 +63,7 @@ spec:
           compression: bzip2
           maxParallel: 8
         destinationPath: s3://cloudnative-pg/
-        endpointURL: http://10.1.30.200:9000
+        endpointURL: https://s3.turbo.ac
         s3Credentials:
           accessKeyId:
             name: cloudnative-pg-secret
