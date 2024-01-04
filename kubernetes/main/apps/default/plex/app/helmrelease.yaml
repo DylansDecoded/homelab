@@ -80,7 +80,7 @@ spec:
       main:
         type: LoadBalancer
         annotations:
-          io.cilium/lb-ipam-ips: 10.1.30.245
+          io.cilium/lb-ipam-ips: 10.1.30.240
         ports:
           http:
             port: 32400
@@ -90,7 +90,7 @@ spec:
         className: external
         annotations:
           external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
-          # nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         hosts:
           - host: &host "{{ .Release.Name }}.robsonhome.cloud"
             paths:
