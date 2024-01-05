@@ -129,22 +129,6 @@ spec:
             editable: true
             options:
               path: /var/lib/grafana/dashboards/omada
-          - name: thanos
-            orgId: 1
-            folder: Thanos
-            type: file
-            disableDeletion: false
-            editable: true
-            options:
-              path: /var/lib/grafana/dashboards/thanos
-          # - name: unifi
-          #   orgId: 1
-          #   folder: Unifi
-          #   type: file
-          #   disableDeletion: false
-          #   editable: true
-          #   options:
-          #     path: /var/lib/grafana/dashboards/unifi
     datasources:
       datasources.yaml:
         apiVersion: 1
@@ -158,7 +142,6 @@ spec:
             uid: prometheus
             access: proxy
             url: http://thanos-query-frontend.monitoring.svc.cluster.local:9090
-            # url: http://vmselect-victoria-metrics.monitoring.svc.cluster.local:8481/select/0/prometheus
             jsonData:
               prometheusType: Thanos # Prometheus for victoria-metrics
             isDefault: true
