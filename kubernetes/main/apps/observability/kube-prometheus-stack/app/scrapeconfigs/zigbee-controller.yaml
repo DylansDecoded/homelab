@@ -3,9 +3,8 @@
 apiVersion: monitoring.coreos.com/v1alpha1
 kind: ScrapeConfig
 metadata:
-  name: node-exporter
+  name: zigbee-controller
 spec:
   staticConfigs:
-    - targets:
-        - pfs.robsonhome.cloud:9100
+    - targets: ["zigbee-controller.robsonhome.cloud:9100"]
   metricsPath: /metrics
