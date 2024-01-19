@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.4.0
+      version: 2.5.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -51,11 +51,10 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
             resources:
-              limits: &resources
-                memory: 16Mi
               requests:
-                <<: *resources
                 cpu: 10m
+              limits:
+                memory: 16Mi
         pod:
           securityContext:
             runAsUser: 568
