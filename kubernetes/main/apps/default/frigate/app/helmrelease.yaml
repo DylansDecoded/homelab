@@ -64,11 +64,12 @@ spec:
             securityContext:
               privileged: true
             resources:
-              requests:
-                cpu: 100m
-              limits:
+              limits: &resources
                 nvidia.com/gpu: 1
                 memory: 2Gi
+              requests:
+                <<: *resources
+                cpu: 100m
         pod:
           affinity:
             podAntiAffinity:
