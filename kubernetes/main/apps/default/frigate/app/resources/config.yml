@@ -1,0 +1,131 @@
+---
+logger:
+  default: info
+  # logs:
+  #   frigate.record: debug
+
+mqtt:
+  host: mosquitto.default.svc.cluster.local
+  topic_prefix: frigate
+  user: "{FRIGATE_MQTT_USERNAME}"
+  password: "{FRIGATE_MQTT_PASSWORD}"
+
+database:
+  path: /data/frigate.db
+
+# detectors:
+#   coral:
+#     type: edgetpu
+#     device: usb
+
+ffmpeg:
+  hwaccel_args:
+    [
+      "-hwaccel",
+      "vaapi",
+      "-hwaccel_device",
+      "/dev/dri/renderD128",
+      "-hwaccel_output_format",
+      "yuv420p",
+    ]
+  input_args:
+    [
+      "-avoid_negative_ts",
+      "make_zero",
+      "-fflags",
+      "+genpts+discardcorrupt",
+      "-flags low_delay",
+      "-strict",
+      "experimental",
+      "-analyzeduration",
+      "1000M",
+      "-probesize",
+      "1000M",
+      "-rw_timeout",
+      "5000000",
+    ]
+  output_args:
+    record:
+      [
+        "-f",
+        "segment",
+        "-segment_time",
+        "10",
+        "-segment_format",
+        "mp4",
+        "-reset_timestamps",
+        "1",
+        "-strftime",
+        "1",
+        "-c",
+        "copy",
+      ]
+
+snapshots:
+  enabled: true
+  timestamp: false
+  bounding_box: true
+  retain:
+    default: 2
+
+record:
+  enabled: true
+  retain:
+    days: 2
+    mode: all
+  events:
+    retain:
+      default: 2
+      mode: active_objects
+
+objects:
+  track: ["person"]
+  filters:
+    person:
+      min_area: 5000
+      max_area: 100000
+      threshold: 0.7
+
+go2rtc:
+  streams:
+    frigate_driveway_floodlight_cam:
+      - "{REOLINK_DRIVEWAY_FLOODLIGHT_CAM_FFMEPG_MAIN}"
+    frigate_driveway_floodlight_cam_sub:
+      - "{REOLINK_DRIVEWAY_FLOODLIGHT_CAM_FFMEPG_SUB}"
+    frigate_backporch_turret_cam:
+      - "{REOLINK_BACKPORCH_TURRET_CAM_FFMEPG_MAIN}"
+    frigate_backporch_turret_cam_sub:
+      - "{REOLINK_BACKPORCH_TURRET_CAM_FFMEPG_SUB}"
+
+cameras:
+  frigate_driveway_floodlight_cam:
+    ffmpeg:
+      inputs:
+        - path: rtsp://localhost:8554/frigate_driveway_floodlight_cam
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://localhost:8554/frigate_driveway_floodlight_cam_sub
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+        - path: rtsp://localhost:8554/frigate_driveway_floodlight_cam_sub?audio
+          input_args: preset-rtsp-restream
+          roles:
+            - audio
+
+  frigate_backporch_turret_cam:
+    ffmpeg:
+      inputs:
+        - path: rtsp://localhost:8554/frigate_backporch_turret_cam
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+        - path: rtsp://localhost:8554/frigate_backporch_turret_cam_sub
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+        - path: rtsp://localhost:8554/frigate_backporch_turret_cam_sub?audio
+          input_args: preset-rtsp-restream
+          roles:
+            - audio

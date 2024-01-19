@@ -48,6 +48,23 @@ tasks:
           msg: "Unable to decrypt sops secret",
           sh: "sops --decrypt {{.KUBERNETES_DIR}}/{{.cluster}}/flux/vars/cluster-secrets.secret.sops.env",
         }
+  kustomization-reconcile:
+    desc: Reconcile Flux kustomization for a cluster
+    summary: |
+      Args:
+        ks: Kustomization to reconcile (required)
+
+    cmd: |
+      flux reconcile kustomization {{.ks}} --with-source
+
+  helmrelease-reconcile:
+    desc: Reconcile Flux resources for a cluster
+    summary: |
+      Args:
+        ns: Namespace the HelmRelease exists in (default: flux-system)
+        hr: HelmRelease to reconcile (required)
+    cmd: |
+      flux reconcile helmrelease -n {{.ns}} {{.hr}} --with-source
 
   apply:
     desc: Apply a Flux Kustomization resource for a cluster
