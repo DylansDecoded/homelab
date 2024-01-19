@@ -19,6 +19,7 @@ database:
 #     device: usb
 
 ffmpeg:
+  global_args: -hide_banner -loglevel warning -threads 2
   hwaccel_args:
     [
       "-hwaccel",
@@ -28,25 +29,9 @@ ffmpeg:
       "-hwaccel_output_format",
       "yuv420p",
     ]
-
-  input_args: -avoid_negative_ts make_zero -fflags +genpts+discardcorrupt -flags low_delay -strict experimental -analyzeduration 1000M -probesize 1000M -rw_timeout 5000000
-
+  input_args: preset-rtsp-generic
   output_args:
-    record:
-      [
-        "-f",
-        "segment",
-        "-segment_time",
-        "10",
-        "-segment_format",
-        "mp4",
-        "-reset_timestamps",
-        "1",
-        "-strftime",
-        "1",
-        "-c",
-        "copy",
-      ]
+    record: preset-record-generic
 
 snapshots:
   enabled: true
@@ -65,13 +50,13 @@ record:
       default: 2
       mode: active_objects
 
-objects:
-  track: ["person"]
-  filters:
-    person:
-      min_area: 5000
-      max_area: 100000
-      threshold: 0.7
+# objects:
+#   track: ["person"]
+#   filters:
+#     person:
+#       min_area: 5000
+#       max_area: 100000
+#       threshold: 0.7
 
 go2rtc:
   streams:
@@ -91,15 +76,15 @@ cameras:
   frigate_driveway_floodlight_cam:
     ffmpeg:
       inputs:
-        - path: rtsp://localhost:8554/frigate_driveway_floodlight_cam
+        - path: rtsp://127.0.0.1:8554/frigate_driveway_floodlight_cam
           input_args: preset-rtsp-restream
           roles:
             - record
-        - path: rtsp://localhost:8554/frigate_driveway_floodlight_cam_sub
+        - path: rtsp://127.0.0.1:8554/frigate_driveway_floodlight_cam_sub
           input_args: preset-rtsp-restream
           roles:
             - detect
-        - path: rtsp://localhost:8554/frigate_driveway_floodlight_cam_sub?audio
+        - path: rtsp://127.0.0.1:8554/frigate_driveway_floodlight_cam_sub?audio
           input_args: preset-rtsp-restream
           roles:
             - audio
@@ -107,15 +92,15 @@ cameras:
   frigate_backporch_turret_cam:
     ffmpeg:
       inputs:
-        - path: rtsp://localhost:8554/frigate_backporch_turret_cam
+        - path: rtsp://127.0.0.1:8554/frigate_backporch_turret_cam
           input_args: preset-rtsp-restream
           roles:
             - record
-        - path: rtsp://localhost:8554/frigate_backporch_turret_cam_sub
+        - path: rtsp://127.0.0.1:8554/frigate_backporch_turret_cam_sub
           input_args: preset-rtsp-restream
           roles:
             - detect
-        - path: rtsp://localhost:8554/frigate_backporch_turret_cam_sub?audio
+        - path: rtsp://127.0.0.1:8554/frigate_backporch_turret_cam_sub?audio
           input_args: preset-rtsp-restream
           roles:
             - audio
