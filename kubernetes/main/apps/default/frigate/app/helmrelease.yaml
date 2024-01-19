@@ -80,7 +80,6 @@ spec:
                         values: ["plex"]
                   topologyKey: kubernetes.io/hostname
           nodeSelector:
-            # google.feature.node.kubernetes.io/coral: "true"
             nvidia-gpu.feature.node.kubernetes.io/nvidia-gpu: "true"
     service:
       main:
