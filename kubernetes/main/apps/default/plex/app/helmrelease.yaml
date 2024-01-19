@@ -67,15 +67,15 @@ spec:
                 <<: *resources
                 cpu: 100m
         pod:
-          affinity:
-            podAntiAffinity:
-              requiredDuringSchedulingIgnoredDuringExecution:
-                - labelSelector:
-                    matchExpressions:
-                      - key: app.kubernetes.io/name
-                        operator: In
-                        values: ["frigate"]
-                  topologyKey: kubernetes.io/hostname
+          # affinity:
+          #   podAntiAffinity:
+          #     requiredDuringSchedulingIgnoredDuringExecution:
+          #       - labelSelector:
+          #           matchExpressions:
+          #             - key: app.kubernetes.io/name
+          #               operator: In
+          #               values: ["frigate"]
+          #         topologyKey: kubernetes.io/hostname
           nodeSelector:
             nvidia-gpu.feature.node.kubernetes.io/nvidia-gpu: "true"
           securityContext:
