@@ -58,16 +58,16 @@ record:
 go2rtc:
   streams:
     frigate_driveway_floodlight_cam:
-      - "ffmpeg:http://10.1.90.4/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=admin&password={REOLINK_PASSWORD}#video=copy#audio=copy#audio=opus"
+      - "ffmpeg:http://10.1.90.4/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=admin&password=Senorita2!Rural!Plated#video=copy#audio=copy#audio=opus"
 
     frigate_driveway_floodlight_cam_sub:
-      - "ffmpeg:http://10.1.90.4/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=admin&password={REOLINK_PASSWORD}"
+      - "ffmpeg:http://10.1.90.4/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=admin&password=Senorita2!Rural!Plated"
 
     frigate_backporch_turret_cam:
-      - "ffmpeg:http://10.1.90.3/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=admin&password={REOLINK_PASSWORD}#video=copy#audio=copy#audio=opus"
+      - "ffmpeg:http://10.1.90.3/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=admin&password=Senorita2!Rural!Plated#video=copy#audio=copy#audio=opus"
 
     frigate_backporch_turret_cam_sub:
-      - "ffmpeg:http://10.1.90.3/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=admin&password={REOLINK_PASSWORD}"
+      - "ffmpeg:http://10.1.90.3/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=admin&password=Senorita2!Rural!Plated"
 
 cameras:
   frigate_driveway_floodlight_cam:
