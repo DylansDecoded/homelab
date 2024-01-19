@@ -74,22 +74,18 @@ cameras:
   frigate_driveway_floodlight_cam:
     ffmpeg:
       inputs:
-        - path: "http://10.1.90.4/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=admin&password={REOLINK_PASSWORD}#video=copy#audio=copy#audio=opus"
-          input_args: preset-http-reolink
-          roles:
-            - detect
-        - path: rtsp://127.0.0.1:8554/frigate_driveway_floodlight_cam_sub
-          input_args: preset-rtsp-generic
-          roles:
-            - detect
+        - path: rtsp://127.0.0.1:8554/frigate_driveway_floodlight_cam?video=copy&audio=aac
+          input_args: preset-rtsp-restream
+          roles: ["record"]
+        - path: rtsp://127.0.0.1:8554/frigate_driveway_floodlight_cam_sub?video=copy
+          input_args: preset-rtsp-restream
+          roles: ["detect"]
   frigate_backporch_turret_cam:
     ffmpeg:
       inputs:
-        - path: "http://10.1.90.3/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=admin&password={REOLINK_PASSWORD}#video=copy#audio=copy#audio=opus"
-          input_args: preset-http-reolink
-          roles:
-            - detect
-        - path: rtsp://127.0.0.1:8554/frigate_backporch_turret_cam_sub
-          input_args: preset-rtsp-generic
-          roles:
-            - record
+        - path: rtsp://127.0.0.1:8554/frigate_backporch_turret_cam?video=copy&audio=aac
+          input_args: preset-rtsp-restream
+          roles: ["record"]
+        - path: rtsp://127.0.0.1:8554/frigate_backporch_turret_cam_sub?video=copy
+          input_args: preset-rtsp-restream
+          roles: ["detect"]
