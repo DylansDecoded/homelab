@@ -28,22 +28,9 @@ ffmpeg:
       "-hwaccel_output_format",
       "yuv420p",
     ]
-  input_args:
-    [
-      "-avoid_negative_ts",
-      "make_zero",
-      "-fflags",
-      "+genpts+discardcorrupt",
-      "-flags low_delay",
-      "-strict",
-      "experimental",
-      "-analyzeduration",
-      "1000M",
-      "-probesize",
-      "1000M",
-      "-rw_timeout",
-      "5000000",
-    ]
+
+  input_args: -avoid_negative_ts make_zero -fflags +genpts+discardcorrupt -flags low_delay -strict experimental -analyzeduration 1000M -probesize 1000M -rw_timeout 5000000
+
   output_args:
     record:
       [
@@ -89,13 +76,16 @@ objects:
 go2rtc:
   streams:
     frigate_driveway_floodlight_cam:
-      - "{REOLINK_DRIVEWAY_FLOODLIGHT_CAM_FFMEPG_MAIN}"
+      - "ffmpeg:http://10.1.90.4/flv?port=1935&app=bcs&stream=channel0_main.bcs&user={REOLINK_USERNAME}&password={REOLINK_PASSWORD}#video=copy#audio=copy#audio=opus"
+
     frigate_driveway_floodlight_cam_sub:
-      - "{REOLINK_DRIVEWAY_FLOODLIGHT_CAM_FFMEPG_SUB}"
+      - "ffmpeg:http://10.1.90.4/flv?port=1935&app=bcs&stream=channel0_sub.bcs&user={REOLINK_USERNAME}&password={REOLINK_PASSWORD}#video=copy#audio=copy#audio=opus"
+
     frigate_backporch_turret_cam:
-      - "{REOLINK_BACKPORCH_TURRET_CAM_FFMEPG_MAIN}"
+      - "ffmpeg:http://10.1.90.3/flv?port=1935&app=bcs&stream=channel0_main.bcs&user={REOLINK_USERNAME}&password={REOLINK_PASSWORD}"
+
     frigate_backporch_turret_cam_sub:
-      - "{REOLINK_BACKPORCH_TURRET_CAM_FFMEPG_SUB}"
+      - "http://10.1.90.3/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user={REOLINK_USERNAME}&password={REOLINK_PASSWORD}"
 
 cameras:
   frigate_driveway_floodlight_cam:
