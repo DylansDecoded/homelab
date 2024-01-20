@@ -43,35 +43,35 @@ record:
 
 go2rtc:
   streams:
-      frigate_backporch_turret_cam:
+      reolink_backporch_turret_cam:
         - "ffmpeg:http://10.1.90.3/flv?port=1935&app=bcs&stream=channel0_main.bcs&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}#video=copy#audio=copy#audio=opus"
 
-    frigate_backporch_turret_cam_sub:
+    reolink_backporch_turret_cam_sub:
       - "ffmpeg:http://10.1.90.3/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}"
 
-    frigate_driveway_floodlight_cam:
+    reolink_driveway_floodlight_cam:
       - "ffmpeg:http://10.1.90.4/flv?port=1935&app=bcs&stream=channel0_main.bcs&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}#video=copy#audio=copy#audio=opus"
 
-    frigate_driveway_floodlight_cam_sub:
+    reolink_driveway_floodlight_cam_sub:
       - "ffmpeg:http://10.1.90.4/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}"
 
 cameras:
-  frigate_driveway_floodlight_cam:
+  reolink_driveway_floodlight_cam:
     ffmpeg:
       inputs:
-        - path: rtsp://127.0.0.1:8554/frigate_driveway_floodlight_cam?video=copy&audio=aac
+        - path: rtsp://127.0.0.1:8554/reolink_driveway_floodlight_cam?video=copy&audio=aac
           input_args: preset-rtsp-restream
           roles: ["record"]
-        - path: rtsp://127.0.0.1:8554/frigate_driveway_floodlight_cam_sub?video=copy
+        - path: rtsp://127.0.0.1:8554/reolink_driveway_floodlight_cam_sub?video=copy
           input_args: preset-rtsp-restream
           roles: ["detect"]
 
-  frigate_backporch_turret_cam:
+  reolink_backporch_turret_cam:
     ffmpeg:
       inputs:
-        - path: rtsp://127.0.0.1:8554/frigate_backporch_turret_cam?video=copy&audio=aac
+        - path: rtsp://127.0.0.1:8554/reolink_backporch_turret_cam?video=copy&audio=aac
           input_args: preset-rtsp-restream
           roles: ["record"]
-        - path: rtsp://127.0.0.1:8554/frigate_backporch_turret_cam_sub?video=copy
+        - path: rtsp://127.0.0.1:8554/reolink_backporch_turret_cam_sub?video=copy
           input_args: preset-rtsp-restream
           roles: ["detect"]
