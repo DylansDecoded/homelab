@@ -13,6 +13,8 @@ database:
 
 ffmpeg:
   global_args: -hide_banner -loglevel warning -threads 2
+  output_args:
+    record: preset-record-generic-audio-copy
 
 snapshots:
   enabled: true
@@ -40,18 +42,21 @@ record:
 #       threshold: 0.7
 
 go2rtc:
+  ffmpeg:
+    inputs:
   streams:
-    frigate_backporch_turret_cam:
-      - ffmpeg:http://10.1.90.3/flv?port=1935&app=bcs&stream=channel0_main.bcs&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}#video=copy#audio=copy#audio=opus
+    ffmpeg:
+      frigate_backporch_turret_cam:
+        - ffmpeg:rtsp://10.1.90.3/flv?port=554&app=bcs&stream=channel0_main.bcs&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}#video=copy#audio=copy#audio=opus
 
     frigate_backporch_turret_cam_sub:
-      - ffmpeg:http://10.1.90.3/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}
+      - ffmpeg:rtsp://10.1.90.3/flv?port=554&app=bcs&stream=channel0_ext.bcs&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}
 
     frigate_driveway_floodlight_cam:
-      - ffmpeg:http://10.1.90.4/flv?port=1935&app=bcs&stream=channel0_main.bcs&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}#video=copy#audio=copy#audio=opus
+      - ffmpeg:rtsp://10.1.90.4/flv?port=554&app=bcs&stream=channel0_main.bcs&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}#video=copy#audio=copy#audio=opus
 
     frigate_driveway_floodlight_cam_sub:
-      - ffmpeg:http://10.1.90.4/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}
+      - ffmpeg:rtsp://10.1.90.4/flv?port=554&app=bcs&stream=channel0_ext.bcs&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}
 
 cameras:
   frigate_driveway_floodlight_cam:
@@ -69,7 +74,9 @@ cameras:
       inputs:
         - path: rtsp://localhost:8554/frigate_backporch_turret_cam?video=copy&audio=aac
           input_args: preset-rtsp-restream
-          roles: ["record"]
+          roles:
+            - record
         - path: rtsp://localhost:8554/frigate_backporch_turret_cam_sub?video=copy
           input_args: preset-rtsp-restream
-          roles: ["detect"]
+          roles:
+            - detect
