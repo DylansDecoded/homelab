@@ -62,19 +62,19 @@ cameras:
   frigate_driveway_floodlight_cam:
     ffmpeg:
       inputs:
-        - path: rtsp://localhost:8554/frigate_driveway_floodlight_cam?video=copy&audio=aac
+        - path: rtsp://127.0.0.1:8554/frigate_driveway_floodlight_cam?video=copy&audio=aac
           input_args: preset-rtsp-restream
           roles: ["record"]
-        - path: rtsp://localhost:8554/frigate_driveway_floodlight_cam_sub?video=copy
+        - path: rtsp://127.0.0.1:8554/frigate_driveway_floodlight_cam_sub?video=copy
           input_args: preset-rtsp-restream
           roles: ["detect"]
 
   frigate_backporch_turret_cam:
     ffmpeg:
       inputs:
-        - path: rtsp://localhost:8554/frigate_backporch_turret_cam?video=copy&audio=aac
+        - path: rtsp://127.0.0.1:8554/frigate_backporch_turret_cam?video=copy&audio=aac
           input_args: preset-rtsp-restream
           roles: ["record"]
-        - path: rtsp://localhost:8554/frigate_backporch_turret_cam_sub?video=copy
+        - path: rtsp://127.0.0.1:8554/frigate_backporch_turret_cam_sub?video=copy
           input_args: preset-rtsp-restream
           roles: ["detect"]
