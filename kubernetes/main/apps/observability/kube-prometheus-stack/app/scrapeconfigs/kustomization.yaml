@@ -6,4 +6,4 @@ resources:
   - ./kube-vip.yaml
   # - ./minio.yaml
   - ./node-exporter.yaml
-  - ./zigbee-controller.yaml
+  # - ./zigbee-controller.yaml

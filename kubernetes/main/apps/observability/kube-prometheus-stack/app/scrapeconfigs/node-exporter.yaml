@@ -7,5 +7,5 @@ metadata:
 spec:
   staticConfigs:
     - targets:
-        - pfs.robsonhome.cloud:9100
+        - 10.1.1.1:9100
   metricsPath: /metrics
