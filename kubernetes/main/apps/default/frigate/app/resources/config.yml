@@ -74,9 +74,7 @@ cameras:
       inputs:
         - path: rtsp://localhost:8554/frigate_backporch_turret_cam?video=copy&audio=aac
           input_args: preset-rtsp-restream
-          roles:
-            - record
+          roles: ["record"]
         - path: rtsp://localhost:8554/frigate_backporch_turret_cam_sub?video=copy
           input_args: preset-rtsp-restream
-          roles:
-            - detect
+          roles: ["detect"]
