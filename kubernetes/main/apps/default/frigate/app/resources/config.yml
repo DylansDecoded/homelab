@@ -11,10 +11,11 @@ mqtt:
 database:
   path: /data/frigate.db
 
-# ffmpeg:
-#   global_args: -hide_banner -loglevel warning -threads 2
-#   output_args:
-#     record: preset-record-generic-audio-copy
+ffmpeg:
+  global_args: -hide_banner -loglevel warning -threads 2
+  hwaccel_args: preset-nvidia-h264
+  output_args:
+    record: preset-record-generic-audio-copy
 
 snapshots:
   enabled: true
