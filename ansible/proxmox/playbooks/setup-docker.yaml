@@ -1,0 +1,9 @@
+- hosts: pxe
+  roles:
+    - role: geerlingguy.docker
+      become: true
+      vars:
+        docker_install_compose_plugin: "{{ ansible_os_family == 'Ubuntu' }}"
+        docker_users:
+          - "{{ me.user }}"
+    - netbootxyz

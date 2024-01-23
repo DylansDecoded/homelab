@@ -1,17 +1,17 @@
 ---
-# https://github.com/k3s-io/k3s/issues/1971
+# Ref: https://github.com/k3s-io/k3s/issues/1971
 - name: Cruft
   block:
-    - name: Cruft | Get list of custom mantifests
-      find:
+    - name: Cruft | Get list of custom manifests
+      ansible.builtin.find:
         paths: "{{ k3s_server_manifests_dir }}"
         file_type: file
         use_regex: true
         patterns: ["^custom-.*"]
       register: custom_manifest
 
-    - name: Cruft | Delete custom mantifests
-      file:
+    - name: Cruft | Delete custom manifests
+      ansible.builtin.file:
         path: "{{ item.path }}"
         state: absent
       loop: "{{ custom_manifest.files }}"

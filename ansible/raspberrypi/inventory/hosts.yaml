@@ -16,7 +16,7 @@ raspberrypi:
           ansible_user: dylanrobson
         k3s-pi4-worker-01:
           ansible_host: 10.1.30.36
-          ansible_user: dylan
+          ansible_user: dylanrobson
         k3s-pi4-worker-02:
           ansible_host: 10.1.30.37
           ansible_user: dylanrobson

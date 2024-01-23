@@ -49,12 +49,6 @@
       loop:
         - { name: cilium, kind: HelmChart, namespace: kube-system }
         - { name: coredns, kind: HelmChart, namespace: kube-system }
-        - { name: policy, kind: CiliumL2AnnouncementPolicy }
-        - { name: pool, kind: CiliumLoadBalancerIPPool }
-        - { name: podmonitors.monitoring.coreos.com, kind: CustomResourceDefinition }
-        - { name: prometheusrules.monitoring.coreos.com, kind: CustomResourceDefinition }
-        - { name: scrapeconfigs.monitoring.coreos.com, kind: CustomResourceDefinition }
-        - { name: servicemonitors.monitoring.coreos.com, kind: CustomResourceDefinition }
 
     - name: Coredns
       when: k3s_primary_control_node
@@ -68,15 +62,33 @@
       when: k3s_primary_control_node
       include_tasks: tasks/cruft.yaml
 
-    - name: Stale Containers
-      include_tasks: tasks/stale_containers.yaml
-      vars:
-        stale_containers_state: disabled
+    # - name: Helm controller
+    #   notify: Restart Kubernetes
+    #   when: k3s_control_node
+    #   include_tasks: tasks/helm_controller.yaml
 
-    - name: Longhorn (defaults)
-      delegate_to: localhost
+    # TODO: Replace this with embedded spegel in the future
+    - name: Copy custom containerd configuration
+      notify: Restart Kubernetes
+      copy:
+        src: files/config.toml.tmpl
+        dest: /var/lib/rancher/k3s/agent/etc/containerd/config.toml.tmpl
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Label Longhorn nodes
       when: inventory_hostname in groups['longhorn_nodes']
-      include_tasks: tasks/longhorn.yaml
+      command: kubectl label node --overwrite {{ inventory_hostname }} node.longhorn.io/create-default-disk=true
+
+  handlers:
+    - name: Restart Kubernetes
+      systemd:
+        name: k3s
+        state: restarted
+
+
+
 
 
     # - name: Helm controller

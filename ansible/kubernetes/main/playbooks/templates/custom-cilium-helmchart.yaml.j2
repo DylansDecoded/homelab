@@ -9,44 +9,84 @@ spec:
   # renovate: datasource=helm
   repo: https://helm.cilium.io/
   chart: cilium
-  version: 1.14.5
+  version: 1.14.6
   targetNamespace: kube-system
   bootstrap: true
   valuesContent: |-
-    autoDirectNodeRoutes: true
+    bgpControlPlane:
+      enabled: true
     bpf:
       masquerade: true
     bgp:
-      enabled: false
+      enabled: true
+    bpf:
+      masquerade: true
+      tproxy: true
+    bandwidthManager:
+      enabled: true
+      bbr: true
+
     cluster:
-      name: kubernetes
+      name: main
       id: 1
+    cni:
+      exclusive: false
+
     containerRuntime:
       integration: containerd
       socketPath: /var/run/k3s/containerd/containerd.sock
-    endpointRoutes:
-      enabled: true
+
     hubble:
       enabled: false
+
     ipam:
       mode: kubernetes
+
+    autoDirectNodeRoutes: true
     ipv4NativeRoutingCIDR: "{{ k3s_server['cluster-cidr'] }}"
     k8sServiceHost: "{{ k3s_registration_address }}"
     k8sServicePort: 6443
     kubeProxyReplacement: true
     kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
-    l2announcements:
+
+    l7Proxy: true
+
+    enableCnpStatusUpdates: true
+    endpointStatus:
       enabled: true
-      leaseDuration: 120s
-      leaseRenewDeadline: 60s
-      leaseRetryPeriod: 1s
+      status: "policy"
+
     loadBalancer:
       algorithm: maglev
       mode: dsr
+    ingressController:
+      enabled: false
+      loadbalancerMode: shared
+
     localRedirectPolicy: true
+
     operator:
       rollOutPods: true
+
     rollOutCiliumPods: true
+
     securityContext:
-      privileged: true
+      capabilities:
+        ciliumAgent:
+          - CHOWN
+          - KILL
+          - NET_ADMIN
+          - NET_RAW
+          - IPC_LOCK
+          - SYS_ADMIN
+          - SYS_RESOURCE
+          - DAC_OVERRIDE
+          - FOWNER
+          - SETGID
+          - SETUID
+        cleanCiliumState:
+          - NET_ADMIN
+          - SYS_ADMIN
+          - SYS_RESOURCE
+
     tunnel: disabled
