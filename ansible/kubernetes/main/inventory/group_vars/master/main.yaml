@@ -2,7 +2,6 @@
 k3s_control_node: true
 k3s_server:
   cluster-cidr: 10.42.0.0/16
-
   disable:
     [
       "coredns",

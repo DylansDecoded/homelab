@@ -37,7 +37,7 @@
       when:
         - k3s_primary_control_node
         - (k3s_server_manifests_templates | length > 0
-            or k3s_server_manifests_urls | length > 0)
+          or k3s_server_manifests_urls | length > 0)
       kubernetes.core.k8s_info:
         kubeconfig: /etc/rancher/k3s/k3s.yaml
         kind: "{{ item.kind }}"
@@ -80,31 +80,6 @@
     - name: Label Longhorn nodes
       when: inventory_hostname in groups['longhorn_nodes']
       command: kubectl label node --overwrite {{ inventory_hostname }} node.longhorn.io/create-default-disk=true
-
-  handlers:
-    - name: Restart Kubernetes
-      systemd:
-        name: k3s
-        state: restarted
-
-
-
-
-
-    # - name: Helm controller
-    #   notify: Restart Kubernetes
-    #   when: k3s_control_node
-    #   include_tasks: tasks/helm_controller.yaml
-
-    # # TODO: Get this to work and replace with embedded spegel in future versions
-    # - name: Copy custom containerd configuration
-    #   notify: Restart Kubernetes
-    #   copy:
-    #     src: files/config.toml.tmpl
-    #     dest: /var/lib/rancher/k3s/agent/etc/containerd/config.toml.tmpl
-    #     owner: root
-    #     group: root
-    #     mode: "0644"
 
   handlers:
     - name: Restart Kubernetes
