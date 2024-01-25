@@ -2,6 +2,7 @@
 k3s_release_version: "v1.29.0+k3s1"
 k3s_install_hard_links: true
 k3s_become: true
+# datastore-endpoint: postgres://admin:{{ vault_postgres_admin_password }}@10.1.30.5/kubernetes
 k3s_etcd_datastore: true
 k3s_registration_address: 10.1.30.254
 # /var/lib/rancher/k3s/server/manifests
@@ -11,6 +12,7 @@ k3s_server_manifests_urls:
     filename: kube-vip-rbac.yaml
 # /var/lib/rancher/k3s/server/manifests
 k3s_server_manifests_templates:
+  - custom-metallb
   - custom-cilium-helmchart.yaml.j2
   - custom-coredns-helmchart.yaml.j2
 # /var/lib/rancher/k3s/agent/pod-manifests

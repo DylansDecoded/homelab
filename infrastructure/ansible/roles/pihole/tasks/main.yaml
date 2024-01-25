@@ -1,0 +1,5 @@
+---
+- name: Install PiHole
+  command: curl -sSL https://install.pi-hole.net | bash
+
+- name:

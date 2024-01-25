@@ -1,0 +1,29 @@
+---
+- name: Disable update_etc_hosts
+  file:
+
+- name: Update /etc/hosts
+  template:
+    src: etc/hosts.j2
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Remove /etc/resolv.conf
+  file:
+    path: /etc/resolv.conf
+    state: absent
+
+- name: Create new /etc/resolv.conf
+  template:
+    src: etc/resolv.conf.j2
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Make /etc/resolv.conf immutable
+  file:
+    path: /etc/resolv.conf
+    state: immutable

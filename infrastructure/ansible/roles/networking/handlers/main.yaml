@@ -1,0 +1,10 @@
+---
+- name: Reboot
+  reboot:
+  listen: reboot
+
+- name: Restart Pihole
+  service:
+    name: pihole-FTL
+    state: restarted
+  listen: restart_pihole

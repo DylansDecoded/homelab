@@ -1,0 +1,27 @@
+---
+collections:
+  - name: ansible.posix
+    version: 1.5.4
+  - name: ansible.utils
+    version: 3.0.0
+  - name: community.general
+    version: 8.2.0
+  - name: community.sops
+    version: 1.6.7
+  - name: kubernetes.core
+    version: 3.0.0
+  - name: onepassword.connect
+    version: 2.2.4
+roles:
+  - name: xanmanning.k3s
+    src: https://github.com/PyratLabs/ansible-role-k3s
+    version: v3.4.3
+  - name: ricsanfre.minio
+    src: https://github.com/ricsanfre/ansible-role-minio
+    version: 1.1.4
+  - name: geerlingguy.docker
+    src: https://github.com/geerlingguy/ansible-role-docker
+    version: 7.0.2
+  - name: systemli.bind9
+    src: https://github.com/systemli/ansible-role-bind9
+    version: 1.5.0
