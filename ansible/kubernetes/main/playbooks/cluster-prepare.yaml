@@ -17,6 +17,15 @@
 
         - name: Set hostname
           hostname: name={{ inventory_hostname }}
+    - name: Disable cloudinit configurations
+      lineinfile:
+        dest: /etc/cloud/cloud.cfg
+        regexp: "^-update_etc_hosts: true"
+        line: "#-update_etc_hosts: true"
+        state: present
+        backup: yes
+
+
 
     - name: Packages
       block:
@@ -63,6 +72,7 @@
         - name: Network Configuration | Set hostname
           ansible.builtin.hostname:
             name: "{{ inventory_hostname }}"
+
         - name: Network Configuration | Update hosts
           ansible.builtin.copy:
             dest: /etc/hosts
