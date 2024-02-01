@@ -8,6 +8,7 @@ vars:
 env:
   PATH: "{{.ROOT_DIR}}/.venv/bin:$PATH"
   VIRTUAL_ENV: "{{.ROOT_DIR}}/.venv"
+  INFRA_DIR: "{{.ROOT_DIR}}/infrastructure/ansible"
   ANSIBLE_COLLECTIONS_PATH: "{{.ROOT_DIR}}/.venv/galaxy"
   ANSIBLE_ROLES_PATH: "{{.ROOT_DIR}}/.venv/galaxy/ansible_roles"
   ANSIBLE_VARS_ENABLED: "host_group_vars,community.sops.sops"
@@ -38,6 +39,15 @@ tasks:
     cmd: |
       ansible-playbook --inventory {{.ANSIBLE_DIR}}/raspberrypi/inventory/hosts.yaml \
       {{.ANSIBLE_DIR}}/raspberrypi/playbooks/{{.playbook}}.yaml {{.CLI_ARGS}}
+
+  run-infra:
+    desc: Run infrastructure setup ansible playbooks
+    summary: |
+      Args:
+        playbook: Playbook to run (required)
+    cmd: |
+      ansible-playbook --inventory {{.ROOT_DIR}}/infrastructure/ansible/inventory/hosts.yaml \
+      {{.INFRA_DIR}}/playbooks/{{.playbook}}.yaml {{.CLI_ARGS}}
 
   run-kubernetes:
     desc: Run an Ansible playbook for configuring a cluster

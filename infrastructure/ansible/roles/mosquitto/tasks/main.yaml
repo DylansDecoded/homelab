@@ -1,0 +1,21 @@
+---
+- name: Create Mosquitto directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ me.user }}"
+    group: "docker"
+    mode: "0755"
+  loop:
+    - "{{ docker_volumes_directory }}/mosquitto/config"
+    - "{{ docker_volumes_directory }}/mosquitto/data"
+    - "{{ docker_volumes_directory }}/mosquitto/log"
+
+- name: Copy over docker compose file
+  copy:
+    src: files/docker-compose.yaml
+    dest: "{{ docker_volumes_directory }}/mosquitto/docker-compose.yaml"
+    owner: "{{ me.user }}"
+    group: "docker"
+    mode: "0644"
+  become: true

@@ -4,6 +4,10 @@
   become: true
   gather_facts: true
   any_errors_fatal: true
+  pre_tasks:
+    - name: Pausing for 2 seconds...
+      pause:
+        seconds: 2
   tasks:
     - name: Check if cluster is installed
       check_mode: false
@@ -16,6 +20,10 @@
       set_fact:
         k3s_server_manifests_templates: []
         k3s_server_manifests_urls: []
+
+    - name: Prevent downgrades
+      when: k3s_installed.stat.exists
+      include_tasks: tasks/version-check.yaml
 
     - name: Install Kubernetes
       include_role:
@@ -33,7 +41,7 @@
       when:
         - k3s_primary_control_node
         - (k3s_server_manifests_templates | length > 0
-          or k3s_server_manifests_urls | length > 0)
+            or k3s_server_manifests_urls | length > 0)
       kubernetes.core.k8s_info:
         kubeconfig: /etc/rancher/k3s/k3s.yaml
         kind: "{{ item.kind }}"
@@ -58,9 +66,15 @@
       when: k3s_primary_control_node
       include_tasks: tasks/cruft.yaml
 
-    - name: Label Longhorn nodes
-      when: inventory_hostname in groups['longhorn_nodes']
-      command: kubectl label node --overwrite {{ inventory_hostname }} node.longhorn.io/create-default-disk=true
+    # TODO: Replace this with embedded spegel in the future
+    - name: Copy custom containerd configuration
+      notify: Restart Kubernetes
+      copy:
+        src: files/config.toml.tmpl
+        dest: /var/lib/rancher/k3s/agent/etc/containerd/config.toml.tmpl
+        owner: root
+        group: root
+        mode: "0644"
 
   handlers:
     - name: Restart Kubernetes

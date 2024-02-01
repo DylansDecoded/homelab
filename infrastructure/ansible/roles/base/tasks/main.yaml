@@ -1,0 +1,13 @@
+- name: Update system
+  apt:
+    update_cache: yes
+    upgrade: dist
+
+- name: Setup networking
+  include_tasks: networking.yaml
+
+- name: Setup ssh
+  include_tasks: ssh.yaml
+
+- name: Setup NFS mounts
+  include_tasks: nfs.yaml

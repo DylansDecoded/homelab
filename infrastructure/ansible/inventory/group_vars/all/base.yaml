@@ -1,0 +1,5 @@
+timezone: America/New_York
+github_username: "DylansDecoded"
+# HACK: Some of the hostnames aren't valid dict keys
+hostname_slug: "{{ ansible_hostname | replace('-', '_') }}"
+truenas_server_ip: 10.1.30.210

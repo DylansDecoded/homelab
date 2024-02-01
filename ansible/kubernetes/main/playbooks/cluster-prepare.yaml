@@ -15,36 +15,30 @@
           timezone:
             name: "{{ timezone | default('Etc/UTC') }}"
 
-        - name: Set hostname
-          hostname: name={{ inventory_hostname }}
-    - name: Disable cloudinit configurations
-      lineinfile:
-        dest: /etc/cloud/cloud.cfg
-        regexp: "^-update_etc_hosts: true"
-        line: "#-update_etc_hosts: true"
-        state: present
-        backup: yes
-
-
-
     - name: Packages
       block:
-        - name: Packages | Install
+        - name: Packages | Add non-free repository
+          apt_repository:
+            repo: deb http://deb.debian.org/debian/ stable main contrib non-free
+            filename: non-free
+            update_cache: true
+        - name: Packages | Install common packages
           apt:
-            name: apt-transport-https,ca-certificates,conntrack,curl,dirmngr,gdisk,gnupg,hdparm,htop,
-              iptables,iputils-ping,ipvsadm,libseccomp2,lm-sensors,neofetch,net-tools,nfs-common,
-              nvme-cli,open-iscsi,parted,psmisc,python3,python3-apt,python3-kubernetes,python3-yaml,
-              smartmontools,socat,software-properties-common,unzip,util-linux
+            name: i965-va-driver-shaders,apt-transport-https,ca-certificates,conntrack,curl,dirmngr,gdisk,
+              gnupg,hdparm,htop,intel-gpu-tools,intel-media-va-driver-non-free,iperf3,iptables,iputils-ping,ipvsadm,
+              libseccomp2,lm-sensors,neofetch,net-tools,nfs-common,nvme-cli,open-iscsi,parted,psmisc,python3,
+              python3-apt,python3-openshift,python3-kubernetes,python3-yaml,smartmontools,socat,software-properties-common,
+              unzip,util-linux
             install_recommends: false
 
 
     - name: User Configuration
       block:
-        - name: User Configuration | SSH keys
-          authorized_key:
-            user: "{{ ansible_user }}"
-            key: "https://github.com/{{ github_username }}.keys"
-            state: present
+        # - name: User Configuration | SSH keys
+        #   authorized_key:
+        #     user: "{{ ansible_user }}"
+        #     key: "https://github.com/{{ github_username }}.keys"
+        #     state: present
 
         - name: User Configuration | Silence login
           file:
@@ -66,55 +60,51 @@
             mode: "0440"
 
 
-    - name: Network Configuration
-      notify: Reboot
-      block:
-        - name: Network Configuration | Set hostname
-          ansible.builtin.hostname:
-            name: "{{ inventory_hostname }}"
+    # - name: Network Configuration
+    #   notify: Reboot
+    #   block:
+    #     - name: Network Configuration | Set hostname
+    #       hostname:
+    #         name: "{{ inventory_hostname }}"
+    #     - name: Network Configuration | Update hosts
+    #       copy:
+    #         dest: /etc/hosts
+    #         content: |
+    #           127.0.0.1 localhost
+    #           127.0.1.1 {{ inventory_hostname }}
+    #           # The following lines are desirable for IPv6 capable hosts
+    #           ::1     localhost ip6-localhost ip6-loopback
+    #           ff02::1 ip6-allnodes
+    #           ff02::2 ip6-allrouters
+    #         mode: preserve
+    #     - name: Network Configuration | Set NIC MTU
+    #       copy:
+    #         dest: /etc/network/interfaces.d/eno1
+    #         content: |
+    #           auto eno1
+    #           allow-hotplug eno1
+    #           iface eno1 inet static
+    #                 address "{{ ansible_default_ipv4.address }}"
+    #                 post-up ifconfig eno1 mtu 9000
 
-        - name: Network Configuration | Update hosts
-          ansible.builtin.copy:
-            dest: /etc/hosts
-            content: |
-              127.0.0.1 localhost
-              127.0.1.1 {{ inventory_hostname }}
+    #           auto eno1.20
+    #         owner: root
+    #         group: root
+    #         mode: "0644"
 
-              # The following lines are desirable for IPv6 capable hosts
-              ::1     localhost ip6-localhost ip6-loopback
-              ff02::1 ip6-allnodes
-              ff02::2 ip6-allrouters
-            mode: preserve
-
-        # https://github.com/cilium/cilium/issues/18706
-        - name: Network Configuration | Cilium (1)
-          ansible.builtin.lineinfile:
-            dest: /etc/systemd/networkd.conf
-            regexp: ManageForeignRoutingPolicyRules
-            line: ManageForeignRoutingPolicyRules=no
-        - name: Network Configuration | Cilium (2)
-          ansible.builtin.lineinfile:
-            dest: /etc/systemd/networkd.conf
-            regexp: ManageForeignRoutes
-            line: ManageForeignRoutes=no
 
     - name: System Configuration
       notify: Reboot
       block:
-        - name: System Configuration | Neofetch
-          ansible.builtin.copy:
-            dest: /etc/profile.d/neofetch.sh
-            mode: "0755"
-            content: neofetch --config none
         - name: System Configuration | NFS
-          ansible.builtin.copy:
+          copy:
             src: files/nfsmount.conf
             dest: /etc/nfsmount.conf
             owner: root
             group: root
             mode: "0644"
         - name: System Configuration | Disable apparmor
-          ansible.builtin.systemd:
+          systemd:
             name: apparmor
             state: stopped
             masked: true
@@ -124,25 +114,18 @@
             fstype: swap
             state: absent
           loop: ["none", "swap"]
-        - name: System Configuration | Kernel modules (1)
-          community.general.modprobe:
-            name: "{{ item }}"
-            state: present
-          loop: [
-            "br_netfilter", "ip_vs",
-            "ip_vs_rr", "nbd", "overlay",
-            "rbd", "tcp_bbr"
-          ]
-        - name: System Configuration | Kernel modules (2)
-          ansible.builtin.copy:
+        - name: System Configuration | Create Kernel modules
+          copy:
             dest: "/etc/modules-load.d/{{ item }}.conf"
             mode: "0644"
             content: "{{ item }}"
-          loop: [
-            "br_netfilter", "ip_vs",
-            "ip_vs_rr", "nbd", "overlay",
-            "rbd", "tcp_bbr"
-          ]
+          loop: ["br_netfilter", "ceph", "ip_vs", "ip_vs_rr", "nbd", "overlay", "rbd", "tcp_bbr"]
+          register: modules_status
+        - name: System Configuration | Reload Kernel modules # noqa: no-changed-when no-handler
+          when: modules_status.changed
+          systemd:
+            name: systemd-modules-load
+            state: restarted
         - name: System Configuration | Sysctl
           ansible.posix.sysctl:
             name: "{{ item.key }}"
@@ -155,10 +138,24 @@
               fs.inotify.max_queued_events: 65536
               fs.inotify.max_user_watches: 524288
               fs.inotify.max_user_instances: 8192
+        - name: System Configuration | Grub (1)
+          replace:
+            path: /etc/default/grub
+            regexp: '^(GRUB_CMDLINE_LINUX=(?:(?![" ]{{ item.key | regex_escape }}=).)*)(?:[" ]{{ item.key | regex_escape }}=\S+)?(.*")$'
+            replace: '\1 {{ item.key }}={{ item.value }}\2'
+          with_dict: "{{ grub_config }}"
+          vars:
+            grub_config:
+              apparmor: "0"
+              mitigations: "off"
+          register: grub_status
+        - name: System Configuration | Grub (2) # noqa: no-changed-when no-handler
+          when: grub_status.changed
+          command: update-grub
 
   handlers:
     - name: Reboot
-      ansible.builtin.reboot:
+      reboot:
         msg: Rebooting nodes
         reboot_timeout: 3600
 

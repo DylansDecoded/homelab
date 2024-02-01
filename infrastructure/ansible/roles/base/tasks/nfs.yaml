@@ -1,0 +1,22 @@
+- name: Install nfs-common if not installed
+  apt:
+    name: nfs-common
+    state: present
+  become: true
+
+- name: System Configuration | NFS
+  copy:
+    src: files/nfsmount.conf
+    dest: /etc/nfsmount.conf
+    owner: root
+    group: root
+    mode: "0644"
+  become: true
+# - name: Mount docker-volumes NFS share
+#   mount:
+#     path: /mnt/docker-volumes
+#     src: "{{ truenas_server_ip }}:/mnt/tank/nfs/docker-volumes"
+#     fstype: nfs
+#     state: mounted
+#     opts: "rw,sync,hard"
+#   become: true
