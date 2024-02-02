@@ -1,13 +1,14 @@
 ---
+# https://docs.k3s.io/helm
 apiVersion: helm.cattle.io/v1
 kind: HelmChart
 metadata:
   name: coredns
   namespace: kube-system
 spec:
+  # renovate: datasource=helm
   repo: https://coredns.github.io/helm
   chart: coredns
-  # renovate: datasource=helm depName=coredns repository=https://coredns.github.io/helm
   version: 1.29.0
   targetNamespace: kube-system
   bootstrap: true

@@ -13,7 +13,7 @@
       block:
         - name: Locale | Set TimeZone
           timezone:
-            name: "{{ timezone | default('Etc/UTC') }}"
+            name: America/New_York
 
     - name: Packages
       block:
@@ -22,6 +22,8 @@
             repo: deb http://deb.debian.org/debian/ stable main contrib non-free
             filename: non-free
             update_cache: true
+            state: present
+
         - name: Packages | Install common packages
           apt:
             name: i965-va-driver-shaders,apt-transport-https,ca-certificates,conntrack,curl,dirmngr,gdisk,
@@ -34,11 +36,11 @@
 
     - name: User Configuration
       block:
-        # - name: User Configuration | SSH keys
-        #   authorized_key:
-        #     user: "{{ ansible_user }}"
-        #     key: "https://github.com/{{ github_username }}.keys"
-        #     state: present
+        - name: User Configuration | SSH keys
+          authorized_key:
+            user: "{{ ansible_user }}"
+            key: "https://github.com/{{ github_username }}.keys"
+            state: present
 
         - name: User Configuration | Silence login
           file:
@@ -60,37 +62,32 @@
             mode: "0440"
 
 
-    # - name: Network Configuration
-    #   notify: Reboot
-    #   block:
-    #     - name: Network Configuration | Set hostname
-    #       hostname:
-    #         name: "{{ inventory_hostname }}"
-    #     - name: Network Configuration | Update hosts
-    #       copy:
-    #         dest: /etc/hosts
-    #         content: |
-    #           127.0.0.1 localhost
-    #           127.0.1.1 {{ inventory_hostname }}
-    #           # The following lines are desirable for IPv6 capable hosts
-    #           ::1     localhost ip6-localhost ip6-loopback
-    #           ff02::1 ip6-allnodes
-    #           ff02::2 ip6-allrouters
-    #         mode: preserve
-    #     - name: Network Configuration | Set NIC MTU
-    #       copy:
-    #         dest: /etc/network/interfaces.d/eno1
-    #         content: |
-    #           auto eno1
-    #           allow-hotplug eno1
-    #           iface eno1 inet static
-    #                 address "{{ ansible_default_ipv4.address }}"
-    #                 post-up ifconfig eno1 mtu 9000
+    - name: Network Configuration
+      notify: Reboot
+      block:
+        - name: Network Configuration | Set hostname
+          hostname:
+            name: "{{ inventory_hostname }}"
+        - name: Network Configuration | Update hosts
+          copy:
+            dest: /etc/hosts
+            content: |
+              127.0.0.1 localhost
+              127.0.1.1 {{ inventory_hostname }}
+              # The following lines are desirable for IPv6 capable hosts
+              ::1     localhost ip6-localhost ip6-loopback
+              ff02::1 ip6-allnodes
+              ff02::2 ip6-allrouters
+            mode: preserve
 
-    #           auto eno1.20
-    #         owner: root
-    #         group: root
-    #         mode: "0644"
+        - name: Network Configuration | Set NIC MTU
+          copy:
+            dest: /etc/network/interfaces.d/eno1
+            content: |
+              auto eno1
+              allow-hotplug eno1
+              iface eno1 inet dhcp
+                    post-up ifconfig eno1 mtu 9000
 
 
     - name: System Configuration

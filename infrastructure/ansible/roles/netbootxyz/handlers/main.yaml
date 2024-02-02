@@ -1,0 +1,5 @@
+---
+- name: restart netbootxyz
+  shell:
+    chdir: /opt/netbootxyz
+    cmd: docker compose pull && docker compose down --remove-orphans && docker compose up rm && docker compose up -d

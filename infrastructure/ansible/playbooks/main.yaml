@@ -1,20 +1,24 @@
 ---
-- hosts: all
-  gather_facts: true
-  become: true
-  roles:
-    - base
+# - hosts: all
+#   gather_facts: true
+#   become: true
+#   roles:
+#     - base
 
-- hosts: kubernetes
+- hosts: docker
   become: true
   gather_facts: true
   any_errors_fatal: true
-  pre_tasks:
-    - name: Pausing for 2 seconds...
-      pause:
-        seconds: 2
   roles:
-    - k3s-prepare
+    - role: geerlingguy.docker
+      become: true
+      vars:
+        docker_install_compose_plugin: "{{ ansible_os_family == 'Debian' }}"
+        docker_users:
+          - "{{ me.user }}"
+    - docker-cleanup
+    - nfs
+    - netbootxyz
 
 
 
