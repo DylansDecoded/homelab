@@ -1,0 +1,14 @@
+---
+- name: Network Configuration | Update hosts
+  copy:
+    src: templates/hosts.j2
+    dest: /etc/hosts
+    mode: preserve
+
+- name: Network Configuration | Update /etc/systemd/resolved.conf
+  copy:
+    src: files/resolved.conf
+    dest: /etc/systemd/resolved.conf
+    mode: preserve
+
+- name:

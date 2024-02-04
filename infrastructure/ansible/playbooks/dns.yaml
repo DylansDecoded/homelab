@@ -1,0 +1,43 @@
+---
+- hosts: dns-servers
+  gather_facts: true
+  become: true
+  any_errors_fatal: true
+  tasks:
+    - name: Create the default user
+      user:
+        name: "{{default_user}}"
+        shell: /bin/bash
+        password: ""
+        groups: sudo
+        append: yes
+        createhome: yes
+        home: "/home/{{default_user}}"
+        state: present
+
+    - name: Grant Full Permissions to home directory
+      command: "chown -R {{default_user}}:{{default_user}} /home/{{default_user}}"
+
+    - name: Ensure default user has sudo access without password
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: "^{{default_user}} ALL=(ALL) NOPASSWD: ALL$"
+        line: "{{default_user}} ALL=(ALL) NOPASSWD: ALL"
+        validate: "visudo -cf %s"
+        backup: yes
+
+    - name: Create the .ssh directory
+      command: "mkdir -p /home/{{default_user}}/.ssh"
+
+    - name: Create the authorized_keys file
+      command: "touch /home/{{default_user}}/.ssh/authorized_keys"
+
+    - name: User Configuration | SSH keys
+      authorized_key:
+        user: "{{ default_user }}"
+        key: "https://github.com/{{ github_username }}.keys"
+        state: present
+
+    - name: chmod .ssh and keys
+      command: "chmod 700 /home/{{default_user}}/.ssh && chmod 600 /home/{{default_user}}/.ssh/authorized_keys"

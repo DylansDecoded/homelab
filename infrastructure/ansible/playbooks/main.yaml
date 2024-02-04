@@ -5,7 +5,17 @@
 #   roles:
 #     - base
 
-- hosts: docker
+# - hosts: kubernetes
+#   gather_facts: true
+#   become: true
+#   tasks:
+#     - name: Install linux-headers
+#       apt:
+#         name: linux-headers-{{ ansible_kernel }}
+#         state: present
+#       when: ansible_os_family == 'Debian'
+
+- hosts: dns-servers
   become: true
   gather_facts: true
   any_errors_fatal: true
@@ -18,7 +28,6 @@
           - "{{ me.user }}"
     - docker-cleanup
     - nfs
-    - netbootxyz
 
 
 

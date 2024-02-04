@@ -4,32 +4,32 @@ kubernetes:
     ansible_user: dylan
     ansible_ssh_port: 22
   children:
-    master:
+    controllers:
       hosts:
         k3s-01:
-          ansible_host: 10.33.1.11
+          ansible_host: 10.1.33.11
           ceph_drives:
             - /dev/disk/by-id/ata-SAMSUNG_MZ7KM960HMJP-00005_S3HSNWAJ300236B
         k3s-02:
-          ansible_host: 10.33.1.12
+          ansible_host: 10.1.33.12
           ceph_drives:
             - /dev/disk/by-id/ata-SAMSUNG_MZ7KM960HAHP-000FU_S2TLNX0J900056
         k3s-03:
-          ansible_host: 10.33.1.13
+          ansible_host: 10.1.33.13
           ceph_drives:
             - /dev/disk/by-id/ata-SAMSUNG_MZ7KM960HAHP-00005_S2HTNX0H415045
 
-    worker:
+    workers:
       hosts:
         k3s-04:
-          ansible_host: 10.33.1.14
+          ansible_host: 10.1.33.14
           ceph_drives:
             - /dev/disk/by-id/ata-SAMSUNG_MZ7KM960HAHP-00005_S2HTNX0H413743
         k3s-05:
-          ansible_host: 10.33.1.15
+          ansible_host: 10.1.33.15
           ceph_drives:
             - /dev/disk/by-id/ata-SAMSUNG_MZ7KM960HAHP-00005_S2HTNXAH300874
         k3s-06:
-          ansible_host: 10.33.1.16
+          ansible_host: 10.1.33.16
           ceph_drives:
             - /dev/disk/by-id/ata-SAMSUNG_MZ7KM960HAHP-00005_S2HTNX0H414441
