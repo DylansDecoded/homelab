@@ -32,6 +32,11 @@
       vars:
         k3s_state: installed
 
+    - name: Kubeconfig
+      include_tasks: tasks/kubeconfig.yaml
+      vars:
+        repository_base: "{{ lookup('pipe', 'git rev-parse --show-toplevel') }}"
+
     - name: Wait for custom manifests to rollout
       when:
         - k3s_primary_control_node
