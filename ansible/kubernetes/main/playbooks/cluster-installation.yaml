@@ -6,36 +6,31 @@
   any_errors_fatal: true
   pre_tasks:
     - name: Pausing for 2 seconds...
-      pause:
+      ansible.builtin.pause:
         seconds: 2
   tasks:
     - name: Check if cluster is installed
       check_mode: false
-      stat:
+      ansible.builtin.stat:
         path: /etc/rancher/k3s/config.yaml
       register: k3s_installed
 
     - name: Ignore manifests templates and urls if the cluster is already installed
       when: k3s_installed.stat.exists
-      set_fact:
+      ansible.builtin.set_fact:
         k3s_server_manifests_templates: []
         k3s_server_manifests_urls: []
 
     - name: Prevent downgrades
       when: k3s_installed.stat.exists
-      include_tasks: tasks/version-check.yaml
+      ansible.builtin.include_tasks: tasks/downgrade.yaml
 
     - name: Install Kubernetes
-      include_role:
+      ansible.builtin.include_role:
         name: xanmanning.k3s
         public: true
       vars:
         k3s_state: installed
-
-    - name: Kubeconfig
-      include_tasks: tasks/kubeconfig.yaml
-      vars:
-        repository_base: "{{ lookup('pipe', 'git rev-parse --show-toplevel') }}"
 
     - name: Wait for custom manifests to rollout
       when:
@@ -56,28 +51,12 @@
 
     - name: Coredns
       when: k3s_primary_control_node
-      include_tasks: tasks/coredns.yaml
+      ansible.builtin.include_tasks: tasks/coredns.yaml
 
     - name: Cilium
       when: k3s_primary_control_node
-      include_tasks: tasks/cilium.yaml
+      ansible.builtin.include_tasks: tasks/cilium.yaml
 
     - name: Cruft
       when: k3s_primary_control_node
-      include_tasks: tasks/cruft.yaml
-
-    # # # TODO: Replace this with embedded spegel in the future
-    # - name: Copy custom containerd configuration
-    #   notify: Restart Kubernetes
-    #   copy:
-    #     src: files/config.toml.tmpl
-    #     dest: /var/lib/rancher/k3s/agent/etc/containerd/config.toml.tmpl
-    #     owner: root
-    #     group: root
-    #     mode: "0644"
-
-  handlers:
-    - name: Restart Kubernetes
-      systemd:
-        name: k3s
-        state: restarted
+      ansible.builtin.include_tasks: tasks/cruft.yaml
