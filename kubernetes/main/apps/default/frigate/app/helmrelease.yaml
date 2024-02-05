@@ -24,12 +24,14 @@ spec:
   uninstall:
     keepHistory: false
   dependsOn:
-    - name: nvidia-device-plugin
+    - name: intel-device-plugin-gpu
       namespace: tools
     - name: mosquitto
       namespace: default
-    - name: longhorn
-      namespace: longhorn-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: storage
   values:
     controllers:
       main:
@@ -39,10 +41,10 @@ spec:
           main:
             image:
               repository: ghcr.io/blakeblackshear/frigate
-              tag: 0.13.0-rc1@sha256:24dce42044a0f9631813beea9d49afb266e9bef77ed6972cd1486e14463d7dc6
+              tag: 0.13.1@sha256:ee3cd964f19f3b7aa48cc512423c4378478dd97214f66b16741ac3c1d799d407
             env:
               TZ: America/New_York
-              LIBVA_DRIVER_NAME: nvidia
+              LIBVA_DRIVER_NAME: i965
             envFrom:
               - secretRef:
                   name: frigate-secret
@@ -64,15 +66,24 @@ spec:
             securityContext:
               privileged: true
             resources:
-              limits: &resources
-                memory: 4Gi
-                nvidia.com/gpu: 1
               requests:
-                <<: *resources
                 cpu: 100m
+              limits:
+                gpu.intel.com/i915: "1"
+                memory: 8Gi
         pod:
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                      - key: app.kubernetes.io/name
+                        operator: In
+                        values: ["plex"]
+                  topologyKey: kubernetes.io/hostname
           nodeSelector:
-            nvidia-gpu.feature.node.kubernetes.io/nvidia-gpu: "true"
+            google.feature.node.kubernetes.io/coral: "true"
+            intel.feature.node.kubernetes.io/gpu: "true"
     service:
       main:
         ports:
@@ -111,13 +122,19 @@ spec:
         enabled: true
         type: emptyDir
         medium: Memory
-        sizeLimit: 2Gi
+        sizeLimit: 4Gi
         globalMounts:
           - path: /dev/shm
-
+      usb:
+        enabled: true
+        type: hostPath
+        hostPath: /dev/bus/usb
+        hostPathType: Directory
+        globalMounts:
+          - path: /dev/bus/usb
       media:
         type: nfs
-        server: ${TRUENAS_IP}
-        path: /mnt/tank/media
+        server: truenas.robsonhome.cloud
+        path: /mnt/tank/nfs/media
         globalMounts:
           - path: /media
