@@ -6,6 +6,7 @@ resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
   - ./scrapeconfigs
+  - ./prometheusrules
 configMapGenerator:
   - name: alertmanager-config-tpl
     files:
