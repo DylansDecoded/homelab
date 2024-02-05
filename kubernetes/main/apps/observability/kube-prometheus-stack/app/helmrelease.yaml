@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: kube-prometheus-stack
-      version: 55.5.2
+      version: 56.6.1
       sourceRef:
         kind: HelmRepository
         name: prometheus-community
@@ -43,7 +43,7 @@ spec:
         pathType: Prefix
         ingressClassName: internal
         hosts:
-          - &host alertmanager.robsonhome.cloud
+          - &host alertmanager.devbu.io
         tls:
           - hosts:
               - *host
@@ -95,9 +95,9 @@ spec:
     kubeControllerManager:
       enabled: true
       endpoints: &cp
-        - 10.1.30.30
-        - 10.1.30.31
-        - 10.1.30.32
+        - 10.1.33.11
+        - 10.1.33.12
+        - 10.1.33.13
       serviceMonitor:
         metricRelabelings:
           # Remove duplicate labels provided by k3s
@@ -128,8 +128,8 @@ spec:
         tls:
           - hosts:
               - *host
-      # thanosService:
-      #   enabled: true
+      thanosService:
+        enabled: true
       thanosServiceMonitor:
         enabled: true
       prometheusSpec:
@@ -146,14 +146,15 @@ spec:
           - auto-gomaxprocs
           - memory-snapshot-on-shutdown
           - new-service-discovery-manager
-        # thanos:
-        #   image: quay.io/thanos/thanos:v0.33.0
-        #   objectStorageConfig:
-        #     existingSecret:
-        #       name: thanos-objstore-secret
-        #       key: objstore.yml
+        thanos:
+          image: quay.io/thanos/thanos:${THANOS_VERSION}
+          version: "${THANOS_VERSION#v}"
+          objectStorageConfig:
+            existingSecret:
+              name: thanos-objstore-secret
+              key: objstore.yml
         retention: 2d
-        retentionSize: 5GB
+        retentionSize: 15GB
         externalLabels:
           cluster: main
         storageSpec:
@@ -162,7 +163,7 @@ spec:
               storageClassName: local-hostpath
               resources:
                 requests:
-                  storage: 10Gi
+                  storage: 20Gi
     nodeExporter:
       enabled: true
     prometheus-node-exporter:

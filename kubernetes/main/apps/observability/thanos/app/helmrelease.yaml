@@ -1,22 +1,20 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta1.json
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: thanos
-  namespace: monitoring
 spec:
   interval: 30m
   timeout: 15m
   chart:
     spec:
       chart: thanos
-      version: 12.13.12
+      version: 12.23.1
       sourceRef:
         kind: HelmRepository
         name: bitnami
         namespace: flux-system
-  maxHistory: 2
   install:
     remediation:
       retries: 3
@@ -27,13 +25,38 @@ spec:
   uninstall:
     keepHistory: false
   dependsOn:
-    - name: longhorn
-      namespace: longhorn-system
+    - name: local-path-provisioner
+      namespace: storage
+    - name: redis
+      namespace: database
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+  valuesFrom:
+    - targetPath: objstoreConfig.config.bucket
+      kind: ConfigMap
+      name: thanos-bucket-v2
+      valuesKey: BUCKET_NAME
+    - targetPath: objstoreConfig.config.endpoint
+      kind: ConfigMap
+      name: thanos-bucket-v2
+      valuesKey: BUCKET_HOST
+    - targetPath: objstoreConfig.config.region
+      kind: ConfigMap
+      name: thanos-bucket-v2
+      valuesKey: BUCKET_REGION
+    - targetPath: objstoreConfig.config.access_key
+      kind: Secret
+      name: thanos-bucket-v2
+      valuesKey: AWS_ACCESS_KEY_ID
+    - targetPath: objstoreConfig.config.secret_key
+      kind: Secret
+      name: thanos-bucket-v2
+      valuesKey: AWS_SECRET_ACCESS_KEY
   values:
     image:
       registry: quay.io
       repository: thanos/thanos
-      tag: v0.32.5
+      tag: v0.34.0
     objstoreConfig:
       type: s3
       config:
@@ -41,6 +64,15 @@ spec:
     queryFrontend:
       enabled: true
       replicaCount: 2
+      config: &config |-
+        type: REDIS
+        config:
+          addr: >-
+            redis-node-0.redis-headless.database.svc.cluster.local:26379,
+            redis-node-1.redis-headless.database.svc.cluster.local:26379,
+            redis-node-2.redis-headless.database.svc.cluster.local:26379
+          db: 13
+          master_name: redis-master
       ingress:
         enabled: true
         ingressClassName: internal
@@ -55,7 +87,8 @@ spec:
       replicaLabel: ["__replica__"]
       dnsDiscovery:
         sidecarsService: kube-prometheus-stack-thanos-discovery
-        sidecarsNamespace: monitoring
+        sidecarsNamespace: observability
+      stores: [":10901"]
     bucketweb:
       enabled: true
       replicaCount: 2
@@ -64,20 +97,21 @@ spec:
       extraFlags:
         - --compact.concurrency=4
         - --delete-delay=30m
-      retentionResolutionRaw: 30d
-      retentionResolution5m: 60d
-      retentionResolution1h: 90d
+      retentionResolutionRaw: 14d
+      retentionResolution5m: 30d
+      retentionResolution1h: 60d
       persistence:
         enabled: true
-        storageClass: longhorn
-        size: 5Gi
+        storageClass: local-hostpath
+        size: 10Gi
     storegateway:
       enabled: true
       replicaCount: 2
+      config: *config
       persistence:
         enabled: true
-        storageClass: longhorn
-        size: 5Gi
+        storageClass: local-hostpath
+        size: 10Gi
     ruler:
       enabled: true
       replicaCount: 2
@@ -98,30 +132,9 @@ spec:
                   severity: critical
       persistence:
         enabled: true
-        storageClass: longhorn
+        storageClass: local-hostpath
         size: 10Gi
     metrics:
       enabled: true
       serviceMonitor:
         enabled: true
-  valuesFrom:
-    - targetPath: objstoreConfig.config.bucket
-      kind: Secret
-      name: thanos-secert
-      valuesKey: BUCKET_NAME
-    - targetPath: objstoreConfig.config.endpoint
-      kind: Secret
-      name: thanos-secret
-      valuesKey: BUCKET_HOST
-    - targetPath: objstoreConfig.config.region
-      kind: Secret
-      name: thanos-secret
-      valuesKey: BUCKET_REGION
-    - targetPath: objstoreConfig.config.access_key
-      kind: Secret
-      name: thanos-secret
-      valuesKey: AWS_ACCESS_KEY_ID
-    - targetPath: objstoreConfig.config.secret_key
-      kind: Secret
-      name: thanos-secret
-      valuesKey: AWS_SECRET_ACCESS_KEY
