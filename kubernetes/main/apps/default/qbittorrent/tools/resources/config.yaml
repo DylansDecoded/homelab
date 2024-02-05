@@ -28,6 +28,8 @@ trackers:
     urls: ["landof.tv"]
     required_seed_ratio: 1.01
     required_seed_days: 5.1
+  - name: fearnopeer
+    urls:
   - name: filelist
     urls: ["filelist.io", "flro.org"]
     required_seed_ratio: 1.01
@@ -104,3 +106,6 @@ trackers:
     urls: ["uhdbits.org"]
     required_seed_ratio: 1.01
     required_seed_days: 0
+
+  # - name: TeamOS
+  #   urls:

@@ -24,8 +24,10 @@ spec:
   uninstall:
     keepHistory: false
   dependsOn:
-    - name: longhorn
-      namespace: longhorn-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: storage
   values:
     controllers:
       main:
@@ -43,7 +45,8 @@ spec:
               QBT_Preferences__WebUI__AlternativeUIEnabled: false
               QBT_Preferences__WebUI__AuthSubnetWhitelistEnabled: true
               QBT_Preferences__WebUI__AuthSubnetWhitelist: |-
-                10.42.0.0/16, 10.1.40.0/24, 10.1.10.0/24, 10.1.1.0/24
+                10.32.0.0/16, 10.1.40.0/24, 10.1.33.0/24, 10.1.30.0/24,
+                10.1.20.0/24 10.1.10.0/24, 10.1.1.0/24
               QBT_Preferences__WebUI__LocalHostAuth: false
               QBT_BitTorrent__Session__Interface: eth0
               QBT_BitTorrent__Session__InterfaceAddress:
@@ -88,7 +91,7 @@ spec:
         controller: main
         type: LoadBalancer
         annotations:
-          io.cilium/lb-ipam-ips: 10.1.30.219
+          io.cilium/lb-ipam-ips: 10.1.33.219
         ports:
           bittorrent:
             enabled: true
@@ -129,7 +132,7 @@ spec:
             readOnly: true
       media:
         type: nfs
-        server: ${TRUENAS_IP}
-        path: /mnt/tank/media
+        server: truenas.robsonhome.cloud
+        path: /mnt/tank/nfs/media
         globalMounts:
           - path: /media
