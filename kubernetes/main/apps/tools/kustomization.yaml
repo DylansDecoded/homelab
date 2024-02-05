@@ -11,4 +11,4 @@ resources:
   - ./intel-device-plugin/ks.yaml
   # - ./nvidia-device-plugin/ks.yaml
   - ./reloader/ks.yaml
-  - ./system-upgrade-controller/ks.yaml
+  # - ./system-upgrade-controller/ks.yaml
