@@ -15,7 +15,7 @@
 #         state: present
 #       when: ansible_os_family == 'Debian'
 
-- hosts: dns-servers
+- hosts: docker
   become: true
   gather_facts: true
   any_errors_fatal: true
@@ -26,8 +26,8 @@
         docker_install_compose_plugin: "{{ ansible_os_family == 'Debian' }}"
         docker_users:
           - "{{ me.user }}"
-    - docker-cleanup
-    - nfs
+    # - docker-cleanup
+    # - nfs
 
 
 

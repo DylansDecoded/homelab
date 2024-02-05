@@ -14,9 +14,11 @@ docker:
     ansible_user: dylan
     ansible_python_interpreter: /usr/bin/python3
   hosts:
-    netbootxyz:
-      ansible_host: 10.1.30.5
-      ansible_ssh_port: 22
+    s3:
+      ansible_host: 10.1.30.99
+
+    # onepassword-connect:
+    #   ansible_host: 10.1.30.90
 
 kubernetes:
   vars:
