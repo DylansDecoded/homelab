@@ -50,7 +50,7 @@ notifier:
   smtp:
     username: "${AUTHELIA_SMTP_USERNAME}"
     password: "${AUTHELIA_SMTP_PASSWORD}"
-    sender: <Authelia> noreply@robsonhome.cloud
+    sender: noreply@robsonhome.cloud
     host: "${AUTHELIA_SMTP_HOST}"
     port: 587
 
