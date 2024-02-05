@@ -30,7 +30,7 @@ spec:
     provider: pihole
     env:
       - name: EXTERNAL_DNS_PIHOLE_SERVER
-        value: "http://10.1.100.53"
+        value: "http://10.1.100.51"
       - name: EXTERNAL_DNS_PIHOLE_PASSWORD
         valueFrom:
           secretKeyRef:
@@ -45,4 +45,3 @@ spec:
       enabled: true
     podAnnotations:
       secret.reloader.stakater.com/reload: external-dns-pihole-secret
-
