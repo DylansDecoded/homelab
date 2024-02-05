@@ -12,6 +12,8 @@ spec:
   targetNamespace: kube-system
   bootstrap: true
   valuesContent: |-
+    bgpControlPlane:
+      enabled: true
     autoDirectNodeRoutes: true
     bpf:
       masquerade: true
@@ -21,7 +23,6 @@ spec:
     containerRuntime:
       integration: containerd
       socketPath: /var/run/k3s/containerd/containerd.sock
-    devices: eno1
     enableRuntimeDeviceDetection: true
     endpointRoutes:
       enabled: true
@@ -34,11 +35,11 @@ spec:
     k8sServicePort: 6444
     kubeProxyReplacement: true
     kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
-    l2announcements:
-      enabled: true
     loadBalancer:
       algorithm: maglev
       mode: dsr
+    l2announcements:
+      enabled: true
     localRedirectPolicy: true
     operator:
       rollOutPods: true

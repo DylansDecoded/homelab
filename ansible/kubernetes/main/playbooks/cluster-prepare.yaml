@@ -9,153 +9,236 @@
       pause:
         seconds: 5
   tasks:
-    - name: Update System
+    # - name: Update System
+    #   notify: Reboot
+    #   block:
+    #     - name: Update System | Update apt cache
+    #       apt:
+    #         upgrade: dist
+    #         update_cache: yes
+    #         cache_valid_time: 3600
+
+    # - name: Locale
+    #   block:
+    #     - name: Locale | Set TimeZone
+    #       timezone:
+    #         name: America/New_York
+
+    # - name: Ubuntu | Disable Cloudinit
+    #   block:
+    #     - name: check if bash script exists
+    #       stat:
+    #         path: /home/{{ ansible_user }}/disable-cloudinit
+    #       register: script_status
+
+    #     - name: Copy over bash script
+    #       copy:
+    #         src: files/disable-cloudinit
+    #         dest: /home/{{ ansible_user }}/disable-cloudinit
+    #         mode: "0755"
+    #         owner: "{{ ansible_user }}"
+    #         group: "{{ ansible_user }}"
+    #       when: script_status.stat.exists == False
+
+    #     - name: make bash script executable
+    #       command: chmod +x /home/{{ ansible_user }}/disable-cloudinit
+
+    #     - name: run bash script
+    #       command: /home/{{ ansible_user }}/disable-cloudinit
+    #       args:
+    #         chdir: /home/{{ ansible_user }}
+
+    #     - name: Reboot after disabling cloudinit
+    #       reboot:
+    #         msg: Rebooting nodes
+    #         reboot_timeout: 3600
+
+    #  when: ansible_facts['distribution'] == 'Ubuntu'
+
+    # - name: Packages
+    #   block:
+
+    #     - name: Packages | Install common packages
+    #       apt:
+    #         name: i965-va-driver-shaders,apt-transport-https,ca-certificates,conntrack,curl,dirmngr,gdisk,gnupg,hdparm,htop,intel-gpu-tools,intel-media-va-driver-non-free,iperf3,iptables,iputils-ping,ipvsadm,libseccomp2,lm-sensors,neofetch,net-tools,nfs-common,nvme-cli,open-iscsi,parted,psmisc,python3,python3-apt,python3-kubernetes,python3-yaml,smartmontools,socat,software-properties-common,unzip,util-linux, python-babel-localedata, python3-babel, python3-jinja2, python3-json-pointer, python3-jsonpatch, python3-jsonschema,python3-markupsafe, python3-pyrsistent, python3-tz, ubuntu-server-minimal, python3-openshift
+    #         install_recommends: false
+
+    # - name: User Configuration
+    #   block:
+    #     - name: User Configuration | SSH keys
+    #       authorized_key:
+    #         user: "{{ ansible_user }}"
+    #         key: "https://github.com/DylansDecoded.keys"
+    #         state: present
+
+    #     - name: User Configuration | sshd_conf
+    #       notify: restart_sshd
+    #       copy:
+    #         src: files/sshd_config
+    #         dest: /etc/ssh/sshd_config
+    #         owner: root
+    #         group: root
+    #         mode: "0644"
+
+
+    #     - name: User Configuration | Silence login
+    #       file:
+    #         dest: "{{ '/home/' + ansible_user if ansible_user != 'root' else '/root' }}/.hushlogin"
+    #         state: touch
+    #         owner: "{{ ansible_user }}"
+    #         group: "{{ ansible_user }}"
+    #         mode: "0644"
+    #         modification_time: preserve
+    #         access_time: preserve
+
+    #     - name: User Configuration | Add user to sudoers
+    #       when: ansible_user != 'root'
+    #       copy:
+    #         content: "{{ ansible_user }} ALL=(ALL:ALL) NOPASSWD:ALL"
+    #         dest: "/etc/sudoers.d/{{ ansible_user }}"
+    #         owner: root
+    #         group: root
+    #         mode: "0440"
+
+    - name: Ubuntu Network Configuration
       notify: Reboot
       block:
-        - name: Update System | Update apt cache
-          apt:
-            upgrade: dist
-            update_cache: yes
-            cache_valid_time: 3600
+    #     - name: Mask systemd-network-wait-online
+    #       command: systemctl mask systemd-networkd-wait-online
 
-    - name: Locale
-      block:
-        - name: Locale | Set TimeZone
-          timezone:
-            name: America/New_York
 
-    - name: Packages
-      block:
+    #     - name: Enable systemd-networkd
+    #       systemd:
+    #         name: systemd-networkd
+    #         state: started
+    #         enabled: true
 
-        - name: Packages | Install common packages
-          apt:
-            name: i965-va-driver-shaders,apt-transport-https,ca-certificates,conntrack,curl,dirmngr,gdisk,gnupg,hdparm,htop,intel-gpu-tools,intel-media-va-driver-non-free,iperf3,iptables,iputils-ping,ipvsadm,libseccomp2,lm-sensors,neofetch,net-tools,nfs-common,nvme-cli,open-iscsi,parted,psmisc,python3,python3-apt,python3-kubernetes,python3-yaml,smartmontools,socat,software-properties-common,unzip,util-linux
-            install_recommends: false
+    #     - name: Disable ufw
+    #       systemd:
+    #         name: ufw
+    #         state: stopped
+    #         enabled: false
 
-    - name: User Configuration
-      block:
-        - name: User Configuration | SSH keys
-          authorized_key:
-            user: "{{ ansible_user }}"
-            key: "https://github.com/{{ github_username }}.keys"
-            state: present
+    #     - name: Disable systemd-resolved
+    #       systemd:
+    #         name: systemd-resolved
+    #         state: stopped
+    #         enabled: false
 
-        - name: User Configuration | Silence login
-          file:
-            dest: "{{ '/home/' + ansible_user if ansible_user != 'root' else '/root' }}/.hushlogin"
-            state: touch
-            owner: "{{ ansible_user }}"
-            group: "{{ ansible_user }}"
-            mode: "0644"
-            modification_time: preserve
-            access_time: preserve
+        # - name: Ubuntu Network Configuration | Delete link to /etc/resolv.conf
+        #   file:
+        #     path: /etc/resolv.conf
+        #     state: absent
 
-        - name: User Configuration | Add user to sudoers
-          when: ansible_user != 'root'
-          copy:
-            content: "{{ ansible_user }} ALL=(ALL:ALL) NOPASSWD:ALL"
-            dest: "/etc/sudoers.d/{{ ansible_user }}"
+        # - name: Ubuntu Network Configuration | Create correct /etc/resolv.conf
+        #   copy:
+        #     dest: /etc/resolv.conf
+        #     content: |
+        #       search .
+        #       nameserver 10.1.100.51
+
+        - name: Ubuntu Network Configuration | Update netplan
+          template:
+            src: templates/00-installer-config.yaml.j2
+            dest: /etc/netplan/00-installer-config.yaml
             owner: root
             group: root
-            mode: "0440"
-
-
-    - name: Network Configuration
-      notify: Reboot
-      block:
-        - name: Network Configuration | Set hostname
-          hostname:
-            name: "{{ inventory_hostname }}"
-        - name: Network Configuration | Update hosts
-          copy:
-            dest: /etc/hosts
-            content: |
-              127.0.0.1 localhost
-              127.0.1.1 {{ inventory_hostname }}
-              # The following lines are desirable for IPv6 capable hosts
-              ::1     localhost ip6-localhost ip6-loopback
-              ff02::1 ip6-allnodes
-              ff02::2 ip6-allrouters
-            mode: preserve
-
-        - name: Network Configuration | Update /etc/systemd/resolved.conf
-          copy:
-            dest: /etc/systemd/resolved.conf
-            content: |
-              [Resolve]
-              DNS=10.1.100.51
-              Domains=~.
-            mode: preserve
-
-        - name: reload systemd-resolved
-          systemd:
-            name: systemd-resolved
-            state: restarted
-
-    - name: System Configuration
-      notify: Reboot
-      block:
-        - name: System Configuration | NFS
-          copy:
-            src: files/nfsmount.conf
-            dest: /etc/nfsmount.conf
-            owner: root
-            group: root
             mode: "0644"
-        - name: System Configuration | Disable apparmor
-          systemd:
-            name: apparmor
-            state: stopped
-            masked: true
-        - name: System Configuration | Disable swap
-          ansible.posix.mount:
-            name: "{{ item }}"
-            fstype: swap
-            state: absent
-          loop: ["none", "swap"]
-        - name: System Configuration | Create Kernel modules
-          copy:
-            dest: "/etc/modules-load.d/{{ item }}.conf"
-            mode: "0644"
-            content: "{{ item }}"
-          loop: ["br_netfilter", "ceph", "ip_vs", "ip_vs_rr", "nbd", "overlay", "rbd", "tcp_bbr"]
-          register: modules_status
-        - name: System Configuration | Reload Kernel modules # noqa: no-changed-when no-handler
-          when: modules_status.changed
-          systemd:
-            name: systemd-modules-load
-            state: restarted
-        - name: System Configuration | Sysctl
-          ansible.posix.sysctl:
-            name: "{{ item.key }}"
-            value: "{{ item.value }}"
-            sysctl_file: /etc/sysctl.d/99-kubernetes.conf
-            reload: true
-          with_dict: "{{ sysctl_config }}"
-          vars:
-            sysctl_config:
-              fs.inotify.max_queued_events: 65536
-              fs.inotify.max_user_watches: 524288
-              fs.inotify.max_user_instances: 8192
-        - name: System Configuration | Grub (1)
-          replace:
-            path: /etc/default/grub
-            regexp: '^(GRUB_CMDLINE_LINUX=(?:(?![" ]{{ item.key | regex_escape }}=).)*)(?:[" ]{{ item.key | regex_escape }}=\S+)?(.*")$'
-            replace: '\1 {{ item.key }}={{ item.value }}\2'
-          with_dict: "{{ grub_config }}"
-          vars:
-            grub_config:
-              apparmor: "0"
-              mitigations: "off"
-          register: grub_status
-        - name: System Configuration | Grub (2) # noqa: no-changed-when no-handler
-          when: grub_status.changed
-          command: update-grub
+
+        - name: Ubuntu Network Configuration | Apply netplan
+          command: netplan apply
+
+        - name: Reboot after network configuration
+          reboot:
+            msg: Rebooting nodes
+            reboot_timeout: 3600
+
+
+    # - name: General Network Configuration
+    #   notify: Reboot
+    #   block:
+    #     - name: Network Configuration | Update hosts
+    #       copy:
+    #         dest: /etc/hosts
+    #         content: |
+    #           127.0.0.1 localhost
+    #           127.0.1.1 {{ inventory_hostname }}
+    #           # The following lines are desirable for IPv6 capable hosts
+    #           ::1     localhost ip6-localhost ip6-loopback
+    #           ff02::1 ip6-allnodes
+    #           ff02::2 ip6-allrouters
+    #         mode: preserve
+
+    # - name: System Configuration
+    #   notify: Reboot
+    #   block:
+    #     - name: System Configuration | NFS
+    #       copy:
+    #         src: files/nfsmount.conf
+    #         dest: /etc/nfsmount.conf
+    #         owner: root
+    #         group: root
+    #         mode: "0644"
+    #     - name: System Configuration | Disable apparmor
+    #       systemd:
+    #         name: apparmor
+    #         state: stopped
+    #         masked: true
+    #     - name: System Configuration | Disable swap
+    #       ansible.posix.mount:
+    #         name: "{{ item }}"
+    #         fstype: swap
+    #         state: absent
+    #       loop: ["none", "swap"]
+    #     - name: System Configuration | Create Kernel modules
+    #       copy:
+    #         dest: "/etc/modules-load.d/{{ item }}.conf"
+    #         mode: "0644"
+    #         content: "{{ item }}"
+    #       loop: ["br_netfilter", "ceph", "ip_vs", "ip_vs_rr", "nbd", "overlay", "rbd", "tcp_bbr"]
+    #       register: modules_status
+    #     - name: System Configuration | Reload Kernel modules # noqa: no-changed-when no-handler
+    #       when: modules_status.changed
+    #       systemd:
+    #         name: systemd-modules-load
+    #         state: restarted
+    #     - name: System Configuration | Sysctl
+    #       ansible.posix.sysctl:
+    #         name: "{{ item.key }}"
+    #         value: "{{ item.value }}"
+    #         sysctl_file: /etc/sysctl.d/99-kubernetes.conf
+    #         reload: true
+    #       with_dict: "{{ sysctl_config }}"
+    #       vars:
+    #         sysctl_config:
+    #           fs.inotify.max_queued_events: 65536
+    #           fs.inotify.max_user_watches: 524288
+    #           fs.inotify.max_user_instances: 8192
+    #     # - name: System Configuration | Grub (1)
+    #     #   replace:
+    #     #     path: /etc/default/grub
+    #     #     regexp: '^(GRUB_CMDLINE_LINUX=(?:(?![" ]{{ item.key | regex_escape }}=).)*)(?:[" ]{{ item.key | regex_escape }}=\S+)?(.*")$'
+    #     #     replace: '\1 {{ item.key }}={{ item.value }}\2'
+    #     #   with_dict: "{{ grub_config }}"
+    #     #   vars:
+    #     #     grub_config:
+    #     #       net.ifnames: "0"
+    #     #       apparmor: "0"
+    #     #       mitigations: "off"
+    #     #   register: grub_status
+
+    #     # - name: System Configuration | Grub (2) # noqa: no-changed-when no-handler
+    #     #   when: grub_status.changed
+    #     #   command: update-grub
 
   handlers:
     - name: Reboot
       reboot:
         msg: Rebooting nodes
         reboot_timeout: 3600
+    - name: restart_sshd
+      service:
+        name: sshd
+        state: restarted
 
 
