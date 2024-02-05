@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.4.0
+      version: 2.5.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -24,8 +24,10 @@ spec:
   uninstall:
     keepHistory: false
   dependsOn:
-    - name: longhorn
-      namespace: longhorn-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: storage
   values:
     controllers:
       main:
@@ -35,7 +37,7 @@ spec:
           main:
             image:
               repository: ghcr.io/zwave-js/zwave-js-ui
-              tag: 9.6.2@sha256:cf5eac533babba885390f1fd674d41299dc4e425b3ffde1a813a07af29234469
+              tag: 9.8.2@sha256:cf5eac533babba885390f1fd674d41299dc4e425b3ffde1a813a07af29234469
             env:
               TZ: America/New_York
             probes:

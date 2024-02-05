@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.4.0
+      version: 2.5.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -24,8 +24,10 @@ spec:
   uninstall:
     keepHistory: false
   dependsOn:
-    - name: longhorn
-      namespace: longhorn-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: storage
   values:
     controllers:
       main:
@@ -53,27 +55,30 @@ spec:
               readiness: *probes
               startup:
                 enabled: false
+            securityContext: &securityContext
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
             resources:
-              limits: &resources
-                memory: 1Gi
               requests:
-                <<: *resources
                 cpu: 10m
+              limits:
+                memory: 1Gi
           jbops:
             image:
               repository: registry.k8s.io/git-sync/git-sync
-              tag: v4.1.0@sha256:fd9722fd02e3a559fd6bb4427417c53892068f588fc8372aa553fbf2f05f9902
+              tag: v4.2.0@sha256:d277810f72bc30bf0e276db609c0b606a83b5698606d92b6b14f50ea5f54de5f
             env:
               GITSYNC_REPO: https://github.com/blacktwin/JBOPS
               GITSYNC_REF: master
               GITSYNC_PERIOD: 24h
               GITSYNC_ROOT: /add-ons
+            securityContext: *securityContext
             resources:
-              limits: &resources
-                memory: 128Mi
               requests:
-                <<: *resources
                 cpu: 10m
+              limits:
+                memory: 128Mi
         pod:
           securityContext:
             runAsUser: 568
@@ -103,5 +108,7 @@ spec:
       config:
         enabled: true
         existingClaim: tautulli
+      tmp:
+        type: emptyDir
       add-ons:
         type: emptyDir

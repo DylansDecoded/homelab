@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.4.0
+      version: 2.5.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -27,8 +27,10 @@ spec:
   dependsOn:
     - name: mosquitto
       namespace: default
-    - name: longhorn
-      namespace: longhorn-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: storage
   values:
     controllers:
       main:
@@ -38,7 +40,7 @@ spec:
           main:
             image:
               repository: ghcr.io/koenkk/zigbee2mqtt
-              tag: v1.35.0@sha256:11484861c807cc7920bfb034f772d6bc28645ddbc5291f67919868ad0c1cd92e
+              tag: v1.35.2@sha256:11484861c807cc7920bfb034f772d6bc28645ddbc5291f67919868ad0c1cd92e
             env:
               TZ: America/New_York
               ZIGBEE2MQTT_DATA: /config
