@@ -35,7 +35,7 @@ spec:
       service:
         annotations:
           external-dns.alpha.kubernetes.io/hostname: external.robsonhome.cloud
-          io.cilium/lb-ipam-ips: 10.1.30.240
+          io.cilium/lb-ipam-ips: 10.1.33.206
       ingressClassResource:
         name: external
         default: false
