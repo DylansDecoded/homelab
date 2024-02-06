@@ -68,9 +68,10 @@ spec:
             resources:
               requests:
                 cpu: 100m
+                memory: 512Mi
               limits:
                 gpu.intel.com/i915: "1"
-                memory: 8Gi
+                memory: 4Gi
         pod:
           affinity:
             podAntiAffinity:
@@ -125,13 +126,13 @@ spec:
         sizeLimit: 4Gi
         globalMounts:
           - path: /dev/shm
-      usb:
+      pci:
         enabled: true
         type: hostPath
-        hostPath: /dev/bus/usb
+        hostPath: /sys/bus/pci
         hostPathType: Directory
         globalMounts:
-          - path: /dev/bus/usb
+          - path: /sys/bus/pci
       media:
         type: nfs
         server: truenas.robsonhome.cloud
