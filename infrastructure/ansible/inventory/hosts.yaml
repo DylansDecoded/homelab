@@ -14,11 +14,10 @@ docker:
     ansible_user: dylan
     ansible_python_interpreter: /usr/bin/python3
   hosts:
-    s3:
-      ansible_host: 10.1.30.99
-
-    # onepassword-connect:
-    #   ansible_host: 10.1.30.90
+    ns1:
+      ansible_host: 10.1.100.51
+    # ns2:
+    #   ansible_host: 10.1.100.52
 
 kubernetes:
   vars:
