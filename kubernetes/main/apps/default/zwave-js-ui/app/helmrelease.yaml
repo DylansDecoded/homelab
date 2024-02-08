@@ -37,7 +37,7 @@ spec:
           main:
             image:
               repository: ghcr.io/zwave-js/zwave-js-ui
-              tag: 9.8.2@sha256:cf5eac533babba885390f1fd674d41299dc4e425b3ffde1a813a07af29234469
+              tag: 9.8.2
             env:
               TZ: America/New_York
             probes:
@@ -59,7 +59,7 @@ spec:
               privileged: true
             resources:
               limits: &resources
-                memory: 512Mi
+                memory: 256Mi
               requests:
                 <<: *resources
                 cpu: 10m
@@ -72,6 +72,7 @@ spec:
           http:
             port: *port
           websocket:
+            enabled: true
             port: 3000
 
     serviceMonitor:

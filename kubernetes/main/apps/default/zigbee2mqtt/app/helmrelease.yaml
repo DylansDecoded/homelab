@@ -40,7 +40,7 @@ spec:
           main:
             image:
               repository: ghcr.io/koenkk/zigbee2mqtt
-              tag: v1.35.2@sha256:11484861c807cc7920bfb034f772d6bc28645ddbc5291f67919868ad0c1cd92e
+              tag: 1.35.3
             env:
               TZ: America/New_York
               ZIGBEE2MQTT_DATA: /config
@@ -79,11 +79,12 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
             resources:
-              limits: &resources
-                memory: 512Mi
               requests:
-                <<: *resources
-                cpu: 10m
+                cpu: 8m
+                memory: 212M
+              limits:
+                memory: 256M
+
         pod:
           securityContext:
             runAsUser: 568
@@ -96,6 +97,10 @@ spec:
         ports:
           http:
             port: 8080
+        metrics:
+          enabled: true
+          port: 9000
+
     ingress:
       main:
         enabled: true
@@ -113,7 +118,8 @@ spec:
 
     persistence:
       config:
-        enabled: true
         existingClaim: zigbee2mqtt
-        globalMounts:
-          - path: /config
+        advancedMounts:
+          main:
+            main:
+              - path: /config
