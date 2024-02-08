@@ -43,7 +43,7 @@ spec:
         pathType: Prefix
         ingressClassName: internal
         hosts:
-          - &host alertmanager.devbu.io
+          - &host alertmanager.robsonhome.cloud
         tls:
           - hosts:
               - *host
