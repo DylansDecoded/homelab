@@ -34,7 +34,7 @@ spec:
       replicaCount: 2
       service:
         annotations:
-          external-dns.alpha.kubernetes.io/hostname: external.devbu.io
+          external-dns.alpha.kubernetes.io/hostname: external.robsonhome.cloud
           io.cilium/lb-ipam-ips: 10.1.33.206
       ingressClassResource:
         name: external
@@ -92,6 +92,6 @@ spec:
         requests:
           cpu: 100m
         limits:
-          memory: 500Mi
+          memory: 250Mi
     defaultBackend:
       enabled: false
