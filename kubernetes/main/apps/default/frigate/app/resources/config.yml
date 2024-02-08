@@ -58,7 +58,7 @@ objects:
 go2rtc:
   streams:
     reolink_backporch_turret_cam:
-      - http://10.1.90.3/flv?port=1935&app=bcs&stream=channel0_main.bcs&user={FRIGATE_CAMERA_USER}&password=${FRIGATE_CAMERA_PASSWORD}
+      - http://10.1.90.3/flv?port=1935&app=bcs&stream=channel0_main.bcs&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}
       - "ffmpeg:reolink_backporch_turret_cam#audio=opus"
 
     reolink_backporch_turret_cam_sub:
