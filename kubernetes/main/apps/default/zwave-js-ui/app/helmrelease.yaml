@@ -72,7 +72,6 @@ spec:
           http:
             port: *port
           websocket:
-            enabled: true
             port: 3000
 
     serviceMonitor:
