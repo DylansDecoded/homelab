@@ -10,7 +10,7 @@ spec:
   commonMetadata:
     labels:
       app: *app
-  path: ./kubernetes/main/apps/monitoring/grafana/app
+  path: ./kubernetes/main/apps/observability/grafana/app
   prune: true
   sourceRef:
     kind: GitRepository
