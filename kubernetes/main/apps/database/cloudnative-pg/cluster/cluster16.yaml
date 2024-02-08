@@ -6,7 +6,7 @@ metadata:
   name: postgres16
 spec:
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.1-17
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.1-13
   primaryUpdateStrategy: unsupervised
   storage:
     size: 20Gi
@@ -18,12 +18,12 @@ spec:
     parameters:
       max_connections: "600"
       max_slot_wal_keep_size: 10GB
-      shared_buffers: 512MB
+      shared_buffers: 256MB
   resources:
     requests:
-      cpu: 200m
+      cpu: 250m
     limits:
-      memory: 1Gi
+      memory: 2Gi
   monitoring:
     enablePodMonitor: true
     # Ref: https://github.com/cloudnative-pg/cloudnative-pg/issues/2501
@@ -43,7 +43,7 @@ spec:
         compression: bzip2
         maxParallel: 8
       destinationPath: s3://cloudnative-pg/
-      endpointURL: https://10.1.30.80
+      endpointURL: http://10.1.30.80:9000
       # Note: serverName version needs to be inclemented
       # when recovering from an existing cnpg cluster
       serverName: &currentCluster postgres16-v2
