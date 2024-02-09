@@ -11,20 +11,17 @@ spec:
   targetNamespace: kube-system
   bootstrap: true
   valuesContent: |-
+    bgpControlPlane:
+      enabled: true
     autoDirectNodeRoutes: true
     bpf:
       masquerade: true
-    cgroup:
-      automount:
-        enabled: false
-      hostRoot: /sys/fs/cgroup
     cluster:
       id: 1
       name: kubernetes
     containerRuntime:
       integration: containerd
       socketPath: /var/run/k3s/containerd/containerd.sock
-    devices: {{ ansible_default_ipv4.interface }}
     enableRuntimeDeviceDetection: true
     endpointRoutes:
       enabled: true
@@ -37,8 +34,6 @@ spec:
     k8sServicePort: 6444
     kubeProxyReplacement: true
     kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
-    l2announcements:
-      enabled: true
     loadBalancer:
       algorithm: maglev
       mode: dsr
