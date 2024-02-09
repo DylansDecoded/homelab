@@ -2,13 +2,13 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: robsonhome.cloud
+  name: robsonhome-cloud
 spec:
   secretName: robsonhome-cloud-tls
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: "*.robsonhome.cloud"
+  commonName: robsonhome.cloud
   dnsNames:
     - robsonhome.cloud
     - "*.robsonhome.cloud"
