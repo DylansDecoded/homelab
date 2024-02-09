@@ -21,7 +21,7 @@ spec:
       shared_buffers: 256MB
   resources:
     requests:
-      cpu: 250m
+      cpu: 128m
     limits:
       memory: 2Gi
   monitoring:
