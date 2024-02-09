@@ -14,8 +14,16 @@ spec:
     bgpControlPlane:
       enabled: true
     autoDirectNodeRoutes: true
+    cni
+      exclusive: false
     bpf:
       masquerade: true
+      tproxy: true
+    bgp:
+      enabled: false
+      announce:
+        loadbalancerIP: true
+        podCIDR: false
     cluster:
       id: 1
       name: kubernetes
@@ -28,7 +36,7 @@ spec:
     hubble:
       enabled: false
     ipam:
-      mode: kubernetes
+      mode: "kubernetes"
     ipv4NativeRoutingCIDR: "{{ k3s_server['cluster-cidr'] }}"
     k8sServiceHost: 127.0.0.1
     k8sServicePort: 6444

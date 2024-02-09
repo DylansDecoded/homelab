@@ -29,20 +29,42 @@ spec:
   values:
     bgpControlPlane:
       enabled: true
+
+    bgp:
+      enabled: false
+      announce:
+        loadbalancerIP: true
+        podCIDR: false
+
     cluster:
       id: 1
       name: kubernetes
+
     containerRuntime:
       integration: containerd
       socketPath: /var/run/k3s/containerd/containerd.sock
+
+    endpointStatus:
+      enabled: true
+      status: "policy"
+
+    ingressController:
+      enabled: false
+      loadBalancerMode: shared
+
     endpointRoutes:
       enabled: true
+
     enableCiliumEndpointSlice: true
+
     bandwidthManager:
       enabled: true
       bbr: true
+
     bpf:
       masquerade: true
+      tproxy: true
+
     hubble:
       enabled: true
       metrics:
@@ -54,11 +76,14 @@ spec:
           - port-distribution
           - icmp
           - http
+
       relay:
         enabled: true
         rollOutPods: true
+
       serviceMonitor:
-        enabled: true
+        enabled: false
+
       dashboards:
         enabled: true
         annotations:
@@ -74,37 +99,46 @@ spec:
             - hosts:
                 - *host
       rollOutPods: true
-      ingressController:
-        enabled: false
+
       l7Proxy: true
+
       loadBalancer:
         algorithm: maglev
         mode: dsr
-        l7:
-          backend: envoy
-      envoy:
-        enabled: true
+
       ipam:
-        mode: kubernetes
+        mode: "kubernetes"
+
       autoDirectNodeRoutes: true
+
       routingMode: native
+
       ipv4NativeRoutingCIDR: 10.42.0.0/16
+
       k8sServiceHost: 127.0.0.1
+
       k8sServicePort: 6444
+
       kubeProxyReplacement: true
+
       kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
+
       localRedirectPolicy: true
+
       operator:
         rollOutPods: true
         prometheus:
           enabled: true
           serviceMonitor:
             enabled: true
+
       prometheus:
         enabled: true
         serviceMonitor:
           enabled: true
+
       rollOutCiliumPods: true
+
       securityContext:
         privileged: true
         capabilities:
