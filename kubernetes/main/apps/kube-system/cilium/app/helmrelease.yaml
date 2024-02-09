@@ -58,6 +58,9 @@ spec:
 
     enableCiliumEndpointSlice: true
 
+    nodePort:
+      enabled: true
+
     bandwidthManager:
       enabled: true
       bbr: true
