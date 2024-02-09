@@ -40,7 +40,7 @@ spec:
                 valueFrom:
                   secretKeyRef:
                     name: external-dns-pihole-secret
-                    key: password
+                    key: EXTERNAL_DNS_PIHOLE_PASSWORD
               EXTERNAL_DNS_PIHOLE_TLS_SKIP_VERIFY: true
             args:
               - --domain-filter=robsonhome.cloud
