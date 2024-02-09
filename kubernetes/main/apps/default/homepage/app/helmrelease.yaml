@@ -1,0 +1,130 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: homepage
+spec:
+  releaseName: homepage
+  interval: 30m
+  maxHistory: 3
+  chart:
+    spec:
+      chart: homepage
+      version: 1.2.3
+      sourceRef:
+        kind: HelmRepository
+        name: jameswynn
+        namespace: flux-system
+  values:
+    image:
+      repository: ghcr.io/gethomepage/homepage
+      tag: v0.8.7
+    enableRbac: true
+    podAnnotations:
+      reloader.stakater.com/auto: "true"
+    serviceAccount:
+      create: true
+    ingress:
+      main:
+        ingressClassName: nginx
+        enabled: true
+        hosts:
+          - host: &host home.cfg.sh
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - *host
+    envFrom:
+      - secretRef: # yamllint disable-line
+          name: homepage-app-secrets
+    resources:
+      requests:
+        cpu: 10m
+        memory: 100Mi
+      limits:
+        memory: 200Mi
+    config:
+      kubernetes:
+        mode: cluster
+      settings:
+        title: Cluster Home
+        theme: dark
+        background: https://images.unsplash.com/photo-1444080748397-f442aa95c3e5?auto=format&fit=crop&w=2560&q=80
+        favicon: https://docs.cfg.sh/logo.png
+
+        cardBlur: sm
+        disableCollapse: true
+        statusStyle: dot
+        headerStyle: clean
+        iconStyle: theme
+
+        layout:
+          media:
+            header: false
+            columns: 3
+            style: row
+            useEqualHeights: true
+          selfhosted:
+            header: false
+            columns: 4
+            style: row
+          downloads:
+            header: false
+            columns: 4
+            style: row
+            useEqualHeights: true
+          monitoring:
+          nas:
+          network:
+          security:
+      services:
+        - network:
+            - pfsense:
+                href: https://pfs.robsonhome.cloud
+                icon: pfsense.png
+            - pi-hole:
+                href: http://ns1.robsonhome.cloud/admin/
+                icon: pi-hole.png
+                widget:
+                  type: pihole
+                  url: "http://ns1.robsonhome.cloud:3001"
+                  key: "{{ PIHOLE_API_KEY }}"
+        - nas:
+            - portal:
+                href: https://truenas.robsonhome.cloud
+                icon: truenas.png
+
+      widgets:
+        - kubernetes:
+            cluster:
+              show: false
+              cpu: false
+              memory: false
+              showLabel: false
+            nodes:
+              show: true
+              cpu: true
+              memory: true
+              showLabel: true
+      bookmarks:
+        - homelab:
+            - cloudflare:
+                - abbr: cf
+                  href: https://dash.cloudflare.com
+        - dev:
+            - kubesearch:
+                - abbr: ks
+                  href: https://kubesearch.dev/
+            - github:
+                - abbr: gh
+                  href: https://github.com/
+            - hacker news:
+                - abbr: hn
+                  href: https://news.ycombinator.com/
+        - social:
+            - reddit:
+                - abbr: rdt
+                  href: https://reddit.com/

@@ -19,6 +19,7 @@ resources:
   # - ./hajimari.yaml
   - ./ingress-nginx.yaml
   - ./intel.yaml
+  - ./jameswynn.yaml
   - ./jetstack.yaml
   - ./longhorn.yaml
   - ./metrics-server.yaml
