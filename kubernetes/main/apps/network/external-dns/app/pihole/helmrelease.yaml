@@ -44,9 +44,8 @@ spec:
               EXTERNAL_DNS_PIHOLE_TLS_SKIP_VERIFY: true
             args:
               - --domain-filter=robsonhome.cloud
-              - --interval=1m
-              - --log-format=text
-              - --log-level=info
+              - --source=service
+              - --source=ingress
               - --metrics-address=:7979
               - --provider=pihole
               - --registry=noop
