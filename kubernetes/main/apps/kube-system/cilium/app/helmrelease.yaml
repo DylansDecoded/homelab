@@ -58,8 +58,7 @@ spec:
 
     enableCiliumEndpointSlice: true
 
-    # nodePort:
-    #   enabled: true
+    devices: mainif
 
     bandwidthManager:
       enabled: true
