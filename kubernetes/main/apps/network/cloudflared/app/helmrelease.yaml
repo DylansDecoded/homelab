@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.4.0
+      version: 2.5.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -37,11 +37,12 @@ spec:
           main:
             image:
               repository: docker.io/cloudflare/cloudflared
-              tag: 2023.10.0@sha256:c18744ae1767c17c5562cc731c24e64a5a2f93f35c3dd6629b90dedaff6dff8f
+              tag: 2024.2.0@sha256:4d55d2f8c05a2e372d62dc3e84586e2b87730d6fb372fdb1801dd7dbab70187c
             env:
-              NO_AUTOUPDATE: "true"
+              NO_AUTOUPDATE: true
               TUNNEL_CRED_FILE: /etc/cloudflared/creds/credentials.json
               TUNNEL_METRICS: 0.0.0.0:8080
+              TUNNEL_ORIGIN_ENABLE_HTTP2: true
               TUNNEL_TRANSPORT_PROTOCOL: quic
               TUNNEL_POST_QUANTUM: true
             args:
@@ -71,10 +72,9 @@ spec:
               capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                cpu: 5m
-                memory: 128M
+                cpu: 10m
               limits:
-                memory: 256M
+                memory: 128Mi
         pod:
           securityContext:
             runAsUser: 568
