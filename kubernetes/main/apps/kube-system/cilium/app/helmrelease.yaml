@@ -31,34 +31,15 @@ spec:
     bgpControlPlane:
       enabled: true
 
-    bgp:
-      enabled: false
-      announce:
-        loadbalancerIP: true
-        podCIDR: false
-
-    cluster:
-      id: 1
-      name: kubernetes
+    autoDirectNodeRoutes: true
 
     containerRuntime:
       integration: containerd
-      socketPath: /var/run/k3s/containerd/containerd.sock
-
-    endpointStatus:
-      enabled: true
-      status: "policy"
-
-    # ingressController:
-    #   enabled: false
-    #   loadBalancerMode: shared
 
     endpointRoutes:
       enabled: true
 
     enableCiliumEndpointSlice: true
-
-    devices: mainif
 
     bandwidthManager:
       enabled: true
@@ -67,7 +48,15 @@ spec:
     bpf:
       masquerade: true
       # tproxy: true
-
+    cgroup:
+      autoMount:
+        enabled: false
+      hostRoot: /sys/fs/cgroup
+    cluster:
+      id: 1
+      name: kubernetes
+    devices: mainif
+    enableRuntimeDeviceDetection: true
     hubble:
       enabled: true
       metrics:
@@ -79,18 +68,18 @@ spec:
           - port-distribution
           - icmp
           - http
-
-      relay:
-        enabled: true
-        rollOutPods: true
-
       serviceMonitor:
-        enabled: false
-
+        enabled: true
       dashboards:
         enabled: true
         annotations:
           grafana_folder: Cilium
+      relay:
+        enabled: true
+        rollOutPods: true
+        prometheus:
+          serviceMonitor:
+            enabled: true
       ui:
         enabled: true
         ingress:
@@ -104,10 +93,8 @@ spec:
 
       l7Proxy: true
 
-      nodePort:
-        enabled: true
-
-      devices: mainif
+      # nodePort:
+      #   enabled: true
 
       loadBalancer:
         algorithm: maglev
@@ -115,8 +102,6 @@ spec:
 
       ipam:
         mode: "kubernetes"
-
-      autoDirectNodeRoutes: true
 
       routingMode: native
 
@@ -131,22 +116,23 @@ spec:
       kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
 
       localRedirectPolicy: true
-
-      rollOutCiliumPods:
-        enabled: true
-
       operator:
         rollOutPods: true
         prometheus:
           enabled: true
           serviceMonitor:
             enabled: true
-
+        dashboards:
+          enabled: true
+          annotations:
+            grafana_folder: Cilium
       prometheus:
         enabled: true
         serviceMonitor:
           enabled: true
+          trustCRDsExist: true
 
+      rollOutCiliumPods: true
       securityContext:
         privileged: true
         capabilities:
@@ -168,7 +154,3 @@ spec:
             - NET_ADMIN
             - SYS_ADMIN
             - SYS_RESOURCE
-      cgroup:
-        autoMount:
-          enabled: false
-        hostRoot: /sys/fs/cgroup
