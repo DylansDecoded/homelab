@@ -105,6 +105,9 @@ spec:
 
       l7Proxy: true
 
+      nodePort:
+        enabled: true
+
       devices: mainif
 
       loadBalancer:
