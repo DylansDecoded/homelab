@@ -58,8 +58,8 @@ spec:
 
     enableCiliumEndpointSlice: true
 
-    nodePort:
-      enabled: true
+    # nodePort:
+    #   enabled: true
 
     bandwidthManager:
       enabled: true
@@ -67,7 +67,7 @@ spec:
 
     bpf:
       masquerade: true
-      tproxy: true
+      # tproxy: true
 
     hubble:
       enabled: true
@@ -103,8 +103,6 @@ spec:
             - hosts:
                 - *host
 
-      rollOutPods: true
-
       l7Proxy: true
 
       devices: mainif
@@ -132,7 +130,8 @@ spec:
 
       localRedirectPolicy: true
 
-      enableRuntimeDeviceDetection: true
+      rollOutCiliumPods:
+        enabled: true
 
       operator:
         rollOutPods: true
@@ -145,8 +144,6 @@ spec:
         enabled: true
         serviceMonitor:
           enabled: true
-
-      rollOutCiliumPods: true
 
       securityContext:
         privileged: true
