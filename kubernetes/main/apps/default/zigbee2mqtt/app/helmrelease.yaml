@@ -40,7 +40,7 @@ spec:
           main:
             image:
               repository: ghcr.io/koenkk/zigbee2mqtt
-              tag: 1.35.3
+              tag: 1.35.3@sha256:f80dbca12732841eb9f77b04903d00369543c65632f9209fc1c545e9525e7bdd
             env:
               TZ: America/New_York
               ZIGBEE2MQTT_DATA: /config
@@ -58,8 +58,8 @@ spec:
               ZIGBEE2MQTT_CONFIG_DEVICE_OPTIONS_LEGACY: "false"
               ZIGBEE2MQTT_CONFIG_DEVICE_OPTIONS_RETAIN: "true"
               ZIGBEE2MQTT_CONFIG_EXPERIMENTAL_NEW_API: "true"
-              ZIGBEE2MQTT_CONFIG_FRONTEND_PORT: &port 80
-              ZIGBEE2MQTT_CONFIG_FRONTEND_URL: https://zigbee.robsonhome.cloud
+              # ZIGBEE2MQTT_CONFIG_FRONTEND_PORT: &port 80
+              # ZIGBEE2MQTT_CONFIG_FRONTEND_URL: https://zigbee.robsonhome.cloud
               ZIGBEE2MQTT_CONFIG_HOMEASSISTANT: "true"
               ZIGBEE2MQTT_CONFIG_MQTT_INCLUDE_DEVICE_INFORMATION: "true"
               ZIGBEE2MQTT_CONFIG_MQTT_KEEPALIVE: 60
@@ -95,7 +95,7 @@ spec:
       main:
         ports:
           http:
-            port: *port
+            port: 80
         metrics:
           enabled: true
           port: 9000
