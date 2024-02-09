@@ -9,7 +9,7 @@ spec:
   imageName: ghcr.io/cloudnative-pg/postgresql:16.1-13
   primaryUpdateStrategy: unsupervised
   storage:
-    size: 20Gi
+    size: 10Gi
     storageClass: local-hostpath
   superuserSecret:
     name: cloudnative-pg-secret
@@ -23,7 +23,7 @@ spec:
     requests:
       cpu: 128m
     limits:
-      memory: 2Gi
+      memory: 1Gi
   monitoring:
     enablePodMonitor: true
     # Ref: https://github.com/cloudnative-pg/cloudnative-pg/issues/2501
