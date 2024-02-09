@@ -58,9 +58,8 @@ spec:
               ZIGBEE2MQTT_CONFIG_DEVICE_OPTIONS_LEGACY: "false"
               ZIGBEE2MQTT_CONFIG_DEVICE_OPTIONS_RETAIN: "true"
               ZIGBEE2MQTT_CONFIG_EXPERIMENTAL_NEW_API: "true"
-              ZIGBEE2MQTT_CONFIG_FRONTEND: "true"
-              # ZIGBEE2MQTT_CONFIG_FRONTEND_PORT: &port 80
-              # ZIGBEE2MQTT_CONFIG_FRONTEND_URL: https://zigbee.robsonhome.cloud
+              ZIGBEE2MQTT_CONFIG_FRONTEND_PORT: &port 80
+              ZIGBEE2MQTT_CONFIG_FRONTEND_URL: https://zigbee.robsonhome.cloud
               ZIGBEE2MQTT_CONFIG_HOMEASSISTANT: "true"
               ZIGBEE2MQTT_CONFIG_MQTT_INCLUDE_DEVICE_INFORMATION: "true"
               ZIGBEE2MQTT_CONFIG_MQTT_KEEPALIVE: 60
@@ -96,7 +95,7 @@ spec:
       main:
         ports:
           http:
-            port: 8080
+            port: *port
         metrics:
           enabled: true
           port: 9000
@@ -106,7 +105,7 @@ spec:
         enabled: true
         className: internal
         hosts:
-          - host: &host "zigbee.robsonhome.cloud"
+          - host: &host zigbee.robsonhome.cloud
             paths:
               - path: /
                 service:
@@ -118,8 +117,5 @@ spec:
 
     persistence:
       config:
+        enabled: true
         existingClaim: zigbee2mqtt
-        advancedMounts:
-          main:
-            main:
-              - path: /config
