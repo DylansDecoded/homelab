@@ -6,13 +6,13 @@ metadata:
   name: &app thanos
   namespace: flux-system
 spec:
-  targetNamespace: monitoring
+  targetNamespace: observability
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: external-secrets-stores
-  path: ./kubernetes/main/apps/monitoring/thanos/app
+  path: ./kubernetes/main/apps/observability/thanos/app
   prune: true
   sourceRef:
     kind: GitRepository
