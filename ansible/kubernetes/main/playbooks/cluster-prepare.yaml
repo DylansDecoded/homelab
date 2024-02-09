@@ -9,14 +9,14 @@
       pause:
         seconds: 5
   tasks:
-    # - name: Update System
-    #   notify: Reboot
-    #   block:
-    #     - name: Update System | Update apt cache
-    #       apt:
-    #         upgrade: dist
-    #         update_cache: yes
-    #         cache_valid_time: 3600
+    - name: Update System
+      notify: Reboot
+      block:
+        - name: Update System | Update apt cache
+          apt:
+            upgrade: dist
+            update_cache: yes
+            cache_valid_time: 3600
 
     # - name: Locale
     #   block:
@@ -154,20 +154,21 @@
             reboot_timeout: 3600
 
 
-    # - name: General Network Configuration
-    #   notify: Reboot
-    #   block:
-    #     - name: Network Configuration | Update hosts
-    #       copy:
-    #         dest: /etc/hosts
-    #         content: |
-    #           127.0.0.1 localhost
-    #           127.0.1.1 {{ inventory_hostname }}
-    #           # The following lines are desirable for IPv6 capable hosts
-    #           ::1     localhost ip6-localhost ip6-loopback
-    #           ff02::1 ip6-allnodes
-    #           ff02::2 ip6-allrouters
-    #         mode: preserve
+    - name: General Network Configuration
+      notify: Reboot
+      block:
+        - name: Network Configuration | Update hosts
+          copy:
+            dest: /etc/hosts
+            content: |
+              127.0.0.1 localhost
+              127.0.1.1 {{ inventory_hostname }}
+
+              # The following lines are desirable for IPv6 capable hosts
+              ::1     localhost ip6-localhost ip6-loopback
+              ff02::1 ip6-allnodes
+              ff02::2 ip6-allrouters
+            mode: preserve
 
     # - name: System Configuration
     #   notify: Reboot
