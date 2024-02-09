@@ -16,21 +16,17 @@ spec:
     autoDirectNodeRoutes: true
     bpf:
       masquerade: true
-      tproxy: true
     cluster:
       id: 1
       name: kubernetes
     containerRuntime:
       integration: containerd
-      socketPath: /var/run/k3s/containerd/containerd.sock
-    enableRuntimeDeviceDetection: true
     endpointRoutes:
       enabled: true
     hubble:
       enabled: false
     ipam:
       mode: "kubernetes"
-    devices: mainif
     ipv4NativeRoutingCIDR: "{{ k3s_server['cluster-cidr'] }}"
     k8sServiceHost: 127.0.0.1
     k8sServicePort: 6444
