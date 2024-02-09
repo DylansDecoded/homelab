@@ -96,46 +96,25 @@ spec:
       resources:
         mgr:
           requests:
-            cpu: "125m"
-            memory: "512Mi"
+            cpu: 500m
+            memory: 512Mi
           limits:
-            memory: "2Gi"
+            cpu: 512m
+            memory: 512Mi
         mon:
           requests:
-            cpu: "50m"
-            memory: "512Mi"
+            cpu: 256m
+            memory: 256Mi
           limits:
-            memory: "1Gi"
+            cpu: 1000m
+            memory: 512Mi
         osd:
           requests:
-            cpu: "445m"
-            memory: "2Gi"
+            cpu: 500m
+            memory: 1Gi
           limits:
-            memory: "6Gi"
-        mgr-sidecar:
-          requests:
-            cpu: "50m"
-            memory: "128Mi"
-          limits:
-            memory: "256Mi"
-        crashcollector:
-          requests:
-            cpu: "15m"
-            memory: "64Mi"
-          limits:
-            memory: "64Mi"
-        logcollector:
-          requests:
-            cpu: "100m"
-            memory: "100Mi"
-          limits:
-            memory: "1Gi"
-        cleanup:
-          requests:
-            cpu: "250m"
-            memory: "100Mi"
-          limits:
-            memory: "1Gi"
+            cpu: 1000m
+            memory: 2Gi
     cephBlockPools:
       - name: ceph-blockpool
         spec:
@@ -179,10 +158,10 @@ spec:
             activeStandby: true
             resources:
               requests:
-                cpu: "35m"
-                memory: "1Gi"
+                cpu: 512m
+                memory: 1Gi
               limits:
-                memory: "3Gi"
+                memory: 2Gi
         storageClass:
           enabled: true
           isDefault: false
@@ -220,10 +199,10 @@ spec:
             port: 80
             resources:
               requests:
-                cpu: "100m"
-                memory: "256Mi"
+                cpu: 512m
+                memory: 512Mi
               limits:
-                memory: "2Gi"
+                memory: 1Gi
             instances: 1
           healthCheck:
             bucket:
