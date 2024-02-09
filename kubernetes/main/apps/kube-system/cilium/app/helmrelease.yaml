@@ -102,6 +102,7 @@ spec:
           tls:
             - hosts:
                 - *host
+
       rollOutPods: true
 
       l7Proxy: true
