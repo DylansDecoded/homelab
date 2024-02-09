@@ -49,9 +49,9 @@ spec:
       enabled: true
       status: "policy"
 
-    ingressController:
-      enabled: false
-      loadBalancerMode: shared
+    # ingressController:
+    #   enabled: false
+    #   loadBalancerMode: shared
 
     endpointRoutes:
       enabled: true
