@@ -1,14 +1,10 @@
 ---
 originRequest:
-  http2Origin: true
+  originServerName: external.robsonhome.cloud
 
 ingress:
   - hostname: robsonhome.cloud
     service: https://nginx-external-controller.network.svc.cluster.local:443
-    originRequest:
-      originServerName: external.robsonhome.cloud
   - hostname: "*.robsonhome.cloud"
     service: https://nginx-external-controller.network.svc.cluster.local:443
-    originRequest:
-      originServerName: external.robsonhome.cloud
   - service: http_status:404
