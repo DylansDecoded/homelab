@@ -1,132 +1,57 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta2.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: cilium
 spec:
-  interval: 30m
   chart:
     spec:
       chart: cilium
-      version: 1.15.0
+      interval: 30m
       sourceRef:
         kind: HelmRepository
         name: cilium
         namespace: flux-system
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
+      version: 1.15.0
+  interval: 30m
+
+  valuesFrom:
+    - kind: ConfigMap
+      name: cilium-values
+
   values:
-    autoDirectNodeRoutes: true
-    bandwidthManager:
-      enabled: true
-      bbr: true
-    bpf:
-      masquerade: true
-    cgroup:
-      automount:
-        enabled: false
-      hostRoot: /sys/fs/cgroup
-    cluster:
-      id: 1
-      name: kubernetes
-    containerRuntime:
-      integration: containerd
-      socketPath: /var/run/k3s/containerd/containerd.sock
-    devices: eth0
-    enableRuntimeDeviceDetection: true
-    endpointRoutes:
-      enabled: true
     hubble:
-      enabled: true
-      metrics:
-        enabled:
-          - dns:query;ignoreAAAA
-          - drop
-          - tcp
-          - flow
-          - port-distribution
-          - icmp
-          - http
-        serviceMonitor:
-          enabled: true
-        dashboards:
-          enabled: true
-          annotations:
-            grafana_folder: Cilium
-      relay:
+      serviceMonitor:
         enabled: true
-        rollOutPods: true
+
+      dashboards:
+        enabled: true
+        label: grafana_dashboard
+        namespace: monitoring
+        labelValue: "1"
+        annotations: {}
+
+      relay:
         prometheus:
           serviceMonitor:
             enabled: true
+
       ui:
-        enabled: true
-        rollOutPods: true
         ingress:
           enabled: true
-          className: internal
+          className: "internal"
           hosts:
             - &host hubble.robsonhome.cloud
           tls:
             - hosts:
                 - *host
-    ipam:
-      mode: kubernetes
-    ipv4NativeRoutingCIDR: 10.42.0.0/16
-    k8sServiceHost: 10.1.33.254
-    k8sServicePort: 6443
-    kubeProxyReplacement: true
-    kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
-    l2announcements:
-      enabled: true
-    loadBalancer:
-      algorithm: maglev
-      mode: dsr
-    localRedirectPolicy: true
-    operator:
-      rollOutPods: true
-      prometheus:
-        enabled: true
-        serviceMonitor:
-          enabled: true
-      dashboards:
-        enabled: true
-        annotations:
-          grafana_folder: Cilium
+
     prometheus:
-      enabled: true
       serviceMonitor:
         enabled: true
-        trustCRDsExist: true
-    dashboards:
-      enabled: true
-      annotations:
-        grafana_folder: Cilium
-    rollOutCiliumPods: true
-    routingMode: native
-    securityContext:
-      capabilities:
-        ciliumAgent:
-          - CHOWN
-          - KILL
-          - NET_ADMIN
-          - NET_RAW
-          - IPC_LOCK
-          - SYS_ADMIN
-          - SYS_RESOURCE
-          - DAC_OVERRIDE
-          - FOWNER
-          - SETGID
-          - SETUID
-        cleanCiliumState:
-          - NET_ADMIN
-          - SYS_ADMIN
-          - SYS_RESOURCE
+
+    operator:
+      prometheus:
+        serviceMonitor:
+          enabled: true
