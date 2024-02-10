@@ -34,7 +34,7 @@ spec:
       replicaCount: 2
       service:
         annotations:
-          external-dns.alpha.kubernetes.io/hostname: external.robsonhome.cloud
+          external-dns.alpha.kubernetes.io/hostname: external.lab.robsonhome.cloud
           io.cilium/lb-ipam-ips: 10.1.33.206
       ingressClassResource:
         name: external

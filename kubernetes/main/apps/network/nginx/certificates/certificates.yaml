@@ -6,9 +6,9 @@ metadata:
 spec:
   secretName: robsonhome-cloud-tls
   issuerRef:
-    name: letsencrypt-staging
+    name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: "*.robsonhome.cloud"
+  commonName: "*.lab.robsonhome.cloud"
   dnsNames:
-    - "robsonhome.cloud"
-    - "*.robsonhome.cloud"
+    - "lab.robsonhome.cloud"
+    - "*.lab.robsonhome.cloud"
