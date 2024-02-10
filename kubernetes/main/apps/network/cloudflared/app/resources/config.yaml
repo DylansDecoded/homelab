@@ -1,10 +1,10 @@
 ---
 originRequest:
-  originServerName: external.lab.robsonhome.cloud
+  originServerName: external.robsonhome.cloud
 
 ingress:
-  - hostname: lab.robsonhome.cloud
+  - hostname: robsonhome.cloud
     service: https://nginx-external-controller.network.svc.cluster.local:443
-  - hostname: "*.lab.robsonhome.cloud"
+  - hostname: "*.robsonhome.cloud"
     service: https://nginx-external-controller.network.svc.cluster.local:443
   - service: http_status:404
