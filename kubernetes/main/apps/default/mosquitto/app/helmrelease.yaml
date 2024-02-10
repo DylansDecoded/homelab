@@ -67,7 +67,7 @@ spec:
         type: LoadBalancer
         annotations:
           external-dns.alpha.kubernetes.io/hostname: mosquitto.robsonhome.cloud
-          io.cilium/lb-ipam-ips: 172.16.0.6
+          io.cilium/lb-ipam-ips: 10.1.33.204
         ports:
           http:
             port: 1883
