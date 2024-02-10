@@ -59,14 +59,14 @@ go2rtc:
   streams:
     reolink_backporch_turret_cam:
       - http://10.1.90.3/flv?port=1935&app=bcs&stream=channel0_main.bcs&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}
-      - "ffmpeg:reolink_backporch_turret_cam#audio=opus"
+      - "ffmpeg:reolink_backporch_turret_cam#video=copy#audio=copy#audio=opus"
 
     reolink_backporch_turret_cam_sub:
       - ffmpeg:http://10.1.90.3/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}
 
     reolink_driveway_floodlight_cam:
       - http://10.1.90.4/flv?port=1935&app=bcs&stream=channel0_main.bcs&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}
-      - "ffmpeg:reolink_backporch_turret_cam#audio=opus"
+      - "ffmpeg:reolink_driveway_floodlight_cam#video=copy#audio=copy#audio=opus"
 
     reolink_driveway_floodlight_cam_sub:
       - http://10.1.90.4/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}
@@ -76,18 +76,18 @@ cameras:
     ffmpeg:
       inputs:
         - path: rtsp://127.0.0.1:8554/reolink_backporch_turret_cam?video=copy&audio=aac
-          input_args: preset-rtsp-restream-low-latency
+          input_args: preset-rtsp-generic
           roles: ["record"]
         - path: rtsp://127.0.0.1:8554/reolink_backporch_turret_cam_sub?video=copy
-          input_args: preset-rtsp-restream-low-latency
+          input_args: preset-http-reolink
           roles: ["detect"]
 
-  reolink_driveway_floodlight_cam_sub:
+  reolink_driveway_floodlight_cam:
     ffmpeg:
       inputs:
         - path: rtsp://127.0.0.1:8554/reolink_driveway_floodlight_cam_sub?video=copy&audio=aac
-          input_args: preset-rtsp-restream-low-latency
+          input_args: preset-rtsp-generic
           roles: ["record"]
         - path: rtsp://127.0.0.1:8554/reolink_driveway_floodlight_cam_sub?video=copy
-          input_args: preset-rtsp-restream-low-latency
+          input_args: preset-http-reolink
           roles: ["detect"]
