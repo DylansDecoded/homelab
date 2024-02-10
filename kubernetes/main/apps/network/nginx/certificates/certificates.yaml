@@ -10,5 +10,5 @@ spec:
     kind: ClusterIssuer
   commonName: "*.robsonhome.cloud"
   dnsNames:
-    - robsonhome.cloud
+    - "robsonhome.cloud"
     - "*.robsonhome.cloud"
