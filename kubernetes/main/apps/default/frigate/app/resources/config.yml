@@ -68,12 +68,12 @@ go2rtc:
 
     reolink_driveway_floodlight_cam:
       # - http://10.1.90.4/flv?port=1935&app=bcs&stream=channel0_main.bcs&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}
-      - rtsp://admin:{FRIGATE_CAMERA_PASSWORD}@10.1.90.4:554/h265Preview_01_main
+      - rtsp://admin:{FRIGATE_CAMERA_PASSWORD}@10.1.90.4:554/h265Preview_02_main
       - "ffmpeg:reolink_driveway_floodlight_cam#video=copy#audio=copy#audio=opus"
 
     reolink_driveway_floodlight_cam_sub:
       # - http://10.1.90.4/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user={FRIGATE_CAMERA_USER}&password={FRIGATE_CAMERA_PASSWORD}
-      - rtsp://admin:{FRIGATE_CAMERA_PASSWORD}@10.1.90.4:554/h265Preview_01_sub
+      - rtsp://admin:{FRIGATE_CAMERA_PASSWORD}@10.1.90.4:554/h265Preview_02_sub
 
 cameras:
   reolink_backporch_turret_cam:
