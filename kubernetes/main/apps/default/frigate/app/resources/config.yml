@@ -101,7 +101,3 @@ cameras:
         - path: rtsp://127.0.0.1:8554/reolink_driveway_floodlight_cam_sub?video=copy
           input_args: preset-rtsp-generic
           roles: ["detect"]
-
-          detect:
-            width: 1536
-            height: 576
