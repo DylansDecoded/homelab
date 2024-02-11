@@ -95,9 +95,6 @@ cameras:
     detect:
       width: 2304
       height: 864
-      stationary:
-        interval: 0
-        threshold: 100
 
     best_image_timeout: 60
 
