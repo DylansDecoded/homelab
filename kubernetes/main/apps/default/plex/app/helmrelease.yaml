@@ -90,6 +90,7 @@ spec:
     service:
       main:
         type: LoadBalancer
+        externalTrafficPolicy: Cluster
         annotations:
           io.cilium/lb-ipam-ips: 10.1.33.210
         ports:
@@ -101,9 +102,9 @@ spec:
         className: external
         annotations:
           external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
-          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+          nginx.ingress.kubernetes.io/backend-protocol: HTTPS
         hosts:
-          - host: &host "{{ .Release.Name }}.robsonhome.cloud"
+          - host: &host plex.robsonhome.cloud
             paths:
               - path: /
                 service:
