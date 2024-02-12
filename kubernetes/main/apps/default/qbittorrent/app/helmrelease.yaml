@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.4.0
+      version: 2.5.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -37,7 +37,7 @@ spec:
           main:
             image:
               repository: ghcr.io/onedr0p/qbittorrent
-              tag: 4.6.2@sha256:fedb62126c82ae0c7192e9052633411294a27e9c233613c03b0a8d168d160040
+              tag: 4.6.3@sha256:a4ad890e8c4a287c17d12ca22eb1d84a046aba2efbd882bf7d6eb12459f6a70c
             env:
               TZ: America/New_York
               QBITTORRENT__PORT: &port 80
@@ -45,15 +45,14 @@ spec:
               QBT_Preferences__WebUI__AlternativeUIEnabled: false
               QBT_Preferences__WebUI__AuthSubnetWhitelistEnabled: true
               QBT_Preferences__WebUI__AuthSubnetWhitelist: |-
-                10.32.0.0/16, 10.1.40.0/24, 10.1.33.0/24, 10.1.30.0/24,
-                10.1.20.0/24 10.1.10.0/24, 10.1.1.0/24
+                10.42.0.0/16, 192.168.42.0/24
               QBT_Preferences__WebUI__LocalHostAuth: false
-              QBT_BitTorrent__Session__Interface: eth0
+              QBT_BitTorrent__Session__Interface: mainif
               QBT_BitTorrent__Session__InterfaceAddress:
                 valueFrom:
                   fieldRef:
                     fieldPath: status.podIP
-              QBT_BitTorrent__Session__InterfaceName: eth0
+              QBT_BitTorrent__Session__InterfaceName: mainif
             probes:
               liveness: &probes
                 enabled: true
@@ -69,12 +68,15 @@ spec:
               readiness: *probes
               startup:
                 enabled: false
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                cpu: 200m
-                memory: 2Gi
+                cpu: 100m
               limits:
-                memory: 16Gi
+                memory: 8Gi
         pod:
           securityContext:
             runAsUser: 568
@@ -91,7 +93,7 @@ spec:
         controller: main
         type: LoadBalancer
         annotations:
-          io.cilium/lb-ipam-ips: 10.1.33.219
+          io.cilium/lb-ipam-ips: 10.1.33.202
         ports:
           bittorrent:
             enabled: true
@@ -102,13 +104,7 @@ spec:
         enabled: true
         className: internal
         hosts:
-          - host: &host "{{ .Release.Name }}.robsonhome.cloud"
-            paths:
-              - path: /
-                service:
-                  name: main
-                  port: http
-          - host: &customHost qb.robsonhome.cloud
+          - host: &host qb.robsonhome.cloud
             paths:
               - path: /
                 service:
@@ -117,7 +113,6 @@ spec:
         tls:
           - hosts:
               - *host
-              - *customHost
     persistence:
       config:
         enabled: true

@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.4.0
+      version: 2.5.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -24,8 +24,8 @@ spec:
   uninstall:
     keepHistory: false
   dependsOn:
-    - name: longhorn
-      namespace: longhorn-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
     - name: volsync
       namespace: storage
   values:
@@ -42,8 +42,6 @@ spec:
               repository: ghcr.io/recyclarr/recyclarr
               tag: 6.0.2@sha256:02add40feae0569401b5020528e06419b47046723d0bb4bef1e82325e9eefdad
             env:
-              # https://github.com/Radarr/Radarr/issues/7030#issuecomment-1039689518
-              # https://github.com/dotnet/runtime/issues/9336
               COMPlus_EnableDiagnostics: "0"
               TZ: America/New_York
             envFrom:
@@ -57,9 +55,8 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 64M
               limits:
-                memory: 128M
+                memory: 128Mi
         pod:
           securityContext:
             runAsUser: 568
