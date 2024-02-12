@@ -25,11 +25,11 @@ spec:
     keepHistory: false
   dependsOn:
     - name: intel-device-plugin-gpu
-      namespace: kube-system
+      namespace: tools
     - name: rook-ceph-cluster
       namespace: rook-ceph
     - name: volsync
-      namespace: volsync-system
+      namespace: storage
   values:
     controllers:
       main:
