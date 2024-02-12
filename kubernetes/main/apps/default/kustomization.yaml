@@ -30,5 +30,5 @@ resources:
   # - ./tautulli/ks.yaml
   # - ./thelounge/ks.yaml
   # - ./unpackerr/ks.yaml
-  # - ./zigbee2mqtt/ks.yaml
+  - ./zigbee2mqtt/ks.yaml
   - ./zwave-js-ui/ks.yaml
