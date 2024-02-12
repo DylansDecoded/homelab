@@ -96,8 +96,8 @@ spec:
       resources:
         mgr:
           requests:
-            cpu: "125m"
-            memory: "512Mi"
+            cpu: "50m"
+            memory: "300Mi"
           limits:
             memory: "2Gi"
         mon:
@@ -108,7 +108,7 @@ spec:
             memory: "1Gi"
         osd:
           requests:
-            cpu: "442m"
+            cpu: "300m"
             memory: "2Gi"
           limits:
             memory: "6Gi"
@@ -132,7 +132,7 @@ spec:
             memory: "1Gi"
         cleanup:
           requests:
-            cpu: "250m"
+            cpu: "150m"
             memory: "100Mi"
           limits:
             memory: "1Gi"
@@ -220,7 +220,7 @@ spec:
             port: 80
             resources:
               requests:
-                cpu: 100m
+                cpu: 80m
                 memory: 256Mi
               limits:
                 memory: 2Gi

@@ -7,14 +7,14 @@ resources:
   - ./namespace.yaml
   # Flux-Kustomizations
   - ./authelia/ks.yaml
-  - ./autobrr/ks.yaml
+  # - ./autobrr/ks.yaml
   # - ./cross-seed/ks.yaml
   - ./frigate/ks.yaml
   - ./home-assistant/ks.yaml
   # - ./kromgo/ks.yaml
   - ./lldap/ks.yaml
   # - ./media-browser/ks.yaml
-  - ./miniflux/ks.yaml
+  #- ./miniflux/ks.yaml
   - ./mosquitto/ks.yaml
   # - ./node-red/ks.yaml
   # - ./overseerr/ks.yaml
