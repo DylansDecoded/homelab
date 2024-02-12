@@ -129,9 +129,9 @@ spec:
           - hosts:
               - *host
       thanosService:
-        enabled: true
+        enabled: false
       thanosServiceMonitor:
-        enabled: true
+        enabled: false
       prometheusSpec:
         replicas: 2
         replicaExternalLabelName: __replica__
@@ -146,24 +146,24 @@ spec:
           - auto-gomaxprocs
           - memory-snapshot-on-shutdown
           - new-service-discovery-manager
-        thanos:
-          image: quay.io/thanos/thanos:${THANOS_VERSION}
-          version: "${THANOS_VERSION#v}"
-          objectStorageConfig:
-            existingSecret:
-              name: thanos-objstore-secret
-              key: objstore.yml
-        retention: 2d
-        retentionSize: 15GB
-        externalLabels:
-          cluster: main
-        storageSpec:
-          volumeClaimTemplate:
-            spec:
-              storageClassName: local-hostpath
-              resources:
-                requests:
-                  storage: 20Gi
+        # thanos:
+        #   image: quay.io/thanos/thanos:${THANOS_VERSION}
+        #   version: "${THANOS_VERSION#v}"
+        #   objectStorageConfig:
+        #     existingSecret:
+        #       name: thanos-objstore-secret
+        #       key: objstore.yml
+        # retention: 2d
+        # retentionSize: 15GB
+        # externalLabels:
+        #   cluster: main
+        # storageSpec:
+        #   volumeClaimTemplate:
+        #     spec:
+        #       storageClassName: local-hostpath
+        #       resources:
+        #         requests:
+        #           storage: 20Gi
     nodeExporter:
       enabled: true
     prometheus-node-exporter:
