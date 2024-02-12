@@ -45,7 +45,8 @@ spec:
               QBT_Preferences__WebUI__AlternativeUIEnabled: false
               QBT_Preferences__WebUI__AuthSubnetWhitelistEnabled: true
               QBT_Preferences__WebUI__AuthSubnetWhitelist: |-
-                10.42.0.0/16, 192.168.42.0/24
+                10.42.0.0/16, 10.1.1.0/24, 10.1.10.0/24,
+                10.1.20.0/24, 10.1.30.0/24, 10.1.40.0/24
               QBT_Preferences__WebUI__LocalHostAuth: false
               QBT_BitTorrent__Session__Interface: mainif
               QBT_BitTorrent__Session__InterfaceAddress:
