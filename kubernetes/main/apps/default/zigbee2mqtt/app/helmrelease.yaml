@@ -79,10 +79,9 @@ spec:
               capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                cpu: 8m
-                memory: 212M
+                cpu: 10m
               limits:
-                memory: 256M
+                memory: 512Mi
 
         pod:
           securityContext:
@@ -95,10 +94,7 @@ spec:
       main:
         ports:
           http:
-            port: 80
-        metrics:
-          enabled: true
-          port: 9000
+            port: 8080
 
     ingress:
       main:
