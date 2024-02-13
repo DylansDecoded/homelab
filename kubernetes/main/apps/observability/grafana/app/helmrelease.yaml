@@ -151,13 +151,13 @@ spec:
             jsonData:
               prometheusType: Thanos # Prometheus for victoria-metrics
             isDefault: true
-          - name: Loki
-            type: loki
-            uid: loki
-            access: proxy
-            url: http://loki-gateway.observability.svc.cluster.local
-            jsonData:
-              maxLines: 250
+          # - name: Loki
+          #   type: loki
+          #   uid: loki
+          #   access: proxy
+          #   url: http://loki-gateway.observability.svc.cluster.local
+          #   jsonData:
+          #     maxLines: 250
           - name: Alertmanager
             type: alertmanager
             uid: alertmanager
@@ -169,29 +169,24 @@ spec:
     dashboards:
       default:
         cloudflared:
-          # renovate: depName="Cloudflare Tunnels (cloudflared)"
           gnetId: 17457
           revision: 6
           datasource:
             - { name: DS_PROMETHEUS, value: Prometheus }
         external-dns:
-          # renovate: depName="External-dns"
           gnetId: 15038
           revision: 3
           datasource: Prometheus
-        # minio:
-        #   # renovate: depName="MinIO Dashboard"
-        #   gnetId: 13502
-        #   revision: 25
-        #   datasource:
-        #     - { name: DS_PROMETHEUS, value: Prometheus }
-        # node-exporter-full:
-        #   # renovate: depName="Node Exporter Full"
-        #   gnetId: 1860
-        #   revision: 33
-        #   datasource: Prometheus
+        minio:
+          gnetId: 13502
+          revision: 25
+          datasource:
+            - { name: DS_PROMETHEUS, value: Prometheus }
+        node-exporter-full:
+          gnetId: 1860
+          revision: 33
+          datasource: Prometheus
         redis:
-          # renovate: depName="Redis Dashboard for Prometheus Redis Exporter 1.x"
           gnetId: 763
           revision: 5
           datasource: Prometheus

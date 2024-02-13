@@ -40,6 +40,7 @@ spec:
               tag: 9.8.2
             env:
               TZ: America/New_York
+
             probes:
               liveness: &probes
                 enabled: true
@@ -64,8 +65,8 @@ spec:
                 <<: *resources
                 cpu: 10m
         pod:
-        nodeSelector:
-          zooz.feature.node.kubernetes.io/zwave: "true"
+          nodeSelector:
+            zooz.feature.node.kubernetes.io/zwave: "true"
     service:
       main:
         ports:
@@ -76,7 +77,7 @@ spec:
 
     serviceMonitor:
       main:
-        enabled: true # requires https://github.com/kvaster/zwavejs-prom
+        enabled: true
 
     ingress:
       main:
@@ -89,6 +90,7 @@ spec:
                 service:
                   name: main
                   port: http
+
         tls:
           - hosts:
               - *host
