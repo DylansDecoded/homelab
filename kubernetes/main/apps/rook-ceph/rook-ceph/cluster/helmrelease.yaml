@@ -1,65 +1,87 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta2.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: rook-ceph-cluster
 spec:
   interval: 30m
-  timeout: 15m
   chart:
     spec:
       chart: rook-ceph-cluster
-      version: v1.13.3
+      version: v1.13.4
       sourceRef:
         kind: HelmRepository
         name: rook-ceph
         namespace: flux-system
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
-  dependsOn:
-    - name: rook-ceph-operator
-      namespace: rook-ceph
-    - name: snapshot-controller
-      namespace: storage
   values:
+    toolbox:
+      enabled: false
+
     monitoring:
       enabled: true
       createPrometheusRules: true
-    ingress:
-      dashboard:
-        ingressClassName: internal
-        host:
-          name: &host rook.robsonhome.cloud
-          path: /
-        tls:
-          - hosts:
-              - *host
-    toolbox:
-      enabled: true
+
     configOverride: |
       [global]
       bdev_enable_discard = true
       bdev_async_discard = true
-      osd_class_update_on_start = false
+
     cephClusterSpec:
       network:
         provider: host
-        connections:
-          requireMsgr2: true
+
+      resources:
+        mgr:
+          requests:
+            cpu: "125m"
+            memory: "512Mi"
+          limits:
+            memory: "2Gi"
+        mon:
+          requests:
+            cpu: "49m"
+            memory: "512Mi"
+          limits:
+            memory: "1Gi"
+        osd:
+          requests:
+            cpu: "442m"
+            memory: "2Gi"
+          limits:
+            memory: "6Gi"
+        mgr-sidecar:
+          requests:
+            cpu: "49m"
+            memory: "128Mi"
+          limits:
+            memory: "256Mi"
+        crashcollector:
+          requests:
+            cpu: "15m"
+            memory: "64Mi"
+          limits:
+            memory: "64Mi"
+        logcollector:
+          requests:
+            cpu: "100m"
+            memory: "100Mi"
+          limits:
+            memory: "1Gi"
+        cleanup:
+          requests:
+            cpu: "250m"
+            memory: "100Mi"
+          limits:
+            memory: "1Gi"
+
       crashCollector:
         disable: false
+
       dashboard:
         enabled: true
         urlPrefix: /
-        ssl: false
+
       storage:
         useAllNodes: false
         useAllDevices: false
@@ -84,58 +106,19 @@ spec:
           - name: k3s-06
             devices:
               - name: /dev/disk/by-id/ata-SAMSUNG_MZ7KM960HAHP-00005_S2HTNX0H414441
-      placement:
-        mgr: &placement
-          nodeAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-                - matchExpressions:
-                    - key: node-role.kubernetes.io/control-plane
-                      operator: Exists
-        mon: *placement
-      resources:
-        mgr:
-          requests:
-            cpu: "50m"
-            memory: "300Mi"
-          limits:
-            memory: "2Gi"
-        mon:
-          requests:
-            cpu: "49m"
-            memory: "512Mi"
-          limits:
-            memory: "1Gi"
-        osd:
-          requests:
-            cpu: "300m"
-            memory: "2Gi"
-          limits:
-            memory: "6Gi"
-        mgr-sidecar:
-          requests:
-            cpu: "49m"
-            memory: "128Mi"
-          limits:
-            memory: "256Mi"
-        crashcollector:
-          requests:
-            cpu: "15m"
-            memory: "64Mi"
-          limits:
-            memory: "64Mi"
-        logcollector:
-          requests:
-            cpu: "100m"
-            memory: "100Mi"
-          limits:
-            memory: "1Gi"
-        cleanup:
-          requests:
-            cpu: "150m"
-            memory: "100Mi"
-          limits:
-            memory: "1Gi"
+
+    ingress:
+      dashboard:
+        ingressClassName: internal
+        annotations:
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+        host:
+          name: &host rook.robsonhome.cloud
+          path: "/"
+        tls:
+          - hosts:
+              - *host
+
     cephBlockPools:
       - name: ceph-blockpool
         spec:
@@ -163,6 +146,7 @@ spec:
       name: csi-ceph-blockpool
       isDefault: false
       deletionPolicy: Delete
+
     cephFileSystems:
       - name: ceph-filesystem
         spec:
@@ -190,6 +174,7 @@ spec:
           pool: data0
           reclaimPolicy: Delete
           allowVolumeExpansion: true
+          mountOptions: []
           parameters:
             csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
             csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
@@ -198,29 +183,31 @@ spec:
             csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
             csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
             csi.storage.k8s.io/fstype: ext4
+
     cephFileSystemVolumeSnapshotClass:
       enabled: true
       name: csi-ceph-filesystem
       isDefault: false
       deletionPolicy: Delete
+
     cephObjectStores:
       - name: ceph-objectstore
         spec:
           metadataPool:
             failureDomain: host
             replicated:
-              size: 6
+              size: 3
           dataPool:
             failureDomain: host
             erasureCoded:
-              dataChunks: 4
-              codingChunks: 2
+              dataChunks: 2
+              codingChunks: 1
           preservePoolsOnDelete: true
           gateway:
             port: 80
             resources:
               requests:
-                cpu: 80m
+                cpu: 100m
                 memory: 256Mi
               limits:
                 memory: 2Gi
