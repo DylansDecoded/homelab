@@ -1,4 +1,11 @@
 ---
+- name: Create user if not exists
+  user:
+    name: "{{ me.user }}"
+    shell: /bin/bash
+    password: ""
+  become: true
+
 - name: Add user to visudo
   lineinfile:
     path: /etc/sudoers

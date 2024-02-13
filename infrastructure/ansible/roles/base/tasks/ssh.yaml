@@ -1,3 +1,33 @@
+- name: Create ssh directory
+  file:
+    path: "/home/{{ me.user }}/.ssh"
+    owner: "{{ me.user }}"
+    group: "{{ me.user }}"
+    state: directory
+  become: true
+
+- name: Create authorized_keys file
+  file:
+    path: "/home/{{ me.user }}/.ssh/authorized_keys"
+    owner: "{{ me.user }}"
+    group: "{{ me.user }}"
+    state: touch
+  become: true
+
+- name: add mask to directory
+  file:
+    path: "/home/{{ me.user }}/.ssh"
+    mode: 0700
+    state: directory
+  become: true
+
+- name: add mask to authorized_keys
+  file:
+    path: "/home/{{ me.user }}/.ssh/authorized_keys"
+    mode: 0600
+    state: file
+  become: true
+
 - name: User Configuration | SSH keys
   authorized_key:
     user: "{{ me.user }}"

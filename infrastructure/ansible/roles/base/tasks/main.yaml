@@ -1,2 +1,12 @@
-- name: Setup NFS mounts
+- name: User Setup
+  include_tasks: user.yaml
+
+- name: SSH Setup
+  include_tasks: ssh.yaml
+
+- name: Networking Setup
+  include_tasks: networking.yaml
+
+- name: NFS Setup
   include_tasks: nfs.yaml
+  when: ansible_host not in groups['vps_servers']

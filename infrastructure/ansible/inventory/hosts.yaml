@@ -1,4 +1,14 @@
 ---
+vps_servers:
+  vars:
+    ansible_sudo_user: dylan
+    ansible_python_interpreter: /usr/bin/python3
+  hosts:
+    american-cloud-01:
+      ansible_host: 23.230.68.196
+      ansible_user: cloud
+      ansible_ssh_private_key_file: ~/.ssh/id_ed25519
+
 dns-servers:
   vars:
     ansible_user: dylan

@@ -11,12 +11,12 @@ network:
       addresses:
         - {{ ansible_default_ipv4.address }}/{{ ansible_default_ipv4.netmask }}
       nameservers:
-        addresses: [1.1.1.1,1.0.0.1]
+        addresses:
+          - 1.1.1.1
+          - 1.0.0.1
         search: [.]
       routes:
         - to: default
-          via: 149.28.62.1
-        - to: 169.254.0.0/16
-          via: 149.28.62.1
-          metric: 100
+          via: {{ ansible_default_ipv4.gateway }}
+
 

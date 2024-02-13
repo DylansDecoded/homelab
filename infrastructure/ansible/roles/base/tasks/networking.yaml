@@ -1,22 +1,36 @@
 ---
-# - name: Set hostname
-#   hostname:
-#     name: "{{ ansible_hostname }}"
-#   become: true
-
-# - name: Setup /etc/hosts
-#   template:
-#     src: templates/hosts.yaml.j2
-#     dest: /etc/hosts
-#   become: true
-
-- name: Set network interfaces configuration
-  template:
-    src: templates/interfaces.yaml.j2
-    dest: /etc/network/interfaces
-
-- name: systemctl restart networking
-  systemd:
-    name: networking
-    state: restarted
+- name: Set hostname
+  hostname:
+    name: "{{ ansible_hostname }}"
   become: true
+
+- name: Setup /etc/hosts
+  template:
+    src: templates/hosts.yaml.j2
+    dest: /etc/hosts
+  become: true
+
+- name: Remove symlink to /etc/resolv.conf
+  command: rm /etc/resolv.conf
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Create /etc/resolv.conf
+  copy:
+    src: files/resolv.conf
+    dest: /etc/resolv.conf
+    mode: preserve
+  become: true
+
+- name: Backup and Remove netplan currently on the system
+  command: cp 50-cloud-init.yaml 50-cloud-init.yaml.bak && rm 50-cloud-init.yaml
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Configure netplan
+  template:
+    src: templates/01-network-all.yaml.j2
+    dest: /etc/netplan/01-network-all.yaml
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Apply netplan
+  command: netplan apply
+  when: ansible_distribution == 'Ubuntu'
