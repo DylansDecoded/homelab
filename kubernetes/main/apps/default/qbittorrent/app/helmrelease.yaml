@@ -48,12 +48,12 @@ spec:
                 10.42.0.0/16, 10.1.1.0/24, 10.1.10.0/24,
                 10.1.20.0/24, 10.1.30.0/24, 10.1.40.0/24
               QBT_Preferences__WebUI__LocalHostAuth: false
-              QBT_BitTorrent__Session__Interface: mainif
+              QBT_BitTorrent__Session__Interface: eth0
               QBT_BitTorrent__Session__InterfaceAddress:
                 valueFrom:
                   fieldRef:
                     fieldPath: status.podIP
-              QBT_BitTorrent__Session__InterfaceName: mainif
+              QBT_BitTorrent__Session__InterfaceName: eth0
             probes:
               liveness: &probes
                 enabled: true
