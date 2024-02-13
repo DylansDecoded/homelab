@@ -63,9 +63,9 @@ spec:
               requests:
                 <<: *resources
                 cpu: 10m
-        # pod:
-        # nodeSelector:
-        #   zooz.feature.node.kubernetes.io/zwave: "true"
+        pod:
+        nodeSelector:
+          zooz.feature.node.kubernetes.io/zwave: "true"
     service:
       main:
         ports:
@@ -98,9 +98,9 @@ spec:
         existingClaim: zwave-js-ui
         globalMounts:
           - path: /usr/src/app/store
-      # usb:
-      #   type: hostPath
-      #   hostPath: /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00
-      #   hostPathType: CharDevice
-      #   globalMounts:
-      #     - path: /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00
+      usb:
+        type: hostPath
+        hostPath: /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00
+        hostPathType: CharDevice
+        globalMounts:
+          - path: /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00
