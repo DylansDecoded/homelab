@@ -24,6 +24,8 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    bgpControlPlane:
+      enabled: true
     autoDirectNodeRoutes: true
     bandwidthManager:
       enabled: true

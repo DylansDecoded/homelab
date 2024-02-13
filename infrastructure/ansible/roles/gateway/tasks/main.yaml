@@ -1,0 +1,8 @@
+- name: Configure Nginx
+  include_tasks: nginx.yaml
+
+- name: Configure wireguard
+  include_tasks: wireguard.yaml
+
+- name: Configure fail2ban
+  include_tasks: fail2ban.yaml

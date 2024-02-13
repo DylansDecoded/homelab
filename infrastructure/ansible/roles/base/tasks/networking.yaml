@@ -10,23 +10,6 @@
 #     dest: /etc/hosts
 #   become: true
 
-# - name: enable 8021q module
-#   modprobe:
-#     name: 8021q
-#   become: true
-
-# - name: Add 8021q module to /etc/modules
-#   lineinfile:
-#     path: /etc/modules
-#     line: 8021q
-#   become: true
-
-# - name: Install vlan package
-#   apt:
-#     name: vlan
-#     state: present
-#   become: true
-
 - name: Set network interfaces configuration
   template:
     src: templates/interfaces.yaml.j2

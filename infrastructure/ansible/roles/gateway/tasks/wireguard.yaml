@@ -1,0 +1,46 @@
+- name: Install wireguard tools
+  package:
+    name: "{{ item }}"
+  become: true
+  loop:
+    - wireguard-tools
+    - qrencode
+
+- name: Wireguard server config
+  template:
+    src: files/wireguard-server.conf
+    dest: /etc/wireguard/wg0.conf
+    mode: "0600"
+    backup: true
+  become: true
+  register: wireguard_conf
+
+- name: Enable wireguard
+  service:
+    name: wg-quick@wg0
+    enabled: true
+  become: true
+
+- name: Restart wireguard
+  service:
+    name: wg-quick@wg0
+    state: restarted
+  when: wireguard_conf.changed
+  become: true
+
+- name: Create wireguard client directory
+  file:
+    path: "{{ me.home }}/wireguard-clients"
+    state: directory
+    owner: "{{ me.user }}"
+    mode: "700"
+
+- name: Wireguard client configuration
+  template:
+    src: files/wireguard-client.conf
+    dest: "{{ me.home }}/wireguard-clients/{{ item.key }}.conf"
+    owner: "{{ me.user }}"
+    mode: "600"
+  loop: "{{ wireguard.clients | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
