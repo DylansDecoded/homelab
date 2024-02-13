@@ -92,15 +92,3 @@ cameras:
 
         - path: rtsp://127.0.0.1:8554/reolink_driveway_floodlight_cam_sub?video=copy
           roles: ["detect"]
-    detect:
-      width: 2304
-      height: 864
-
-    best_image_timeout: 60
-
-    record:
-      enabled: True
-      expire_interval: 0
-      retain:
-        days: 30
-        mode: motion
