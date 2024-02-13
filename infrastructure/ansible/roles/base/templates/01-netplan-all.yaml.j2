@@ -9,7 +9,7 @@ network:
       dhcp4: no
       dhcp6: no
       addresses:
-        - {{ ansible_default_ipv4.address }}/{{ ansible_default_ipv4.netmask }}
+        - {{ ansible_default_ipv4.address }}/24
       nameservers:
         addresses:
           - 1.1.1.1

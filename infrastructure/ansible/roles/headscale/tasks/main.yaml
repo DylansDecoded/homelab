@@ -1,0 +1,33 @@
+---
+- name: Create directory
+  file:
+    path: "/home/{{ me.user }}/headscale"
+    state: directory
+    owner: "{{ me.user }}"
+    group: "{{ me.user }}"
+
+- name: Create caddy directory
+  file:
+    path: "/home/{{ me.user }}/caddy"
+    state: directory
+    owner: "{{ me.user }}"
+    group: "{{ me.user }}"
+
+- name: create docker network 'reverseproxy-nw'
+  docker_network:
+    name: reverseproxy-nw
+    state: present
+
+- name: copy caddy docker compose file
+  copy:
+    src: files/caddy-docker-compose.yaml
+    dest: "/home/{{ me.user }}/caddy/docker-compose.yaml"
+    owner: "{{ me.user }}"
+    group: "{{ me.user }}"
+
+- name: Copy headscale docker-compose file
+  template:
+    src: files/headscale-docker-compose.yaml
+    dest: "/home/{{ me.user }}/headscale/docker-compose.yaml"
+    owner: "{{ me.user }}"
+    group: "{{ me.user }}"

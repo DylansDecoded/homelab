@@ -20,17 +20,27 @@
     dest: /etc/resolv.conf
     mode: preserve
   become: true
+# - name: Check if old netplan is present
+#   stat:
+#     path: /etc/netplan/50-cloud-init.yaml
+#   register: netplan
 
-- name: Backup and Remove netplan currently on the system
-  command: cp 50-cloud-init.yaml 50-cloud-init.yaml.bak && rm 50-cloud-init.yaml
-  when: ansible_distribution == 'Ubuntu'
+# - name: Backup and Remove netplan currently on the system
+#   command: cp 50-cloud-init.yaml 50-cloud-init.yaml.bak && rm 50-cloud-init.yaml
+#   when: ansible_distribution == 'Ubuntu' && netplan.stat.exists == True
 
-- name: Configure netplan
-  template:
-    src: templates/01-network-all.yaml.j2
-    dest: /etc/netplan/01-network-all.yaml
-  when: ansible_distribution == 'Ubuntu'
+# - name: Configure netplan
+#   template:
+#     src: templates/01-netplan-all.yaml.j2
+#     dest: /etc/netplan/01-netplan-all.yaml
+#   when: ansible_distribution == 'Ubuntu'
 
-- name: Apply netplan
-  command: netplan apply
-  when: ansible_distribution == 'Ubuntu'
+# - name: Apply netplan
+#   command: netplan apply
+#   when: ansible_distribution == 'Ubuntu'
+
+# - name: Restart networkd
+#   systemd:
+#     name: systemd-networkd
+#     state: restarted
+#   when: ansible_distribution == 'Ubuntu'
