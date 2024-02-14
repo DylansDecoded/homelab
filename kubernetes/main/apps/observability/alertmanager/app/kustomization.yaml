@@ -5,11 +5,11 @@ kind: Kustomization
 resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
-  - ./scrapeconfigs
-  - ./prometheusrules
 configMapGenerator:
-  - name: kube-state-metrics-configmap
+  - name: alertmanager-configmap
     files:
-      - kube-state-metrics.yaml=./resources/kube-state-metrics.yaml
+      - alertmanager.yaml=./resources/alertmanager.yaml
 generatorOptions:
   disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled

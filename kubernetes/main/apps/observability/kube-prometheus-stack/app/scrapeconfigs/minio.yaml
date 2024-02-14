@@ -4,7 +4,7 @@ kind: ScrapeConfig
 metadata:
   name: minio
 spec:
-  scheme: http
+  scheme: HTTP
   staticConfigs:
     - targets: ["10.1.30.200:9000"]
   metricsPath: /minio/v2/metrics/cluster
