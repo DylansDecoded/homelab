@@ -19,7 +19,7 @@ spec:
   values:
     image:
       repository: ghcr.io/gethomepage/homepage
-      tag: v0.8.7
+      tag: v0.8.8
     enableRbac: true
     podAnnotations:
       reloader.stakater.com/auto: "true"
@@ -27,10 +27,10 @@ spec:
       create: true
     ingress:
       main:
-        ingressClassName: nginx
+        ingressClassName: internal
         enabled: true
         hosts:
-          - host: &host home.cfg.sh
+          - host: &host homepage.robsonhome.cloud
             paths:
               - path: /
                 pathType: Prefix
@@ -39,7 +39,7 @@ spec:
               - *host
     envFrom:
       - secretRef: # yamllint disable-line
-          name: homepage-app-secrets
+          name: homepage-secret
     resources:
       requests:
         cpu: 10m
@@ -50,10 +50,9 @@ spec:
       kubernetes:
         mode: cluster
       settings:
-        title: Cluster Home
+        title: K3S Cluster Homepage
+        startUrl: https://homepage.robsonhome.cloud/
         theme: dark
-        background: https://images.unsplash.com/photo-1444080748397-f442aa95c3e5?auto=format&fit=crop&w=2560&q=80
-        favicon: https://docs.cfg.sh/logo.png
 
         cardBlur: sm
         disableCollapse: true
@@ -77,38 +76,61 @@ spec:
             style: row
             useEqualHeights: true
           monitoring:
-          nas:
-          network:
-          security:
+            header: false
+            columns: 4
+            style: row
+            useEqualHeights: true
+          # nas:
+          #   header: false
+          #   columns: 1
+          #   style: row
+          #   useEqualHeights: true
+          # network:
+          #   header: false
+          #   columns: 1
+          #   style: row
+          #   useEqualHeights: true
+          # security:
       services:
         - network:
-            - pfsense:
-                href: https://pfs.robsonhome.cloud
-                icon: pfsense.png
+            # - pfsense:
+            #     href: https://pfs.robsonhome.cloud
+            #     icon: pfsense.png
+            #     widget:
+            #       type: pfsense
+            #       url: "https://pfs.robsonhome.cloud"
+            #       key: "{{ PFSENSE_API_KEY }}"
+
             - pi-hole:
                 href: http://ns1.robsonhome.cloud/admin/
                 icon: pi-hole.png
                 widget:
                   type: pihole
                   url: "http://ns1.robsonhome.cloud:3001"
-                  key: "{{ PIHOLE_API_KEY }}"
-        - nas:
+                  key: "{{ HOMEPAGE_PIHOLE_API_KEY }}"
+        - truenas:
             - portal:
                 href: https://truenas.robsonhome.cloud
                 icon: truenas.png
+                widget:
+                  type: truenas
+                  url: "https://truenas.robsonhome.cloud"
+                  key: "{{ HOMEPAGE_TRUENAS_API_KEY }}"
 
       widgets:
         - kubernetes:
             cluster:
-              show: false
-              cpu: false
-              memory: false
-              showLabel: false
+              show: true
+              cpu: true
+              memory: true
+              showLabel: true
+              label: "K3S Cluster"
             nodes:
               show: true
               cpu: true
               memory: true
               showLabel: true
+
       bookmarks:
         - homelab:
             - cloudflare:
@@ -121,10 +143,10 @@ spec:
             - github:
                 - abbr: gh
                   href: https://github.com/
-            - hacker news:
-                - abbr: hn
-                  href: https://news.ycombinator.com/
         - social:
+            - facebook:
+                - abbr: fb
+                  href: https://facebook.com/
             - reddit:
                 - abbr: rdt
                   href: https://reddit.com/

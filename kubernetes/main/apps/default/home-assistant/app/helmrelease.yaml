@@ -77,6 +77,9 @@ spec:
         enabled: true
         className: external
         annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/group: "automation"
+          gethomepage.dev/icon: homeassistant.png
           external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
         hosts:
           - host: &host hass.robsonhome.cloud

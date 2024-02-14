@@ -11,7 +11,7 @@ resources:
   - ./cross-seed/ks.yaml
   - ./frigate/ks.yaml
   - ./home-assistant/ks.yaml
-  # - ./homepage/ks.yaml
+  - ./homepage/ks.yaml
   - ./jellyfin/ks.yaml
   # - ./kromgo/ks.yaml
   - ./lldap/ks.yaml
