@@ -90,9 +90,9 @@ spec:
               - 109 # render
     service:
       main:
-        type: LoadBalancer
-        annotations:
-          io.cilium/lb-ipam-ips: 10.1.33.220
+        # type: LoadBalancer
+        # annotations:
+        #   io.cilium/lb-ipam-ips: 10.1.33.220
         ports:
           http:
             port: *port
