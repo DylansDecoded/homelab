@@ -38,10 +38,101 @@ spec:
         containers:
           main:
             image:
-              repository: jellyfin/jellyfin
-              tag: 10.8.13@sha256:05a9734d7e83086b957c5b7a16cbb5a60b5bb8d113ffb953e57547359dd05140
+              repository: linuxserver/jellyfin
+              tag: 10.8.13
             env:
               DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
               JELLYFIN_FFmpeg__probesize: 500M
               JELLYFIN_FFmpeg__analyzeduration: 250M
               JELLYFIN_PublishedServerUrl: https://jellyfin.robsonhome.cloud
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: &port 8096
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 100m
+              limits:
+                gpu.intel.com/i915: 1
+                memory: 6Gi
+        pod:
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                      - key: app.kubernetes.io/name
+                        operator: In
+                        values: ["frigate"]
+                  topologyKey: kubernetes.io/hostname
+          nodeSelector:
+            intel.feature.node.kubernetes.io/gpu: "true"
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: "OnRootMismatch"
+            supplementalGroups:
+              - 44
+              - 109
+              - 65539
+      service:
+        main:
+          type: LoadBalancer
+          externalTrafficPolicy: Cluster
+          annotations:
+            io.cilium/lb-ipam-ips: 10.1.33.220
+          ports:
+            http:
+              port: *port
+      ingress:
+        main:
+          enabled: true
+          className: external
+          annotations:
+            external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
+            #nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+          hosts:
+            - host: &host jellyfin.robsonhome.cloud
+              paths:
+                - path: /
+                  service:
+                    name: main
+                    port: http
+          tls:
+            - hosts:
+                - *host
+      persistence:
+        config:
+          enabled: true
+          existingClaim: plex
+          advancedMounts:
+            main:
+              main:
+                - path: /config
+        media:
+          type: nfs
+          server: truenas.robsonhome.cloud
+          path: /mnt/tank/nfs/media
+          globalMounts:
+            - path: /media
+              readOnly: true
+
+        transcode:
+          enabled: true
+          type: emptyDir
+          advancedMounts:
+            main:
+              main:
+                - path: /transcode
