@@ -1,0 +1,47 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: jellyfin
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: app-template
+      version: 2.5.0
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 3
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  dependsOn:
+    - name: intel-device-plugin-gpu
+      namespace: tools
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: storage
+  values:
+    controllers:
+      main:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          main:
+            image:
+              repository: jellyfin/jellyfin
+              tag: 10.8.13@sha256:05a9734d7e83086b957c5b7a16cbb5a60b5bb8d113ffb953e57547359dd05140
+            env:
+              DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
+              JELLYFIN_FFmpeg__probesize: 500M
+              JELLYFIN_FFmpeg__analyzeduration: 250M
+              JELLYFIN_PublishedServerUrl: https://jellyfin.robsonhome.cloud
