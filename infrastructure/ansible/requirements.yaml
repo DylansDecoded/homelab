@@ -18,4 +18,4 @@ roles:
     version: v3.4.4
   - name: geerlingguy.docker
     src: https://github.com/geerlingguy/ansible-role-docker
-    version: 7.0.2
+    version: 7.1.0
