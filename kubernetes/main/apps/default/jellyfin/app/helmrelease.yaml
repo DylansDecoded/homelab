@@ -116,11 +116,9 @@ spec:
       persistence:
         config:
           enabled: true
-          existingClaim: plex
-          advancedMounts:
-            main:
-              main:
-                - path: /config
+          existingClaim: jellyfin
+          globalMounts:
+            - path: /config
         media:
           type: nfs
           server: truenas.robsonhome.cloud
@@ -132,7 +130,5 @@ spec:
         transcode:
           enabled: true
           type: emptyDir
-          advancedMounts:
-            main:
-              main:
-                - path: /transcode
+          globalMounts:
+            - path: /transcode
