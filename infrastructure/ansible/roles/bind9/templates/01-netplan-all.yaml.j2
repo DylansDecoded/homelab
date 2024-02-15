@@ -1,0 +1,19 @@
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    mainif:
+      match:
+        macaddress: {{ ansible_default_ipv4.macaddress }}
+      set-name: mainif
+      dhcp4: no
+      dhcp6: no
+      addresses:
+        - {{ ansible_default_ipv4.address }}/24
+      nameservers:
+        addresses: [{{ ansible_default_ipv4.address }}]
+      routes:
+        - to: default
+          via: 10.1.100.1
+
+

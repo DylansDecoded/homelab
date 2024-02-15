@@ -6,6 +6,6 @@
 
 - name: SSH Setup
   include_tasks: ssh.yaml
-# - name: NFS Setup
-#   include_tasks: nfs.yaml
-#   when: ansible_host not in groups['vps_servers']
+
+- name: NFS Setup
+  include_tasks: nfs.yaml

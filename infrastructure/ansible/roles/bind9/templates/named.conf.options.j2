@@ -1,0 +1,28 @@
+
+acl “trusted” {
+ 10.1.1.0/24;
+ 10.1.10.0/24;
+ 10.1.20.0/24;
+ 10.1.30.0/24;
+ 10.1.33.0/24;
+ 10.1.40.0/24;
+};
+
+acl "dmz-dns" {
+  10.1.100.51;
+  10.1.100.52;
+}
+
+options {
+ directory “/var/cache/bind”;
+ allow-transfer { none; };
+
+ allow-query { trusted; };
+ listen-on port 53 { localhost; "{{ ansible_default_ipv4.address }}"; };
+ recursion no;
+ dnssec-validation auto;
+};
+
+
+
+

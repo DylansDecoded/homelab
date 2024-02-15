@@ -1,0 +1,48 @@
+---
+- name: Mask systemd-network-wait-online
+  command: systemctl mask systemd-networkd-wait-online
+
+- name: Enable systemd-networkd
+  systemd:
+    name: systemd-networkd
+    state: started
+    enabled: true
+
+- name: Remove old netplan
+  command: rm /etc/netplan/50-cloud-init.yaml
+
+- name: Configure netplan
+  template:
+    src: templates/01-netplan-all.yaml.j2
+    dest: /etc/netplan/01-netplan-all.yaml
+
+- name: Apply netplan
+  command: netplan apply
+
+- name: Restart networkd
+  systemd:
+    name: systemd-networkd
+    state: restarted
+
+- name: Delete /etc/resolv.conf
+  file:
+    path: /etc/resolv.conf
+    state: absent
+
+- name: Disable systemd-resolved
+  systemd:
+    name: systemd-resolved
+    state: stopped
+    enabled: false
+
+- name: Update /etc/resolv.conf
+  copy:
+    src: templates/resolv.conf.j2
+    dest: /etc/resolv.conf
+    mode: preserve
+
+- name: Network Configuration | Update hosts
+  copy:
+    src: templates/hosts.j2
+    dest: /etc/hosts
+    mode: preserve

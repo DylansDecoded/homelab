@@ -5,7 +5,6 @@ kind: HelmRelease
 metadata:
   name: homepage
 spec:
-  releaseName: homepage
   interval: 30m
   maxHistory: 3
   chart:
@@ -51,7 +50,7 @@ spec:
         mode: cluster
       settings:
         title: K3S Cluster Homepage
-        startUrl: https://homepage.robsonhome.cloud/
+        startUrl: https://home.robsonhome.cloud/
         theme: dark
 
         cardBlur: sm
@@ -61,6 +60,11 @@ spec:
         iconStyle: theme
 
         layout:
+          networking:
+            header: false
+            columns: 3
+            style: row
+            useEqualHeights: true
           media:
             header: false
             columns: 3
@@ -93,38 +97,85 @@ spec:
           # security:
       services:
         - network:
-            # - pfsense:
-            #     href: https://pfs.robsonhome.cloud
-            #     icon: pfsense.png
-            #     widget:
-            #       type: pfsense
-            #       url: "https://pfs.robsonhome.cloud"
-            #       key: "{{ PFSENSE_API_KEY }}"
+            - pfsense:
+                href: https://pfs.robsonhome.cloud
+                icon: pfsense.png
+                widget:
+                  type: pfsense
+                  url: "https://pfs.robsonhome.cloud"
+                  key: "{{ HOMEPAGE_PFENSE_API_KEY }}"
 
             - pi-hole:
                 href: http://ns1.robsonhome.cloud/admin/
                 icon: pi-hole.png
                 widget:
                   type: pihole
-                  url: "http://ns1.robsonhome.cloud:3001"
+                  url: "http://ns1.robsonhome.cloud"
                   key: "{{ HOMEPAGE_PIHOLE_API_KEY }}"
-        - truenas:
-            - portal:
-                href: https://truenas.robsonhome.cloud
-                icon: truenas.png
+
+            - omada:
+                href: https://omada.robsonhome.cloud
+                icon: omada.png
                 widget:
-                  type: truenas
-                  url: "https://truenas.robsonhome.cloud"
-                  key: "{{ HOMEPAGE_TRUENAS_API_KEY }}"
+                  type: omada
+                  url: "https://omada.robsonhome.cloud"
+                  username: "{{ HOMEPAGE_OMADA_USERNAME }}"
+                  password: "{{ HOMEPAGE_OMADA_PASSWORD }}"
+
+        - selfhosted:
+            - homeassistant:
+                href: https://hass.robsonhome.cloud
+                icon: homeassistant.png
+                widget:
+                  type: homeassistant
+                  url: "https://hass.robsonhome.cloud"
+                  key: "{{ HOMEPAGE_HOMEASSISTANT_API_KEY }}"
+        - nas:
+            - truenas:
+                - portal:
+                    href: https://truenas.robsonhome.cloud
+                    icon: si-truenas
+                    widget:
+                      type: truenas
+                      url: "https://truenas.robsonhome.cloud"
+                      key: "{{ HOMEPAGE_TRUENAS_API_KEY }}"
 
       widgets:
+        - pfsense:
+            url: https://pfs.robsonhome.cloud
+            key: "{{ HOMEPAGE_PFSENSE_API_KEY }}"
+            label: "pfSense"
+            icon: si-pfsense
+            refresh: 5000 # optional, in milliseconds
+
+        - pihole:
+            url: http://ns1.robsonhome.cloud
+            key: "{{ HOMEPAGE_PIHOLE_API_KEY }}"
+            label: "Pi-hole"
+            icon: si-pihole
+            refresh: 5000 # optional, in milliseconds
+
+        - omada:
+            url: https://omada.robsonhome.cloud
+            username: "{{ HOMEPAGE_OMADA_USERNAME }}"
+            password: "{{ HOMEPAGE_OMADA_PASSWORD }}"
+            label: "Omada"
+            icon: si-omada
+            refresh: 5000 # optional, in milliseconds
+
+        - truenas:
+            url: http://truenas.robsonhome.cloud
+            key: "{{ HOMEPAGE_TRUENAS_API_KEY }}"
+            label: "TrueNAS"
+            icon: si-truenas
+            refresh: 5000 # optional, in milliseconds
+
         - kubernetes:
             cluster:
-              show: true
-              cpu: true
-              memory: true
-              showLabel: true
-              label: "K3S Cluster"
+              show: false
+              cpu: false
+              memory: false
+              showLabel: false
             nodes:
               show: true
               cpu: true
