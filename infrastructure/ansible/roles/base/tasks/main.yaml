@@ -1,8 +1,9 @@
 - name: User Setup
   include_tasks: user.yaml
 
-- name: Networking Setup
-  include_tasks: networking.yaml
+- name: Disable Cloudinit
+  include_tasks: ubuntu.yaml
+  when: ansible_distribution == 'Ubuntu'
 
 - name: SSH Setup
   include_tasks: ssh.yaml

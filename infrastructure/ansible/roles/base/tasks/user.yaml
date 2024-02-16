@@ -12,11 +12,3 @@
     line: "{{ me.user }} ALL=(ALL) NOPASSWD:ALL"
     validate: "visudo -cf %s"
   become: true
-
-- name: Grant user ownership of /home/{me.user}
-  file:
-    path: "/home/{{ me.user }}"
-    owner: "{{ me.user }}"
-    group: "{{ me.user }}"
-    state: directory
-  become: true

@@ -2,7 +2,6 @@
   apt:
     name: nfs-common
     state: present
-  become: true
 
 - name: System Configuration | NFS
   copy:
@@ -11,4 +10,12 @@
     owner: root
     group: root
     mode: "0644"
-  become: true
+
+- name: Mount Docker NFS Share
+  mount:
+    path: "{{ item.path }}"
+    src: "{{ item.src }}"
+    fstype: nfs
+    opts: "{{ item.opts }}"
+    state: mounted
+  with_items: "{{ docker_nfs_mounts }}"

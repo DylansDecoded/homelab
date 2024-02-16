@@ -1,5 +1,0 @@
-auto eno1
-allow-hotplug eno1
-iface eno1 inet static
-      address "{{ ansible_default_ipv4.address }}"
-      post-up ifconfig eno1 mtu 9000

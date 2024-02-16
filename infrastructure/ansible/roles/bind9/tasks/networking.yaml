@@ -8,8 +8,17 @@
     state: started
     enabled: true
 
+- name: Find netplan config
+  find:
+    paths: /etc/netplan
+    patterns: "*.yaml"
+  register: netplan_old
+
 - name: Remove old netplan
-  command: rm /etc/netplan/50-cloud-init.yaml
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ netplan_old.files }}"
 
 - name: Configure netplan
   template:
@@ -37,12 +46,7 @@
 
 - name: Update /etc/resolv.conf
   copy:
-    src: templates/resolv.conf.j2
     dest: /etc/resolv.conf
-    mode: preserve
-
-- name: Network Configuration | Update hosts
-  copy:
-    src: templates/hosts.j2
-    dest: /etc/hosts
+    content: |
+      nameserver {{ ansible_default_ipv4.address }}
     mode: preserve

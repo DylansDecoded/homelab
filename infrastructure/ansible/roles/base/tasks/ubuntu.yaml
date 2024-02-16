@@ -1,0 +1,16 @@
+---
+- name: Copy over bash script
+  copy:
+    src: files/disable-cloudinit
+    dest: /home/{{ ansible_user }}/disable-cloudinit
+    mode: "0755"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: make bash script executable
+  command: chmod +x /home/{{ ansible_user }}/disable-cloudinit
+
+- name: run bash script
+  command: /home/{{ ansible_user }}/disable-cloudinit
+  args:
+    chdir: /home/{{ ansible_user }}

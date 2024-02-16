@@ -9,6 +9,15 @@ vps_servers:
       #ansible_ssh_pass: "{{ vault_tailscale_user_password }}"
       ansible_ssh_private_key_file: ~/.ssh/id_ed25519
 
+pis:
+  vars:
+    ansible_user: dylanrobson
+    ansible_python_interpreter: /usr/bin/python3
+  hosts:
+    ns01:
+      ansible_host: 10.1.100.2
+      dns_title: master
+
 dns-servers:
   vars:
     ansible_user: dylan
@@ -20,42 +29,3 @@ dns-servers:
     ns2:
       ansible_host: 10.1.100.52
       bind9_dns_name: slave
-
-kubernetes:
-  vars:
-    ansible_user: dylan
-    ansible_python_interpreter: /usr/bin/python3
-
-  children:
-    master:
-      hosts:
-        k3s-01:
-          ansible_host: 10.1.33.11
-          vpn_network_address: 10.1.20.11
-          storage_network_address: 10.101.101.11
-          ceph_drive:
-            - /dev/disk/by-id/ata-SAMSUNG_MZ7KM960HMJP-00005_S3HSNWAJ300236B
-        k3s-02:
-          ansible_host: 10.1.33.12
-          vpn_network_address: 10.1.20.12
-          storage_network_address: 10.101.101.12
-          ceph_drive:
-            - /dev/disk/by-id/ata-SAMSUNG_MZ7KM960HAHP-000FU_S2TLNX0J900056
-        k3s-03:
-          ansible_host: 10.1.33.13
-          vpn_network_address: 10.1.20.13
-          storage_network_address: 10.101.101.13
-    worker:
-      hosts:
-        k3s-04:
-          ansible_host: 10.1.33.14
-          vpn_network_address: 10.1.20.14
-          storage_network_address: 10.101.101.14
-        k3s-05:
-          ansible_host: 10.1.33.15
-          vpn_network_address: 10.1.20.15
-          storage_network_address: 10.101.101.15
-        k3s-06:
-          ansible_host: 10.1.33.16
-          vpn_network_address: 10.1.20.16
-          storage_network_address: 10.101.101.16
