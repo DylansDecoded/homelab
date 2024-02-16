@@ -36,9 +36,6 @@ spec:
         tls:
           - hosts:
               - *host
-    envFrom:
-      - secretRef: # yamllint disable-line
-          name: homepage-secret
     resources:
       requests:
         cpu: 10m
@@ -52,93 +49,63 @@ spec:
         title: K3S Cluster Homepage
         startUrl: https://home.robsonhome.cloud/
         theme: dark
-
+        headerStyle: underlined
+        iconStyle: theme
         cardBlur: sm
         disableCollapse: true
         statusStyle: dot
-        headerStyle: clean
-        iconStyle: theme
-
+        quicklaunch:
+          searchDescription: true
+          hideInternetSearch: false
+          hideVisitURL: true
+        providers:
+          openweathermap: ${HOMEPAGE_OPENWEATHERMAP_API_KEY}
         layout:
-          networking:
-            header: false
-            columns: 3
-            style: row
-            useEqualHeights: true
-          media:
-            header: false
-            columns: 3
-            style: row
-            useEqualHeights: true
-          selfhosted:
-            header: false
-            columns: 4
-            style: row
-          downloads:
-            header: false
-            columns: 4
-            style: row
-            useEqualHeights: true
-          monitoring:
-            header: false
-            columns: 4
-            style: row
-            useEqualHeights: true
-          # nas:
-          #   header: false
-          #   columns: 1
-          #   style: row
-          #   useEqualHeights: true
-          # network:
-          #   header: false
-          #   columns: 1
-          #   style: row
-          #   useEqualHeights: true
-          # security:
-      services:
-        - network:
-            - pfsense:
-                href: https://pfs.robsonhome.cloud
-                icon: pfsense.png
-                widget:
-                  type: pfsense
-                  url: "https://pfs.robsonhome.cloud"
-                  key: "{{ HOMEPAGE_PFENSE_API_KEY }}"
 
-            - pi-hole:
-                href: http://ns1.robsonhome.cloud/admin/
-                icon: pi-hole.png
-                widget:
-                  type: pihole
-                  url: "http://ns1.robsonhome.cloud"
-                  key: "{{ HOMEPAGE_PIHOLE_API_KEY }}"
+        services:
+          - network:
+              - pfsense:
+                  href: https://pfs.robsonhome.cloud
+                  icon: pfsense.png
+                  widget:
+                    type: pfsense
+                    url: "https://pfs.robsonhome.cloud"
+                    key: ${HOMEPAGE_PFSENSE_API_KEY}
 
-            - omada:
-                href: https://omada.robsonhome.cloud
-                icon: omada.png
-                widget:
-                  type: omada
-                  url: "https://omada.robsonhome.cloud"
-                  username: "{{ HOMEPAGE_OMADA_USERNAME }}"
-                  password: "{{ HOMEPAGE_OMADA_PASSWORD }}"
+              - pi-hole:
+                  href: http://ns1.robsonhome.cloud/admin/
+                  icon: pi-hole.png
+                  widget:
+                    type: pihole
+                    url: "http://ns1.robsonhome.cloud"
+                    key: ${$HOMEPAGE_PIHOLE_API_KEY }
 
-        - selfhosted:
-            - homeassistant:
-                href: https://hass.robsonhome.cloud
-                icon: homeassistant.png
-                widget:
-                  type: homeassistant
-                  url: "https://hass.robsonhome.cloud"
-                  key: "{{ HOMEPAGE_HOMEASSISTANT_API_KEY }}"
-        - nas:
-            - truenas:
-                - portal:
-                    href: https://truenas.robsonhome.cloud
-                    icon: si-truenas
-                    widget:
-                      type: truenas
-                      url: "https://truenas.robsonhome.cloud"
-                      key: "{{ HOMEPAGE_TRUENAS_API_KEY }}"
+              - omada:
+                  href: https://omada.robsonhome.cloud
+                  icon: si-omada
+                  widget:
+                    type: omada
+                    url: "https://omada.robsonhome.cloud"
+                    username: ${HOMEPAGE_OMADA_USERNAME}
+                    password: ${HOMEPAEG_OMADA_PASSWORD}
+
+          - selfhosted:
+              - homeassistant:
+                  href: https://hass.robsonhome.cloud
+                  icon: homeassistant.png
+                  widget:
+                    type: homeassistant
+                    url: "https://hass.robsonhome.cloud"
+                    key: "{{ HOMEPAGE_HOMEASSISTANT_API_KEY }}"
+          - nas:
+              - truenas:
+                  - portal:
+                      href: https://truenas.robsonhome.cloud
+                      icon: si-truenas
+                      widget:
+                        type: truenas
+                        url: "https://truenas.robsonhome.cloud"
+                        key: "{{ HOMEPAGE_TRUENAS_API_KEY }}"
 
       widgets:
         - pfsense:
