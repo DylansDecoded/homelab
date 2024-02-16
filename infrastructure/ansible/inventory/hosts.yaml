@@ -15,7 +15,7 @@ pis:
     ansible_python_interpreter: /usr/bin/python3
   hosts:
     ns01:
-      ansible_host: 10.1.100.2
+      ansible_host: 10.1.100.20
       dns_title: master
 
 dns-servers:
