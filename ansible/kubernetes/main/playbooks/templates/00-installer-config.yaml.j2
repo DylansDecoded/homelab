@@ -11,7 +11,7 @@ network:
       addresses:
         - {{ ansible_default_ipv4.address }}/24
       nameservers:
-        addresses: [10.1.100.51]
+        addresses: [10.1.100.53]
         search: [.]
       routes:
         - to: default
@@ -24,7 +24,7 @@ network:
       addresses:
         - {{ vpn_address }}/24
       nameservers:
-        addresses: [10.1.100.51]
+        addresses: [10.1.100.53]
         search: [.]
     vlan101:
       id: 101

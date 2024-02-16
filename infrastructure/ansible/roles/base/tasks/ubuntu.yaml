@@ -1,4 +1,17 @@
----
+- name: Update & upgrade apt
+  apt:
+    upgrade: dist
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install vlan package
+  apt:
+    name: vlan
+    state: present
+
+- name: enable vlan
+  command: modprobe 8021q
+
 - name: Copy over bash script
   copy:
     src: files/disable-cloudinit
@@ -14,3 +27,6 @@
   command: /home/{{ ansible_user }}/disable-cloudinit
   args:
     chdir: /home/{{ ansible_user }}
+
+- name: Reboot
+  reboot:

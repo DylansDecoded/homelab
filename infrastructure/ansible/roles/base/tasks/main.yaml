@@ -1,12 +1,11 @@
-- name: User Setup
-  include_tasks: user.yaml
+# - name: Disable Cloudinit
+#   include_tasks: ubuntu.yaml
 
-- name: Disable Cloudinit
-  include_tasks: ubuntu.yaml
-  when: ansible_distribution == 'Ubuntu'
+# - name: User Setup
+#   include_tasks: user.yaml
 
-- name: SSH Setup
-  include_tasks: ssh.yaml
+# - name: SSH Setup
+#   include_tasks: ssh.yaml
 
 - name: NFS Setup
   include_tasks: nfs.yaml

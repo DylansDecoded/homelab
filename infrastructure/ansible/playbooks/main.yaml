@@ -1,53 +1,13 @@
----
-# - hosts: all
-#   gather_facts: true
-#   become: true
-#   roles:
-#     - base
-
-# - hosts: kubernetes
-#   gather_facts: true
-#   become: true
-#   tasks:
-#     - name: Install linux-headers
-#       apt:
-#         name: linux-headers-{{ ansible_kernel }}
-#         state: present
-#       when: ansible_os_family == 'Debian'
-
-- hosts: docker
-  become: true
+- hosts: dns
   gather_facts: true
-  any_errors_fatal: true
+  become: true
   roles:
-    - role: geerlingguy.docker
-      become: true
-      vars:
-        docker_install_compose_plugin: "{{ ansible_os_family == 'Debian' }}"
-        docker_users:
-          - "{{ me.user }}"
-    # - docker-cleanup
-    # - nfs
-
-
-
-
-
-# - hosts: docker-hosts
-#   gather_facts: true
-#   become: true
-#   roles:
-#     - role: geerlingguy.docker
-#       become: true
-#       vars:
-#         docker_install_compose_plugin: "{{ ansible_os_family == 'Debian' }}"
-#         docker_users:
-#           - "{{ me.user }}"
-#     - docker
-#     - frigate
-
-# - hosts: wireguard
-#   gather_facts: true
-#   become: true
-#   roles:
-#     - wireguard
+    # - base
+    # - role: geerlingguy.docker
+    #   become: true
+    #   vars:
+    #     docker_install_compose_plugin: "{{ ansible_os_family == 'Debian' }}"
+    #     docker_users:
+    #       - "{{ me.user }}"
+    # - role: docker-cleanup
+    - role: bind9

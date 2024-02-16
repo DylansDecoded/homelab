@@ -13,9 +13,8 @@
 
 - name: Mount Docker NFS Share
   mount:
-    path: "{{ item.path }}"
-    src: "{{ item.src }}"
+    src: 10.101.101.210:/mnt/tank/nfs/docker-volumes
+    path: /mnt/docker-volumes
     fstype: nfs
-    opts: "{{ item.opts }}"
+    opts: "rw,sync,hard"
     state: mounted
-  with_items: "{{ docker_nfs_mounts }}"
