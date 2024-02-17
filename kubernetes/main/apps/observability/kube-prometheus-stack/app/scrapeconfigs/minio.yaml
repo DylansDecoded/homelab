@@ -4,8 +4,7 @@ kind: ScrapeConfig
 metadata:
   name: minio
 spec:
-  scheme: HTTP
-  bearer_token: "{{MINIO_PROMETHEUS_BEARER_TOKEN}}"
+  scheme: HTTPS
   staticConfigs:
-    - targets: ["10.1.30.80:9000"]
+    - targets: ["https://s3.robsonhome.cloud"]
   metricsPath: /minio/v2/metrics/cluster

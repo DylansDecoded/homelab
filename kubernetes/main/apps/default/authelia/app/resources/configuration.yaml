@@ -77,16 +77,6 @@ identity_providers:
       endpoints: ["authorization", "token", "revocation", "introspection"]
       allowed_origins_from_client_redirect_uris: true
     clients:
-      # - id: minio
-      #   description: Minio
-      #   secret: "${MINIO_OAUTH_CLIENT_SECRET}"
-      #   public: false
-      #   authorization_policy: two_factor
-      #   pre_configured_consent_duration: 1y
-      #   scopes: ["openid", "profile", "groups", "email"]
-      #   redirect_uris: ["https://minio.robsonhome.cloud/auth/strategy/callback"]
-      #   userinfo_signed_response_alg: none
-
       - id: nodered
         description: Node-RED
         secret: "${NODE_RED_OAUTH_CLIENT_SECRET}"
@@ -115,12 +105,3 @@ identity_providers:
         redirect_uris:
           ["https://miniflux.robsonhome.cloud/oauth2/oidc/callback"]
         userinfo_signed_response_alg: none
-      - id: weave-gitops
-        description: Weave GitOps
-        secret: "${WEAVE_GITOPS_OAUTH_CLIENT_SECRET}"
-        public: false
-        authorization_policy: two_factor
-        pre_configured_consent_duration: 1y
-        scopes: ["openid", "profile", "groups", "email"]
-        redirect_uris: ["https://wego.robsonhome.cloud/oauth2/callback"]
-        userinfo_signing_algorithm: none
