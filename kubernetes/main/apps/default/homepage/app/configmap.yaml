@@ -10,10 +10,31 @@ data:
     - Communicate:
         - Protonmail:
             - icon: discord.png
-              href: 'https://discord.com/app'
+              href: 'https://proton.me/mail'
         - Gmail:
             - icon: gmail.png
               href: 'http://gmail.com'
+
+    - Health:
+        - Klarity:
+            - icon: mi-medication
+              href: 'https://klarity.intakeq.com'
+
+        - CVS Caremark:
+            - icon: mi-local_pharmacy
+              href: 'https://www.caremark.com'
+
+
+    - Social:
+        - Twitter:
+            - icon: twitter.png
+              href: 'https://twitter.com'
+        - Instagram:
+            - icon: instagram.png
+              href: 'https://instagram.com'
+        - Facebook:
+            - icon: facebook.png
+              href: 'https://facebook.com'
 
     - Media:
         - YouTube:
@@ -34,7 +55,8 @@ data:
             - icon: github.png
               href: 'https://github.com/DylansDecoded'
 
-  docker.yaml: ""
+  docker.yaml: |
+    ---
   kubernetes.yaml: |
     mode: cluster
   services.yaml: |
