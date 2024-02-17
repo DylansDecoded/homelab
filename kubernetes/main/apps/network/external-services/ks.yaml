@@ -6,12 +6,10 @@ metadata:
   name: &app external-services-minio
   namespace: flux-system
 spec:
-  targetNamespace: flux-system
+  targetNamespace: network
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: nginx-internal
   path: ./kubernetes/main/apps/network/external-services/minio
   prune: true
   sourceRef:
