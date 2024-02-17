@@ -13,10 +13,9 @@ resources:
   - ./home-assistant/ks.yaml
   - ./homepage/ks.yaml
   - ./jellyfin/ks.yaml
-  # - ./kromgo/ks.yaml
   - ./lldap/ks.yaml
   # - ./media-browser/ks.yaml
-  #- ./miniflux/ks.yaml
+  - ./miniflux/ks.yaml
   - ./mosquitto/ks.yaml
   - ./node-red/ks.yaml
   # - ./overseerr/ks.yaml

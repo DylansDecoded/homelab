@@ -78,8 +78,12 @@ spec:
         className: external
         annotations:
           gethomepage.dev/enabled: "true"
-          gethomepage.dev/group: "selfhosted"
-          gethomepage.dev/icon: homeassistant.png
+          gethomepage.dev/name: "Home Assistant"
+          gethomepage.dev/group: Home
+          gethomepage.dev/icon: "home-assitant.png"
+          gethomepage.dev/widget.type: homeassistant
+          gethomepage.dev/widget.url: http://home-assistant.default:8123
+          gethomepage.dev/widget.key: "{{HOMEPAGE_HASSIO_TOKEN}}"
           external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
         hosts:
           - host: &host hass.robsonhome.cloud

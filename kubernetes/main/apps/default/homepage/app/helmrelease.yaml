@@ -1,170 +1,89 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: homepage
+  name: &app homepage
 spec:
   interval: 30m
-  maxHistory: 3
   chart:
     spec:
-      chart: homepage
-      version: 1.2.3
+      chart: app-template
+      version: 2.6.0
       sourceRef:
         kind: HelmRepository
-        name: jameswynn
+        name: bjw-s
         namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
   values:
-    image:
-      repository: ghcr.io/gethomepage/homepage
-      tag: v0.8.8
-    enableRbac: true
-    podAnnotations:
-      reloader.stakater.com/auto: "true"
-    serviceAccount:
-      create: true
+    controllers:
+      main:
+        replicas: 2
+        strategy: RollingUpdate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          main:
+            image:
+              repository: ghcr.io/gethomepage/homepage
+              tag: v0.8.8
+            env:
+              TZ: America/New_York
+            envFrom:
+              - secretRef:
+                  name: homepage-secret
+            resources:
+              requests:
+                cpu: 15m
+                memory: 200M
+              limits:
+                memory: 2G
+    service:
+      main:
+        ports:
+          http:
+            port: 3000
     ingress:
       main:
-        ingressClassName: internal
         enabled: true
+        className: internal
         hosts:
           - host: &host homepage.robsonhome.cloud
             paths:
               - path: /
                 pathType: Prefix
+                service:
+                  name: main
+                  port: http
         tls:
           - hosts:
               - *host
-    resources:
-      requests:
-        cpu: 10m
-        memory: 100Mi
-      limits:
-        memory: 200Mi
-    config:
-      kubernetes:
-        mode: cluster
-      settings:
-        title: K3S Cluster Homepage
-        startUrl: https://home.robsonhome.cloud/
-        theme: dark
-        headerStyle: underlined
-        iconStyle: theme
-        cardBlur: sm
-        disableCollapse: true
-        statusStyle: dot
-        quicklaunch:
-          searchDescription: true
-          hideInternetSearch: false
-          hideVisitURL: true
-        providers:
-          openweathermap: ${HOMEPAGE_OPENWEATHERMAP_API_KEY}
-        layout:
-
-        services:
-          - network:
-              - pfsense:
-                  href: https://pfs.robsonhome.cloud
-                  icon: pfsense.png
-                  widget:
-                    type: pfsense
-                    url: "https://pfs.robsonhome.cloud"
-                    key: ${HOMEPAGE_PFSENSE_API_KEY}
-
-              - pi-hole:
-                  href: http://ns1.robsonhome.cloud/admin/
-                  icon: pi-hole.png
-                  widget:
-                    type: pihole
-                    url: "http://ns1.robsonhome.cloud"
-                    key: ${$HOMEPAGE_PIHOLE_API_KEY }
-
-              - omada:
-                  href: https://omada.robsonhome.cloud
-                  icon: si-omada
-                  widget:
-                    type: omada
-                    url: "https://omada.robsonhome.cloud"
-                    username: ${HOMEPAGE_OMADA_USERNAME}
-                    password: ${HOMEPAEG_OMADA_PASSWORD}
-
-          - selfhosted:
-              - homeassistant:
-                  href: https://hass.robsonhome.cloud
-                  icon: homeassistant.png
-                  widget:
-                    type: homeassistant
-                    url: "https://hass.robsonhome.cloud"
-                    key: "{{ HOMEPAGE_HOMEASSISTANT_API_KEY }}"
-          - nas:
-              - truenas:
-                  - portal:
-                      href: https://truenas.robsonhome.cloud
-                      icon: si-truenas
-                      widget:
-                        type: truenas
-                        url: "https://truenas.robsonhome.cloud"
-                        key: "{{ HOMEPAGE_TRUENAS_API_KEY }}"
-
-      widgets:
-        - pfsense:
-            url: https://pfs.robsonhome.cloud
-            key: "{{ HOMEPAGE_PFSENSE_API_KEY }}"
-            label: "pfSense"
-            icon: si-pfsense
-            refresh: 5000 # optional, in milliseconds
-
-        - pihole:
-            url: http://ns1.robsonhome.cloud
-            key: "{{ HOMEPAGE_PIHOLE_API_KEY }}"
-            label: "Pi-hole"
-            icon: si-pihole
-            refresh: 5000 # optional, in milliseconds
-
-        - omada:
-            url: https://omada.robsonhome.cloud
-            username: "{{ HOMEPAGE_OMADA_USERNAME }}"
-            password: "{{ HOMEPAGE_OMADA_PASSWORD }}"
-            label: "Omada"
-            icon: si-omada
-            refresh: 5000 # optional, in milliseconds
-
-        - truenas:
-            url: http://truenas.robsonhome.cloud
-            key: "{{ HOMEPAGE_TRUENAS_API_KEY }}"
-            label: "TrueNAS"
-            icon: si-truenas
-            refresh: 5000 # optional, in milliseconds
-
-        - kubernetes:
-            cluster:
-              show: false
-              cpu: false
-              memory: false
-              showLabel: false
-            nodes:
-              show: true
-              cpu: true
-              memory: true
-              showLabel: true
-
-      bookmarks:
-        - homelab:
-            - cloudflare:
-                - abbr: cf
-                  href: https://dash.cloudflare.com
-        - dev:
-            - kubesearch:
-                - abbr: ks
-                  href: https://kubesearch.dev/
-            - github:
-                - abbr: gh
-                  href: https://github.com/
-        - social:
-            - facebook:
-                - abbr: fb
-                  href: https://facebook.com/
-            - reddit:
-                - abbr: rdt
-                  href: https://reddit.com/
+    persistence:
+      config:
+        enabled: true
+        type: configMap
+        name: homepage-config
+        globalMounts:
+          - subPath: bookmarks.yaml
+            path: /app/config/bookmarks.yaml
+          - subPath: docker.yaml
+            path: /app/config/docker.yaml
+          - subPath: kubernetes.yaml
+            path: /app/config/kubernetes.yaml
+          - subPath: services.yaml
+            path: /app/config/services.yaml
+          - subPath: settings.yaml
+            path: /app/config/settings.yaml
+          - subPath: widgets.yaml
+            path: /app/config/widgets.yaml
+    serviceAccount:
+      create: true
