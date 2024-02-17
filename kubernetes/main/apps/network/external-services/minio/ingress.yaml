@@ -1,0 +1,46 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minio
+  namespace: network
+  # annotations:
+  # nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+spec:
+  ingressClassName: internal
+  rules:
+    - host: &host minio.robsonhome.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: minio-ui
+                port:
+                  number: 9001
+  tls:
+    - hosts:
+        - *host
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minio-api
+  namespace: network
+spec:
+  ingressClassName: internal
+  rules:
+    - host: &host s3.robsonhome.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: minio-api
+                port:
+                  number: 9000
+  tls:
+    - hosts:
+        - *host

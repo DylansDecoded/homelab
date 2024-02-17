@@ -5,6 +5,7 @@ metadata:
   name: minio
 spec:
   scheme: HTTP
+  bearer_token: "{{MINIO_PROMETHEUS_BEARER_TOKEN}}"
   staticConfigs:
-    - targets: ["10.1.30.200:9000"]
+    - targets: ["10.1.30.80:9000"]
   metricsPath: /minio/v2/metrics/cluster
