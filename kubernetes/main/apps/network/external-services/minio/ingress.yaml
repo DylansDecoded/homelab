@@ -4,8 +4,8 @@ kind: Ingress
 metadata:
   name: minio
   namespace: network
-  # annotations:
-  # nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  annotations:
+  nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 spec:
   ingressClassName: internal
   rules:
