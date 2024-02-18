@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.devbu.io/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -9,7 +9,10 @@ spec:
   targetNamespace: observability
   commonMetadata:
     labels:
-      app: *app
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: cloudnative-pg-cluster
+    - name: external-secrets-stores
   path: ./kubernetes/main/apps/observability/grafana/app
   prune: true
   sourceRef:
@@ -19,6 +22,3 @@ spec:
   interval: 30m
   retryInterval: 1m
   timeout: 5m
-  dependsOn:
-    - name: cloudnative-pg-cluster
-    - name: external-secrets-stores
