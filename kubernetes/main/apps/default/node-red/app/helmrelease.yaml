@@ -70,10 +70,6 @@ spec:
       main:
         enabled: true
         className: internal
-        # annotations:
-        #   gethomepage.dev/enabled: "true"
-        #   gethomepage.dev/group: "selfhosted"
-        #   gethomepage.dev/icon: si-nodered
         hosts:
           - host: &host nr.robsonhome.cloud
             paths:
