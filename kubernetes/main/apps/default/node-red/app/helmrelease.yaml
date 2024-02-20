@@ -71,7 +71,7 @@ spec:
         enabled: true
         className: internal
         hosts:
-          - host: &host nr.robsonhome.cloud
+          - host: &host "nr.robsonhome.cloud"
             paths:
               - path: /
                 service:
