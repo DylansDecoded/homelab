@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: http
+  namespace: network
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: truenas
+  namespace: network
+subsets:
+  - addresses:
+      - ip: 10.1.100.53
+    ports:
+      - port: 80

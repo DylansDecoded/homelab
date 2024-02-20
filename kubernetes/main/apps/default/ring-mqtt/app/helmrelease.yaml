@@ -38,7 +38,7 @@ spec:
           reloader.stakater.com/auto: "true"
         containers:
           main:
-            image: ghcr.io/tsightler/ring-mqtt
+            image: tsightler/ring-mqtt
             tag: v5.6.3
           envFrom:
             - secretRef:
@@ -61,7 +61,6 @@ spec:
               port: 8554
       persistence:
         data:
-          enabled: true
           existingClaim: *app
           globalMounts:
             - path: /data

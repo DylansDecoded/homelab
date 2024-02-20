@@ -1,0 +1,24 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: truenas
+  namespace: network
+  annotations:
+  nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+spec:
+  ingressClassName: internal
+  rules:
+    - host: &host pihole.robsonhome.cloud
+      http:
+        paths:
+          - path: /admin
+            pathType: Prefix
+            backend:
+              service:
+                name: http
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - *host
