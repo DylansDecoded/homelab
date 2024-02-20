@@ -70,15 +70,25 @@ spec:
       main:
         enabled: true
         className: internal
+        annotations:
+          gethomepage.dev/enabled: "true"
+          gethomepage.dev/description: Home Automation
+          gethomepage.dev/group: selfhosted
+          gethomepage.dev/icon: si-node-red
+          gethomepage.dev/name: node-red
         hosts:
-          - host: &host "nr.robsonhome.cloud"
-            paths:
+          - host: &host "{{ .Release.Name }}.robsonhome.cloud"
+            paths: &paths
               - path: /
                 service:
                   name: main
                   port: http
+          - host: &customHost nr.robsonhome.cloud
+            paths: *paths
         tls:
-          - hosts: *host
+          - hosts:
+              - *host
+              - *customHost
     persistence:
       data:
         enabled: true
