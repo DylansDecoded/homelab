@@ -48,25 +48,17 @@ spec:
               cpu: 10m
             limits:
               memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
       service:
         main:
           ports:
             http:
               port: 8554
-      ingress:
-        main:
-          enabled: true
-          className: internal
-          hosts:
-            - host: &host ring-mqtt.robsonhome.cloud
-              paths:
-                - path: /
-                  pathType: Prefix
-                  service:
-                    name: main
-                    port: 8554
-          tls:
-            - hosts: *host
       persistence:
         data:
           enabled: true
