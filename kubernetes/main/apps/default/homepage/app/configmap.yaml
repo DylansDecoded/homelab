@@ -40,7 +40,7 @@ data:
               tunnelid: {{HOMEPAGE_VAR_CLOUDFLARED_TUNNELID}}
               key: {{HOMEPAGE_VAR_CLOUDFLARED_API_TOKEN}}
         - Pfsense:
-            href: https://pfsense.robsonhome.cloud
+            href: https://pfs.robsonhome.cloud
             icon: pfsense.png
             description: Pfsense Firewall
             widget:
@@ -49,7 +49,7 @@ data:
               password: {{HOMEPAGE_VAR_PFSENSE_PASSWORD}}
 
         - PiHole:
-            href: https://pihole.robsonhome.cloud
+            href: http://pihole.robsonhome.cloud/admin
             icon: pihole.png
             description: PiHole DNS
             widget:
