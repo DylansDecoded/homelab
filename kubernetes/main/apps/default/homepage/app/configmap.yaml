@@ -52,7 +52,7 @@ data:
             href: https://pihole.robsonhome.cloud
             icon: pihole.png
             description: PiHole DNS
-            widget;
+            widget:
               type: pihole
               key: {{HOMEPAGE_VAR_PIHOLE_API_KEY}}
 
