@@ -12,10 +12,10 @@ spec:
 apiVersion: v1
 kind: Endpoints
 metadata:
-  name: truenas
+  name: omada
   namespace: network
 subsets:
   - addresses:
-      - ip: 10.1.10.210
+      - ip: 10.1.10.200
     ports:
       - port: 80

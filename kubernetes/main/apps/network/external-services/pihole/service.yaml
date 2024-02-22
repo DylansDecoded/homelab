@@ -12,7 +12,7 @@ spec:
 apiVersion: v1
 kind: Endpoints
 metadata:
-  name: truenas
+  name: pihole
   namespace: network
 subsets:
   - addresses:

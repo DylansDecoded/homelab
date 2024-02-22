@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: truenas
+  name: pihole
   namespace: network
   annotations:
   nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"

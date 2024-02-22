@@ -2,17 +2,22 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: truenas
+  name: omada
   namespace: network
   annotations:
   nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  nginx.ingress.kubernetes.io/proxy-ssl-verify: "off"
+  nginx.ingress.kubernetes.io/use-regex: "true"
+  nginx.ingress.kubernetes.io/upstream-vhost: "omada.robsonhome.cloud:80"
+  nginx.ingress.kubernetes.io/proxy-redirect-from: "~https://(.+):80/(.+)/login$"
+  nginx.ingress.kubernetes.io/proxy-redirect-to: "https://$1/$2/login"
 spec:
   ingressClassName: internal
   rules:
-    - host: &host truenas.robsonhome.cloud
+    - host: &host omada.robsonhome.cloud
       http:
         paths:
-          - path: /
+          - path: /admin
             pathType: Prefix
             backend:
               service:
