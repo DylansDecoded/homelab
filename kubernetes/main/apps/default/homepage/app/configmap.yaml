@@ -1,4 +1,3 @@
----
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -7,217 +6,97 @@ metadata:
     app.kubernetes.io/name: homepage
 data:
   bookmarks.yaml: |
-    - Communicate:
-        - Protonmail:
-            - icon: discord.png
-              href: 'https://proton.me/mail'
-        - Gmail:
-            - icon: gmail.png
-              href: 'http://gmail.com'
-
-    - Health:
-        - Klarity:
-            - icon: mi-medication
-              href: 'https://klarity.intakeq.com'
-
-        - CVS Caremark:
-            - icon: mi-local_pharmacy
-              href: 'https://www.caremark.com'
-
-
-    - Social:
-        - Twitter:
-            - icon: twitter.png
-              href: 'https://twitter.com'
-        - Instagram:
-            - icon: instagram.png
-              href: 'https://instagram.com'
-        - Facebook:
-            - icon: facebook.png
-              href: 'https://facebook.com'
-
+    - Communitcate:
+        - Discord:
+            - icon: discord.png # https://github.com/walkxcode/dashboard-icons
+              href: 'https://discord.com/app'
     - Media:
         - YouTube:
             - icon: youtube.png
               href: 'https://youtube.com/feed/subscriptions'
-        - Spotify:
-            - icon: spotify.png
-              href: 'http://open.spotify.com'
     - Reading:
         - Reddit:
             - icon: reddit.png
               href: 'https://reddit.com'
-    - Git:
+    - Dev:
         - kubesearch:
             - icon: kubernetes-dashboard.png
               href: 'https://kubesearch.dev/'
-        - k3s-home-cluster:
+        - Github:
             - icon: github.png
-              href: 'https://github.com/DylansDecoded'
-
-  docker.yaml: |
-    ---
+              href: 'https://github.com/DylansDecoded/homelab'
+  docker.yaml: ""
   kubernetes.yaml: |
     mode: cluster
   services.yaml: |
-    - Calendar:
-        # - Calendar:
-        #     widget:
-        #       type: calendar
-        #       firstDayInWeek: sunday # optional - defaults to monday
-        #       view: monthly # optional - possible values monthly, agenda
-        #       maxEvents: 10 # optional - defaults to 10
-        #       integrations: # optional
-        #         - type: sonarr # active widget type that is currently enabled on homepage - possible values: radarr, sonarr, lidarr, readarr
-        #           service_group: Downloads # group name where widget exists
-        #           service_name: Sonarr # service name for that widget
-        #         - type: radarr # active widget type that is currently enabled on homepage - possible values: radarr, sonarr, lidarr, readarr
-        #           service_group: Downloads # group name where widget exists
-        #           service_name: Radarr # service name for that widget
-        #         - type: readarr # active widget type that is currently enabled on homepage - possible values: radarr, sonarr, lidarr, readarr
-        #           service_group: Downloads # group name where widget exists
-        #           service_name: Readarr # service name for that
-        # - Agenda:
-        #     widget:
-        #       type: calendar
-        #       view: agenda # optional - possible values monthly, agenda
-        #       maxEvents: 20 # optional - defaults to 10
-        #       integrations: # optional
-        #         - type: sonarr # active widget type that is currently enabled on homepage - possible values: radarr, sonarr>
-        #           service_group: Downloads # group name where widget exists
-        #           service_name: Sonarr # service name for that widget
-        #         - type: radarr # active widget type that is currently enabled on homepage - possible values: radarr, sonarr>
-        #           service_group: Downloads # group name where widget exists
-        #           service_name: Radarr # service name for that widget
-        #         - type: readarr # active widget type that is currently enabled on homepage - possible values: radarr, sonar>
-        #           service_group: Downloads # group name where widget exists
-        #           service_name: Readarr # service name for that widget
-    - Media:
-
-    - Infrastructure:
+    - Network:
         - Cloudflared:
             href: https://dash.cloudflare.com/
             icon: cloudflare-zero-trust.png
-            description: Cloudflared Tunnel Status
+            description: Cloudflared Tunnel
             widget:
               type: cloudflared
               accountid: {{HOMEPAGE_VAR_CLOUDFLARED_ACCOUNTID}}
               tunnelid: {{HOMEPAGE_VAR_CLOUDFLARED_TUNNELID}}
               key: {{HOMEPAGE_VAR_CLOUDFLARED_API_TOKEN}}
-        - Omada:
-            href: https://omada.robsonhome.cloud
-            icon: omada.png
-            description: Omada Dashboard
-            widget:
-              type: omada
-              url: https://10.1.10.200
-              username: {{HOMEPAGE_VAR_OMADA_USERNAME}}
-              password: {{HOMEPAGE_VAR_OMADA_PASSWORD}}
-        - PiHole:
-            href: https://pihole.robsonhome.cloud/admin
-            icon: si-pihole
-            description: PiHole HA Dashboard
-            widget:
-              type: pihole
-              url: https://10.1.100.53
-              key: {{HOMEPAGE_VAR_PIHOLE_API_KEY}}
-        # - NextDNS:
-        #     href: https://my.nextdns.io
-        #     icon: nextdns.png
-        #     description: NextDNS
-        #     widget:
-        #       type: nextdns
-        #       profile: {{HOMEPAGE_VAR_NEXTDNS_ID}}
-        #       key: {{HOMEPAGE_VAR_NEXTDNS_API}}
         - Pfsense:
-            href: &url https://pfs.robsonhome.cloud
+            href: https://pfsense.robsonhome.cloud
             icon: pfsense.png
-            description: PfSense Dashboard
+            description: Pfsense Firewall
             widget:
               type: pfsense
-              url: *url
               username: {{HOMEPAGE_VAR_PFSENSE_USERNAME}}
               password: {{HOMEPAGE_VAR_PFSENSE_PASSWORD}}
-    - Storage:
-        - TrueNAS:
-            href: https://truenas.robsonhome.cloud
-            icon: truenas.png
-            description: TrueNAS Storage
-            widget:
-              type: truenas
-              url: https://10.1.10.210
-              key: {{HOMEPAGE_VAR_TRUENAS_API_KEY}}
+
+        - PiHole:
+            href: https://pihole.robsonhome.cloud
+            icon: pihole.png
+            description: PiHole DNS
+            widget;
+              type: pihole
+              key: {{HOMEPAGE_VAR_PIHOLE_API_KEY}}
 
   settings.yaml: |
-    title: Homelab Dashboard
-    favicon: https://github.com/walkxcode/dashboard-icons/blob/main/png/heimdall.png
+    title: Dashboard
     theme: dark
     color: slate
-    headerStyle: underline
+    headerStyle: boxed
+    providers:
+      openweathermap: {{HOMEPAGE_VAR_OPENWEATHERMAP_API_KEY}}
+    hideVersion: true
+    quicklaunch:
+      searchDescriptions: true
+      hideInternetSearch: true
+      showSearchSuggestions: true
+      hideVisitURL: true
     layout:
-      Calendar:
-        style: column
-        icon: mdi-calendar
-      Media:
-        style: column
-        icon: mdi-play-circle
-      Infrastructure:
-        style: row
-        columns: 3
-        icon: mdi-server
-      Storage:
-        style: row
-        columns: 2
-        icon: mdi-desktop-tower
       Home:
+        useEqualHeights: true
         style: column
         icon: mdi-home-analytics
+      Network:
+        style: row
+        columns: 4
+        icon: mdi-ethernet
+      Media:
+        style
       Observability:
         style: column
         icon: mdi-chart-line
 
-      Downloads:
-        style: row
-        columns: 3
-        icon: mdi-download-circle
-    providers:
-      openweathermap:
-        api_key: {{HOMEPAGE_VAR_OPENWEATHERMAP_API_KEY}}
-        latitude: {{HOMEPAGE_VAR_OPENWEATHERMAP_LATITUDE}}
-        longitude: {{HOMEPAGE_VAR_OPENWEATHERMAP_LONGITUDE}}
   widgets.yaml: |
-    # - resources:
-    #     backend: kubernetes
-    #     cpu: true
-    #     expanded: true
-    #     memory: true
-    - openweathermap:
-        label: Local Weather
-        units: metric
-        provider: openweathermap
-        cache: 5
-        apikey: {{HOMEPAGE_VAR_OPENWEATHERMAP_API_KEY}}
-    - logo:
-        icon: mdi-home-analytics
+    - resources:
+        backend: kubernetes
+        cpu: true
+        expanded: true
+        memory: true
     - search:
-        provider: [duckduckgo, google]
+        provider: [google]
         focus: false
         target: _blank
     - greeting:
         text_size: xl
-        text: "Welcome Back!"
-    - kubernetes:
-        cluster:
-          cpu: true
-          label: cluster
-          memory: true
-          show: true
-          showLabel: true
-        nodes:
-          cpu: true
-          memory: true
-          show: false
-          showLabel: true
+        text: "Welcome back!"
     - datetime:
         text_size: l
         format:
