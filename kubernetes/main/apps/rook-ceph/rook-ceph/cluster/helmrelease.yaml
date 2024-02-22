@@ -14,13 +14,24 @@ spec:
         kind: HelmRepository
         name: rook-ceph
         namespace: flux-system
+  dependsOn:
+    - name: rook-ceph-operator
+      namespace: rook-ceph
+    - name: snapshot-controller
+      namespace: storage
   values:
-    toolbox:
-      enabled: false
-
     monitoring:
       enabled: true
       createPrometheusRules: true
+    ingress:
+      dashboard:
+        ingressClassName: internal
+        host:
+          name: &host rook.robsonhome.cloud
+          path: /
+        tls:
+          - hosts:
+              - *host
 
     configOverride: |
       [global]
@@ -81,6 +92,7 @@ spec:
       dashboard:
         enabled: true
         urlPrefix: /
+        ssl: false
 
       storage:
         useAllNodes: false
@@ -106,25 +118,22 @@ spec:
           - name: k3s-06
             devices:
               - name: /dev/disk/by-id/ata-SAMSUNG_MZ7KM960HAHP-00005_S2HTNX0H414441
-
-    ingress:
-      dashboard:
-        ingressClassName: internal
-        annotations:
-          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-        host:
-          name: &host rook.robsonhome.cloud
-          path: "/"
-        tls:
-          - hosts:
-              - *host
+    placement:
+      mgr: &placement
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-role.kubernetes.io/control-plane
+                    operator: Exists
+      mon: *placement
 
     cephBlockPools:
       - name: ceph-blockpool
         spec:
           failureDomain: host
           replicated:
-            size: 6
+            size: 3
         storageClass:
           enabled: true
           name: ceph-block
@@ -152,21 +161,21 @@ spec:
         spec:
           metadataPool:
             replicated:
-              size: 6
+              size: 3
           dataPools:
             - failureDomain: host
               replicated:
-                size: 6
+                size: 3
               name: data0
           metadataServer:
             activeCount: 1
             activeStandby: true
             resources:
               requests:
-                cpu: 35m
+                cpu: 50m
                 memory: 1Gi
               limits:
-                memory: 3Gi
+                memory: 4Gi
         storageClass:
           enabled: true
           isDefault: false
@@ -174,7 +183,7 @@ spec:
           pool: data0
           reclaimPolicy: Delete
           allowVolumeExpansion: true
-          mountOptions: []
+          volumeBindingMode: Immediate
           parameters:
             csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
             csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
@@ -189,7 +198,6 @@ spec:
       name: csi-ceph-filesystem
       isDefault: false
       deletionPolicy: Delete
-
     cephObjectStores:
       - name: ceph-objectstore
         spec:
@@ -208,10 +216,11 @@ spec:
             resources:
               requests:
                 cpu: 100m
-                memory: 256Mi
+                memory: 1Gi
               limits:
                 memory: 2Gi
-            instances: 1
+            instances: 2
+            priorityClassName: system-cluster-critical
           healthCheck:
             bucket:
               interval: 60s
@@ -219,5 +228,15 @@ spec:
           enabled: true
           name: ceph-bucket
           reclaimPolicy: Delete
+          volumeBindingMode: Immediate
           parameters:
             region: us-east-1
+        ingress:
+          enabled: true
+          ingressClassName: internal
+          host:
+            name: &host rgw.robsonhome.cloud
+            path: /
+          tls:
+            - hosts:
+                - *host
