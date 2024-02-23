@@ -50,6 +50,7 @@ spec:
     enableRuntimeDeviceDetection: true
     endpointRoutes:
       enabled: true
+    enableCiliumEndpointSlice: true
     hubble:
       enabled: true
       metrics:
@@ -99,9 +100,15 @@ spec:
     kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
     l2announcements:
       enabled: true
+    gatewayAPI:
+      enabled: true
     loadBalancer:
       algorithm: maglev
       mode: dsr
+      l7:
+        backend: envoy
+    envoy:
+      enabled: true
     l7Proxy: true
     localRedirectPolicy: true
     operator:

@@ -6,3 +6,4 @@ resources:
   - ./cilium-l2.yaml
   - ./bgppeeringpolicy.yaml
   - ./helmrelease.yaml
+  # - ./gatewayclass.yaml

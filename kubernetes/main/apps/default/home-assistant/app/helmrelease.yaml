@@ -84,7 +84,7 @@ spec:
           gethomepage.dev/icon: "home-assitant.png"
           gethomepage.dev/widget.type: homeassistant
           gethomepage.dev/widget.url: https://hass.robsonhome.cloud
-          gethomepage.dev/widget.key: "{{HOMEPAGE_VAR_HASSIO_TOKEN}}"
+          # gethomepage.dev/widget.key: "{{HOMEPAGE_VAR_HASSIO_TOKEN}}"
           external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
         hosts:
           - host: &host hass.robsonhome.cloud
