@@ -10,4 +10,4 @@ resources:
   - ./external-dns/ks.yaml
   - ./nginx/ks.yaml
   # Standard Kustomizations
-  - ./external-services
+  - ./external-services/ks.yaml
