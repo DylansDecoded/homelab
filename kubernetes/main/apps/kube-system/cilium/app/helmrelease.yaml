@@ -30,6 +30,11 @@ spec:
     bandwidthManager:
       enabled: true
       bbr: true
+    bgp:
+      enabled: false
+      announce:
+        loadbalancerIP: true
+        podCIDR: false
     bpf:
       masquerade: true
     cgroup:
@@ -62,6 +67,7 @@ spec:
           enabled: true
           annotations:
             grafana_folder: Cilium
+
       relay:
         enabled: true
         rollOutPods: true
@@ -81,6 +87,11 @@ spec:
                 - *host
     ipam:
       mode: kubernetes
+
+    ingressController:
+      enabled: false
+      loadbalancerMode: shared
+
     ipv4NativeRoutingCIDR: 10.42.0.0/16
     k8sServiceHost: 127.0.0.1
     k8sServicePort: 6444
@@ -91,6 +102,7 @@ spec:
     loadBalancer:
       algorithm: maglev
       mode: dsr
+    l7Proxy: true
     localRedirectPolicy: true
     operator:
       rollOutPods: true

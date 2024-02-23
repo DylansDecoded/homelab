@@ -89,6 +89,8 @@ spec:
               capabilities:
                 add:
                   - NET_ADMIN
+          annotations:
+            configmap.reloader.stakater.com/reload: qbittorrent-dnsdist
         pod:
           securityContext:
             fsGroup: 568
@@ -100,22 +102,12 @@ spec:
         ports:
           http:
             port: *port
-      # bittorrent:
-      #   controller: main
-      #   type: LoadBalancer
-      #   annotations:
-      #     io.cilium/lb-ipam-ips: 10.1.33.202
-      # ports:
-      #   bittorrent:
-      #     enabled: true
-      #     port: *bittorrentPort
-      #     protocol: TCP
     ingress:
       main:
         enabled: true
         className: internal
         hosts:
-          - host: &host qb.robsonhome.cloud
+          - host: &host "qbittorrent.robsonhome.cloud"
             paths:
               - path: /
                 service:
@@ -124,6 +116,19 @@ spec:
         tls:
           - hosts:
               - *host
+    route:
+      main:
+        enabled: true
+        parentRefs:
+          - name: cilium-internal
+            namespace: kube-system
+        hostnames:
+          - "qbittorrent-route.robsonhome.cloud"
+        rules:
+          - backendRefs:
+              - port: *port
+                name: *app
+
     persistence:
       config:
         enabled: true
