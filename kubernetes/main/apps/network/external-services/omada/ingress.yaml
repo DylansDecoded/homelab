@@ -9,7 +9,7 @@ metadata:
   nginx.ingress.kubernetes.io/proxy-ssl-verify: "off"
   nginx.ingress.kubernetes.io/use-regex: "true"
   nginx.ingress.kubernetes.io/upstream-vhost: "omada.robsonhome.cloud:8843"
-  nginx.ingress.kubernetes.io/proxy-redirect-from: "~https://(.+):8843/(.+)/login$"
+  nginx.ingress.kubernetes.io/proxy-redirect-from: "~https://(.+):8083/(.+)/login$"
   nginx.ingress.kubernetes.io/proxy-redirect-to: "https://$1/$2/login"
 spec:
   ingressClassName: internal
@@ -17,7 +17,7 @@ spec:
     - host: &host omada.robsonhome.cloud
       http:
         paths:
-          - path: /admin
+          - path: /
             pathType: Prefix
             backend:
               service:

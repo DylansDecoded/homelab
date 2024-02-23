@@ -5,14 +5,17 @@ metadata:
   name: pihole
   namespace: network
   annotations:
-  nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  # nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  nginx-ingress.kubernetes.io/rewrite-target: ^/admin(.*)$ /$2
+  nginx.ingress.kubernetes.io/use-regex: "true"
+  nginx.ingress.kubernetes.io/proxy-redirect-from: "~https://(.+):80/(.+)/admin$"
 spec:
   ingressClassName: internal
   rules:
     - host: &host pihole.robsonhome.cloud
       http:
         paths:
-          - path: /admin
+          - path: /
             pathType: Prefix
             backend:
               service:
