@@ -38,8 +38,9 @@ spec:
           reloader.stakater.com/auto: "true"
         containers:
           main:
-            image: tsightler/ring-mqtt
-            tag: v5.6.3
+            image:
+              repository: tsightler/ring-mqtt
+              tag: v5.6.3
           envFrom:
             - secretRef:
                 name: ring-mqtt-secret
