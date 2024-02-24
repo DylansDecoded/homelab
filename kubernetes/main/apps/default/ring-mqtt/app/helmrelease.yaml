@@ -39,11 +39,11 @@ spec:
         containers:
           main:
             image:
-              repository: tsightler/ring-mqtt
+              repository: ghcr.io/tsightler/ring-mqtt
               tag: v5.6.3
-          envFrom:
-            - secretRef:
-                name: ring-mqtt-secret
+            envFrom:
+              - secretRef:
+                  name: ring-mqtt-secret
           resources:
             requests:
               cpu: 10m
