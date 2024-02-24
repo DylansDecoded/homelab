@@ -18,6 +18,9 @@ data:
         - Reddit:
             - icon: reddit.png
               href: 'https://reddit.com'
+        - Wealth Management:
+            - icon: mdi-currency-usd
+              href: 'https://www.bogleheads.org/wiki/Main_Page'
     - Dev:
         - kubesearch:
             - icon: kubernetes-dashboard.png
@@ -25,6 +28,7 @@ data:
         - Github:
             - icon: github.png
               href: 'https://github.com/DylansDecoded/homelab'
+
   docker.yaml: ""
   kubernetes.yaml: |
     mode: cluster
@@ -39,12 +43,14 @@ data:
               accountid: {{HOMEPAGE_VAR_CLOUDFLARED_ACCOUNTID}}
               tunnelid: {{HOMEPAGE_VAR_CLOUDFLARED_TUNNELID}}
               key: {{HOMEPAGE_VAR_CLOUDFLARED_API_TOKEN}}
+
         - Pfsense:
             href: https://pfs.robsonhome.cloud
             icon: pfsense.png
             description: Pfsense Firewall
             widget:
               type: pfsense
+              url: https://pfs.robsonhome.cloud
               username: {{HOMEPAGE_VAR_PFSENSE_USERNAME}}
               password: {{HOMEPAGE_VAR_PFSENSE_PASSWORD}}
 
@@ -54,7 +60,19 @@ data:
             description: PiHole DNS
             widget:
               type: pihole
+              url: http://10.1.100.53
               key: {{HOMEPAGE_VAR_PIHOLE_API_KEY}}
+
+        - Omada:
+            href: https://omada.robsonhome.cloud
+            icon: omada.png
+            description: Omada Controller
+            widget:
+              type: omada
+              url: https://omada.robsonhome.cloud
+              username: {{HOMEPAGE_VAR_OMADA_USERNAME}}
+              password: {{HOMEPAGE_VAR_OMADA_PASSWORD}}
+              sitename: {{HOMEPAGE_VAR_OMADA_SITENAME}}
 
   settings.yaml: |
     title: Dashboard
@@ -70,19 +88,22 @@ data:
       showSearchSuggestions: true
       hideVisitURL: true
     layout:
-      Home:
-        useEqualHeights: true
-        style: column
-        icon: mdi-home-analytics
       Network:
         style: row
         columns: 4
         icon: mdi-ethernet
       Media:
-        style
-      Observability:
+        style: row
+        columns: 4
+        icon: mdi-folder-play-outline
+      Reading:
         style: column
-        icon: mdi-chart-line
+        columns: 2
+        icon: mdi-book-open-variant
+      Dev:
+        style: row
+        columns: 2
+        icon: mdi-code-braces
 
   widgets.yaml: |
     - resources:
@@ -97,6 +118,13 @@ data:
     - greeting:
         text_size: xl
         text: "Welcome back!"
+    - openweathermap:
+        label: Waxhaw
+        latitude: {{HOMEPAGE_VAR_OPENWEATHERMAP_LATITUDE}}
+        longitude: {{HOMEPAGE_VAR_OPENWEATHERMAP_LONGITUDE}}
+        units: imperial
+        provider: openweathermap
+        apiKey: {{HOMEPAGE_VAR_OPENWEATHERMAP_API_KEY}}
     - datetime:
         text_size: l
         format:
