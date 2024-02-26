@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: thanos
-      version: 12.23.1
+      version: 13.2.2
       sourceRef:
         kind: HelmRepository
         name: bitnami
@@ -56,11 +56,15 @@ spec:
     image:
       registry: quay.io
       repository: thanos/thanos
-      tag: v0.34.0
+      tag: v0.34.1
     objstoreConfig:
       type: s3
       config:
         insecure: true
+    receive:
+      enabled: false
+      networkPolicy:
+        enabled: false
     queryFrontend:
       enabled: true
       replicaCount: 2
@@ -76,11 +80,13 @@ spec:
       ingress:
         enabled: true
         ingressClassName: internal
-        hostname: &host thanos-query-frontend.robsonhome.cloud
+        hostname: &host thanos-query-frontend.devbu.io
         tls: true
         extraTls:
           - hosts:
               - *host
+      networkPolicy:
+        enabled: false
     query:
       enabled: true
       replicaCount: 2
@@ -88,10 +94,14 @@ spec:
       dnsDiscovery:
         sidecarsService: kube-prometheus-stack-thanos-discovery
         sidecarsNamespace: observability
-      stores: [":10901"]
+      stores: ["thanos.turbo.ac:10901"]
+      networkPolicy:
+        enabled: false
     bucketweb:
       enabled: true
       replicaCount: 2
+      networkPolicy:
+        enabled: false
     compactor:
       enabled: true
       extraFlags:
@@ -104,6 +114,8 @@ spec:
         enabled: true
         storageClass: local-hostpath
         size: 10Gi
+      networkPolicy:
+        enabled: false
     storegateway:
       enabled: true
       replicaCount: 2
@@ -112,6 +124,8 @@ spec:
         enabled: true
         storageClass: local-hostpath
         size: 10Gi
+      networkPolicy:
+        enabled: false
     ruler:
       enabled: true
       replicaCount: 2
@@ -134,6 +148,8 @@ spec:
         enabled: true
         storageClass: local-hostpath
         size: 10Gi
+      networkPolicy:
+        enabled: false
     metrics:
       enabled: true
       serviceMonitor:

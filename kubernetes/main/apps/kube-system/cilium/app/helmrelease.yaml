@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: cilium
-      version: 1.15.0
+      version: 1.15.1
       sourceRef:
         kind: HelmRepository
         name: cilium
@@ -23,34 +23,10 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
+  valuesFrom:
+    - kind: ConfigMap
+      name: cilium-helm-values
   values:
-    bgpControlPlane:
-      enabled: true
-    autoDirectNodeRoutes: true
-    bandwidthManager:
-      enabled: true
-      bbr: true
-    bgp:
-      enabled: false
-      announce:
-        loadbalancerIP: true
-        podCIDR: false
-    bpf:
-      masquerade: true
-    cgroup:
-      automount:
-        enabled: false
-      hostRoot: /sys/fs/cgroup
-    cluster:
-      id: 1
-      name: kubernetes
-    containerRuntime:
-      integration: containerd
-    devices: mainif
-    enableRuntimeDeviceDetection: true
-    endpointRoutes:
-      enabled: true
-    enableCiliumEndpointSlice: true
     hubble:
       enabled: true
       metrics:
@@ -68,7 +44,6 @@ spec:
           enabled: true
           annotations:
             grafana_folder: Cilium
-
       relay:
         enabled: true
         rollOutPods: true
@@ -86,33 +61,7 @@ spec:
           tls:
             - hosts:
                 - *host
-    ipam:
-      mode: kubernetes
-
-    ingressController:
-      enabled: false
-      loadbalancerMode: shared
-
-    ipv4NativeRoutingCIDR: 10.42.0.0/16
-    k8sServiceHost: 127.0.0.1
-    k8sServicePort: 6444
-    kubeProxyReplacement: true
-    kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
-    l2announcements:
-      enabled: true
-    gatewayAPI:
-      enabled: true
-    loadBalancer:
-      algorithm: maglev
-      mode: dsr
-      l7:
-        backend: envoy
-    envoy:
-      enabled: true
-    l7Proxy: true
-    localRedirectPolicy: true
     operator:
-      rollOutPods: true
       prometheus:
         enabled: true
         serviceMonitor:
@@ -130,23 +79,3 @@ spec:
       enabled: true
       annotations:
         grafana_folder: Cilium
-    rollOutCiliumPods: true
-    routingMode: native
-    securityContext:
-      capabilities:
-        ciliumAgent:
-          - CHOWN
-          - KILL
-          - NET_ADMIN
-          - NET_RAW
-          - IPC_LOCK
-          - SYS_ADMIN
-          - SYS_RESOURCE
-          - DAC_OVERRIDE
-          - FOWNER
-          - SETGID
-          - SETUID
-        cleanCiliumState:
-          - NET_ADMIN
-          - SYS_ADMIN
-          - SYS_RESOURCE
