@@ -74,6 +74,16 @@ data:
               password: {{HOMEPAGE_VAR_OMADA_PASSWORD}}
               sitename: {{HOMEPAGE_VAR_OMADA_SITENAME}}
 
+      - Home Automation:
+          - Home Assistant:
+              href: https://hass.robsonhome.cloud
+              icon: home-assistant.png
+              description: Home Assistant
+              widget:
+                type: homeassistant
+                url: https://hass.robsonhome.cloud
+                token: {{HOMEPAGE_VAR_HASS_TOKEN}}
+
   settings.yaml: |
     title: Dashboard
     theme: dark
@@ -81,6 +91,7 @@ data:
     headerStyle: boxed
     providers:
       openweathermap: {{HOMEPAGE_VAR_OPENWEATHERMAP_API_KEY}}
+      home-assistant:
     hideVersion: true
     quicklaunch:
       searchDescriptions: true
@@ -92,12 +103,16 @@ data:
         style: row
         columns: 4
         icon: mdi-ethernet
+      Home Automation:
+        style: row
+        columns: 2
+        icon: mdi-home-analytics
       Media:
         style: row
         columns: 4
         icon: mdi-folder-play-outline
       Reading:
-        style: column
+        style: row
         columns: 2
         icon: mdi-book-open-variant
       Dev:
