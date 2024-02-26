@@ -9,8 +9,8 @@ spec:
   imageName: ghcr.io/cloudnative-pg/postgresql:16.2-6
   primaryUpdateStrategy: unsupervised
   storage:
-    size: 20Gi
-    storageClass: openebs-hostpath
+    size: 15Gi
+    storageClass: local-hostpath
   superuserSecret:
     name: cloudnative-pg-secret
   enableSuperuserAccess: true
@@ -23,7 +23,7 @@ spec:
     reusePVC: true
   resources:
     requests:
-      cpu: 500m
+      cpu: 250m
     limits:
       memory: 4Gi
   monitoring:
@@ -58,12 +58,12 @@ spec:
           key: aws-secret-access-key
   # Note: previousCluster needs to be set to the name of the previous
   # cluster when recovering from an existing cnpg cluster
-  bootstrap:
-    recovery:
-      source: &previousCluster postgres16-v2
+  # bootstrap:
+  #   recovery:
+  #     source: &previousCluster postgres16-v2
   # Note: externalClusters is needed when recovering from an existing cnpg cluster
-  externalClusters:
-    - name: *previousCluster
-      barmanObjectStore:
-        <<: *barmanObjectStore
-        serverName: *previousCluster
+  # externalClusters:
+  #   - name: *previousCluster
+  #     barmanObjectStore:
+  #       <<: *barmanObjectStore
+  #       serverName: *previousCluster
