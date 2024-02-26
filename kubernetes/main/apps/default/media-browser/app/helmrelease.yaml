@@ -99,7 +99,7 @@ spec:
         existingClaim: media-browser
       media:
         type: nfs
-        server: truenas.robsonhome.cloud
+        server: 10.1.30.210
         path: /mnt/tank/nfs/media
         globalMounts:
           - path: /media
