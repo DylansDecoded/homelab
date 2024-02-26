@@ -3,16 +3,16 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: cloudnative-pg
+  name: openebs
 spec:
   interval: 30m
   chart:
     spec:
-      chart: cloudnative-pg
-      version: 0.20.1
+      chart: openebs
+      version: 3.10.0
       sourceRef:
         kind: HelmRepository
-        name: cloudnative-pg
+        name: openebs
         namespace: flux-system
   install:
     remediation:
@@ -23,12 +23,15 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
-  dependsOn:
-    - name: openebs
-      namespace: openebs-system
   values:
-    crds:
-      create: true
-    config:
-      data:
-        INHERITED_ANNOTATIONS: kyverno.io/ignore
+    ndm:
+      enabled: false
+    localprovisioner:
+      enabled: true
+      deviceClass:
+        enabled: false
+      hostpathClass:
+        enabled: true
+        name: openebs-hostpath
+        isDefaultClass: false
+        basePath: /var/openebs/local

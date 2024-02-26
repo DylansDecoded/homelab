@@ -4,7 +4,7 @@ apiVersion: notification.toolkit.fluxcd.io/v1beta3
 kind: Provider
 metadata:
   name: alert-manager
-  namespace: storage
+  namespace: openebs-system
 spec:
   type: alertmanager
   address: http://alertmanager-operated.observability.svc.cluster.local:9093/api/v2/alerts/
@@ -14,23 +14,13 @@ apiVersion: notification.toolkit.fluxcd.io/v1beta3
 kind: Alert
 metadata:
   name: alert-manager
-  namespace: storage
+  namespace: openebs-system
 spec:
   providerRef:
     name: alert-manager
   eventSeverity: error
   eventSources:
-    - kind: GitRepository
-      name: "*"
     - kind: HelmRelease
-      name: "*"
-    - kind: HelmRepository
-      name: "*"
-    - kind: Kustomization
-      name: "*"
-    - kind: OCIRepository
-      name: "*"
-    - kind: Terraform
       name: "*"
   exclusionList:
     - "error.*lookup github\\.com"

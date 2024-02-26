@@ -12,7 +12,7 @@ spec:
   externalName: truenas.
   ports:
     - name: http
-      port: &port 80
+      port: &port 443
       protocol: TCP
       targetPort: *port
 ---
@@ -35,7 +35,7 @@ spec:
               service:
                 name: truenas
                 port:
-                  number: 80
+                  number: 443
   tls:
     - hosts:
         - *host

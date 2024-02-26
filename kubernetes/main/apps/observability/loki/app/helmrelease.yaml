@@ -25,8 +25,8 @@ spec:
   uninstall:
     keepHistory: false
   dependsOn:
-    - name: local-path-provisioner
-      namespace: storage
+    - name: openebs
+      namespace: openebs-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
   values:
@@ -162,9 +162,10 @@ spec:
                   matchLabels:
                     {{- include "loki.backendSelectorLabels" . | nindent 12 }}
                 topologyKey: kubernetes.io/hostname
+
       persistence:
         size: 20Gi
-        storageClass: local-hostpath
+        storageClass: openebs-hostpath
 
     monitoring:
       dashboards:
