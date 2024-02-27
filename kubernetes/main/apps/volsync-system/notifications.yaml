@@ -14,7 +14,7 @@ apiVersion: notification.toolkit.fluxcd.io/v1beta3
 kind: Alert
 metadata:
   name: alert-manager
-  namespace: storage
+  namespace: volsync-system
 spec:
   providerRef:
     name: alert-manager
