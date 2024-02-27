@@ -2,8 +2,7 @@
 .DS_Store
 Thumbs.db
 # k8s
-*.archive/*
-.archive*
+.archive
 kubeconfig
 .decrypted~*.yaml
 .config.env
