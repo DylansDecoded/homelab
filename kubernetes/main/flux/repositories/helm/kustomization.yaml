@@ -21,17 +21,13 @@ resources:
   - ./intel.yaml
   - ./jameswynn.yaml
   - ./jetstack.yaml
-  - ./longhorn.yaml
   - ./metrics-server.yaml
   - ./node-feature-discovery.yaml
-  - ./nvidia.yaml
+  - ./openebs.yaml
   - ./piraeus.yaml
-  # - ./postfinance.yaml
+  - ./postfinance.yaml
   - ./prometheus-community.yaml
-  # - ./redis-operator.yaml
   - ./rook-ceph.yaml
   - ./stakater.yaml
-  # - ./tf-controller.yaml
-  - ./tyzbit.yaml
   - ./weaveworks.yaml
   - ./xenitab.yaml
