@@ -1,7 +1,0 @@
-qm create 8001 --name "ubuntu-2204-cloudinit-template" --ostype l26 \
-    --memory 4096 \
-    --agent 1 \
-    --bios ovmf --machine q35 --efidisk0 ssd_pool:0,pre-enrolled-keys=0 \
-    --cpu x86-64-v2-AES --socket 1 --cores 2 \
-    --vga serial0 --serial0 socket  \
-    --net0 virtio,bridge=vmbr0
