@@ -30,6 +30,6 @@ resources:
   # - ./shlink/ks.yaml
   - ./sonarr/ks.yaml
   # - ./tautulli/ks.yaml
-  - ./unpackerr.yaml
+  - ./unpackerr/ks.yaml
   - ./zigbee2mqtt/ks.yaml
   - ./zwave-js-ui/ks.yaml
