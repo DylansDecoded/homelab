@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/instance: omada
 spec:
   type: ExternalName
-  externalName: omada.robsonhome.cloud
+  externalName: omada.
   ports:
     - name: http
       port: &port 443
