@@ -67,12 +67,16 @@ spec:
     persistence:
       data:
         enabled: true
-        existingClaim: ring-mqtt
-        globalMounts:
-          - path: /data
-      config:
-        type: configMap
-        name: ring-mqtt-config
-        globalMounts:
-          - path: /data/config.json
-            subPath: config.json
+        existingClaim: *app
+        advancedMounts:
+          main:
+            main:
+              - path: /data/config.json
+              - subPath: config.json
+      # config:
+      #   type: configMap
+      #   name: ring-config
+      #   globalMounts:
+      #     - path: /data/config.json
+      #       subPath: config.json
+      #       readOnly: true
