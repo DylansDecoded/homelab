@@ -39,35 +39,26 @@ spec:
         containers:
           main:
             image:
-              repository: tsightler/ring-mqtt
+              repository: docker.io/tsightler/ring-mqtt
               tag: 5.6.3
-            env:
-              - name: "MQTTHOST"
-                value: "mosquitto.default.svc.cluster.local"
-              - name: "ENABLECAMERAS"
-                value: "true"
-              - name: "SNAPSHOTMODE"
-                value: "all"
-              - name: "ENABLEPANIC"
-                value: "true"
-              - name: "DISARMCODE"
-                valueFrom:
-                  secretKeyRef:
-                    name: ring-mqtt-secret
-                    key: RING_DISARM_CODE
-              - name: "DEBUG"
-                value: "ring-mqtt"
-          resources:
-            requests:
-              cpu: 10m
-            limits:
-              memory: 512Mi
-          securityContext:
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-            capabilities:
-              drop:
-                - ALL
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+        # pod:
+        #   securityContext:
+        #     runAsUser: 568
+        #     runAsGroup: 568
+        #     runAsNonRoot: true
+        #     fsGroup: 568
+        #     fsGroupChangePolicy: OnRootMismatch
       service:
         main:
           ports:
