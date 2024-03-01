@@ -65,8 +65,14 @@ spec:
           http:
             port: 8554
     persistence:
-      config:
+      data:
         enabled: true
-        existingClaim: *app
+        existingClaim: ring-mqtt
         globalMounts:
           - path: /data
+      config:
+        type: configMap
+        name: ring-mqtt-config
+        globalMounts:
+          - path: /data/config.json
+            subPath: config.json
