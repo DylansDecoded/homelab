@@ -46,6 +46,7 @@ spec:
               ENABLECAMERAS: "true"
               SNAPSHOTMODE: "true"
               ENABLEPANIC: "true"
+              MQTTHASSTOPIC: hass/status
               MQTTPORT: 1883
               DEBUG: "ring-mqtt"
             envFrom:
@@ -75,10 +76,3 @@ spec:
         globalMounts:
           - path: /data/config.json
             subPath: config.json
-
-      # config:
-      #   type: configMap
-      #   name: ring-mqtt-config
-      #   globalMounts:
-      #     - path: /data/config.json
-      #       subPath: config.json
