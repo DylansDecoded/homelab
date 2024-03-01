@@ -67,17 +67,12 @@ spec:
               repository: ghcr.io/qmcgaw/gluetun
               tag: 3.35.0
             env:
-              - name: VPN_SERVICE_PROVIDER
-                value: custom
-              - name: VPN_TYPE
-                value: wireguard
-              - name: VPN_PORT_FORWARDING
-                value: on
-              - name: DOT
-                value: "off"
-              - name: DNS_ADDRESS
-                value: "127.0.0.2"
-              - name: VPN_DNS_ADDRESSES
+              VPN_SERVICE_PROVIDER: custom
+              VPN_TYPE: wireguard
+              VPN_PORT_FORWARDING: "on"
+              DOT: "off"
+              DNS_ADDRESS: "127.0.0.2"
+             VPN_DNS_ADDRESSES
                 value: "127.0.0.2"
               - name: FIREWALL_OUTBOUND_SUBNETS
                 # Allow access to k3s subnets
@@ -102,6 +97,7 @@ spec:
         ports:
           http:
             port: *port
+
     ingress:
       main:
         enabled: true
@@ -116,18 +112,6 @@ spec:
         tls:
           - hosts:
               - *host
-    route:
-      main:
-        enabled: true
-        parentRefs:
-          - name: cilium-internal
-            namespace: kube-system
-        hostnames:
-          - "qbittorrent-route.robsonhome.cloud"
-        rules:
-          - backendRefs:
-              - port: *port
-                name: *app
 
     persistence:
       config:
