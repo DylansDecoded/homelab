@@ -30,7 +30,7 @@ spec:
     - name: rook-ceph-cluster
       namespace: rook-ceph
     - name: volsync
-      namespace: storage
+      namespace: volsync-system
   values:
     controllers:
       main:
@@ -39,11 +39,24 @@ spec:
         containers:
           main:
             image:
-              repository: ghcr.io/tsightler/ring-mqtt
-              tag: v5.6.3
-            envFrom:
-              - secretRef:
-                  name: ring-mqtt-secret
+              repository: tsightler/ring-mqtt
+              tag: 5.6.3
+            env:
+              - name: "MQTTHOST"
+                value: "mosquitto.default.svc.cluster.local"
+              - name: "ENABLECAMERAS"
+                value: "true"
+              - name: "SNAPSHOTMODE"
+                value: "all"
+              - name: "ENABLEPANIC"
+                value: "true"
+              - name: "DISARMCODE"
+                valueFrom:
+                  secretKeyRef:
+                    name: ring-mqtt-secret
+                    key: RING_DISARM_CODE
+              - name: "DEBUG"
+                value: "ring-mqtt"
           resources:
             requests:
               cpu: 10m
@@ -62,12 +75,15 @@ spec:
               port: 8554
       persistence:
         data:
+          enabled: true
           existingClaim: *app
           globalMounts:
             - path: /data
-        config:
+        config-file:
           type: configMap
           name: ring-mqtt-configmap
-          globalMounts:
-            - path: /data/config.json
-              subPath: config.json
+          advancedMounts:
+            main:
+              main:
+                - path: /ring-mqtt/data/config.json
+                  subPath: config.json
