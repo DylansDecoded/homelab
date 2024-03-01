@@ -59,22 +59,22 @@ spec:
         #     runAsNonRoot: true
         #     fsGroup: 568
         #     fsGroupChangePolicy: OnRootMismatch
-      service:
-        main:
-          ports:
-            http:
-              port: 8554
-      persistence:
-        data:
-          enabled: true
-          existingClaim: *app
-          globalMounts:
-            - path: /data
-        config-file:
-          type: configMap
-          name: ring-mqtt-configmap
-          advancedMounts:
+    service:
+      main:
+        ports:
+          http:
+            port: 8554
+    persistence:
+      data:
+        enabled: true
+        existingClaim: *app
+        globalMounts:
+          - path: /data
+      config-file:
+        type: configMap
+        name: ring-mqtt-configmap
+        advancedMounts:
+          main:
             main:
-              main:
-                - path: /ring-mqtt/data/config.json
-                  subPath: config.json
+              - path: /ring-mqtt/data/config.json
+                subPath: config.json
