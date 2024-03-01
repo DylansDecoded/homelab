@@ -57,8 +57,7 @@ spec:
               limits:
                 memory: 512Mi
             securityContext:
-              runAsUser: 568
-              runAsGroup: 568
+              privileged: true
     service:
       main:
         ports:
@@ -70,9 +69,10 @@ spec:
         existingClaim: ring-mqtt
         globalMounts:
           - path: /data
-      config:
-        type: configMap
-        name: ring-mqtt-config
-        globalMounts:
-          - path: /data/config.json
-            subPath: config.json
+
+      # config:
+      #   type: configMap
+      #   name: ring-mqtt-config
+      #   globalMounts:
+      #     - path: /data/config.json
+      #       subPath: config.json
