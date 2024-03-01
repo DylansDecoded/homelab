@@ -14,7 +14,19 @@ database:
 detectors:
   coral:
     type: edgetpu
-    device: pci
+    device: pci:0
+
+birdseye:
+  enabled: False
+  mode: continuous
+
+objects:
+  track: ["person", "dog", "car"]
+  filters:
+    person:
+      min_area: 5000
+      max_area: 100000
+      threshold: 0.7
 
 ffmpeg:
   global_args: ["-hide_banner", "-loglevel", "warning"]
@@ -45,16 +57,18 @@ record:
     mode: all
   events:
     retain:
-      default: 2
+      default: 3
       mode: active_objects
 
-objects:
-  track: ["person", "dog"]
-  filters:
-    person:
-      min_area: 5000
-      max_area: 100000
-      threshold: 0.7
+# zones:
+#   front_all:
+#     coordinates: 1091,576,991,308,954,196,602,154,474,169,197,160,49,237,119,468,149,576
+#   front_porch:
+#     coordinates: 187,456,363,341,230,267,110,344
+#   driveway:
+#     coordinates: 609,149,836,154,765,576,225,576,177,464,320,362
+#   back_porch:
+#     coordinates:
 
 go2rtc:
   streams:
