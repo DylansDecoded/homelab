@@ -70,11 +70,11 @@ spec:
         existingClaim: *app
         globalMounts:
           - path: /data
-      config-file:
-        type: configMap
-        name: ring-mqtt-configmap
-        advancedMounts:
-          main:
-            main:
-              - path: /data/config.json
-                subPath: config.json
+      # config-file:
+      #   type: configMap
+      #   name: ring-mqtt-configmap
+      #   advancedMounts:
+      #     main:
+      #       main:
+      #         - path: /data/config.json
+      #           subPath: config.json
