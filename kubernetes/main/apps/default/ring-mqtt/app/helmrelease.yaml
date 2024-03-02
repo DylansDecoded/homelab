@@ -65,18 +65,13 @@ spec:
           http:
             port: 8554
     persistence:
-      data:
+      config:
         enabled: true
         existingClaim: *app
-        advancedMounts:
-          main:
-            main:
-              - path: /data/config.json
-                subPath: config.json
-      # config:
-      #   type: configMap
-      #   name: ring-config
-      #   globalMounts:
-      #     - path: /data/config.json
-      #       subPath: config.json
-      #       readOnly: true
+        globalMounts:
+          - path: /data
+      config-file:
+        type: configMap
+        globalMounts:
+          - path: /data/config.json
+            subPath: config.json
