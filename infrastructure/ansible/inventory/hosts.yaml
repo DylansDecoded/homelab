@@ -17,7 +17,14 @@
 #       ansible_host: 10.1.100.20
 #       dns_title: master
 #       storage_network_address: 10.101.101.20
-
+docker:
+  vars:
+    ansible_user: dylan
+    ansible_python_interpreter: /usr/bin/python3
+  hosts:
+    ring-mqtt:
+      ansible_host: 10.1.30.31
+      storage_network_address: 10.101.101.31
 dns:
   vars:
     ansible_user: dylanrobson
