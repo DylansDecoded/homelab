@@ -7,9 +7,9 @@ resources:
   - ./helmrelease.yaml
   - ../../../../templates/volsync
 configMapGenerator:
-  - name: ring-mqtt-config
+  - name: ring-mqtt-configmap
     files:
-      - ring-config=./resources/config.json
+      - config.json=./resources/config.json
 generatorOptions:
   disableNameSuffixHash: true
   annotations:

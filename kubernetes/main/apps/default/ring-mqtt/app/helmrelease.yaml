@@ -72,6 +72,9 @@ spec:
           - path: /data
       config-file:
         type: configMap
-        globalMounts:
-          - path: /data/config.json
-            subPath: config.json
+        name: ring-mqtt-configmap
+        advancedMounts:
+          main:
+            main:
+              - path: /data/config.json
+                subPath: config.json
