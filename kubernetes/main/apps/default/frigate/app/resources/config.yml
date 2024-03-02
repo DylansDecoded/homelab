@@ -21,7 +21,7 @@ birdseye:
   mode: continuous
 
 objects:
-  track: ["person", "dog", "car"]
+  track: ["person", "dog"]
   filters:
     person:
       min_area: 5000

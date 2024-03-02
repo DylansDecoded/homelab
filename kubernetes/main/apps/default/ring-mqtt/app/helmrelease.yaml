@@ -72,7 +72,7 @@ spec:
           main:
             main:
               - path: /data/config.json
-              - subPath: config.json
+                subPath: config.json
       # config:
       #   type: configMap
       #   name: ring-config
