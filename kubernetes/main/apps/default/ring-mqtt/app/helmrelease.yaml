@@ -62,19 +62,31 @@ spec:
     service:
       main:
         ports:
-          http:
+          rtsp:
             port: 8554
+          web-ui:
+            port: 55123
     persistence:
       config:
         enabled: true
         existingClaim: *app
-        globalMounts:
-          - path: /data
-      # config-file:
-      #   type: configMap
-      #   name: ring-mqtt-configmap
-      #   advancedMounts:
-      #     main:
-      #       main:
-      #         - path: /data/config.json
-      #           subPath: config.json
+        advancedMounts:
+          main:
+            main:
+              - path: /data
+      config-file:
+        type: configMap
+        name: ring-mqtt-configmap
+        advancedMounts:
+          main:
+            main:
+              - path: /data/config.json
+                subPath: config.json
+      ring-state:
+        type: configMap
+        name: ring-mqtt-configmap
+        advancedMounts:
+          main:
+            main:
+              - path: /data/ring-state.json
+                subPath: ring-state.json
