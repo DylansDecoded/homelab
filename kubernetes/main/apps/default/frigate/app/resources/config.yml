@@ -60,16 +60,6 @@ record:
       default: 3
       mode: active_objects
 
-# zones:
-#   front_yard_porch:
-#     coordinates: 337,359,601,154,562,153,451,175,106,338,191,463
-#   driveway:
-#     coordinates: 765,576,827,168,608,162,173,473,230,576
-#   front_yard_driveway:
-#     coordinates: 1149,576,963,168,850,150,827,165,762,576
-#   back_porch:
-#     coordinates: 640,156,536,0,418,0,416,172,121,190,40,480,640,480
-
 go2rtc:
   streams:
     reolink_backporch_turret_cam:
@@ -96,6 +86,9 @@ cameras:
 
         - path: rtsp://127.0.0.1:8554/reolink_backporch_turret_cam_sub?video=copy
           roles: ["detect"]
+    zones:
+      back_porch:
+        coordinates: 640,156,536,0,418,0,416,172,121,190,40,480,640,480
 
   reolink_driveway_floodlight_cam:
     enabled: true
@@ -106,3 +99,10 @@ cameras:
 
         - path: rtsp://127.0.0.1:8554/reolink_driveway_floodlight_cam_sub?video=copy
           roles: ["detect"]
+    zones:
+      front_yard_porch:
+        coordinates: 337,359,601,154,562,153,451,175,106,338,191,463
+      driveway:
+        coordinates: 765,576,827,168,608,162,173,473,230,576
+      front_yard_driveway:
+        coordinates: 1149,576,963,168,850,150,827,165,762,576
