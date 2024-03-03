@@ -1,5 +1,5 @@
 {
-  "mqtt_url": "mqtt://mosquitto.default.svc.cluster.local",
+  "mqtt_url": "mqtt://{MQTTUSER}:{MQTTPASSWORD}@mosquitto.default.svc.cluster.local:1883",
   "mqtt_options": "",
   "livestream_user": "",
   "livestream_pass": "",
