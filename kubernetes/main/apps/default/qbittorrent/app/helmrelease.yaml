@@ -63,13 +63,22 @@ spec:
               repository: ghcr.io/qdm12/gluetun
               tag: latest@sha256:ea17355896ba98a4bfaf975bcda3993c2c94178188fb3efbfaefbdccb99edd65
             env:
-              VPN_SERVICE_PROVIDER: custom
-              VPN_TYPE: wireguard
-              VPN_INTERFACE: wg0
-              FIREWALL_INPUT_PORTS: "8080"
-              VPN_PORT_FORWARDING: "on"
-              DOT: "off"
-              FIREWALL_OUTBOUND_SUBNETS: "10.42.0.0/16,10.43.0.0/16"
+              - name: VPN_SERVICE_PROVIDER
+                value: custom
+              - name: VPN_TYPE
+                value: wireguard
+              - name: VPN_INTERFACE
+                value: wg0
+              - name: FIREWALL_INPUT_PORTS
+                value: "8080"
+              - name: VPN_PORT_FORWARDING_PROVIDER
+                value: protonvpn
+              - name: VPN_PORT_FORWARDING
+                value: "on"
+              - name: DOT
+                value: "off"
+              - name: FIREWALL_OUTBOUND_SUBNETS
+                value: "10.42.0.0/16,10.43.0.0/16"
             envFrom:
               - secretRef:
                   name: gluetun-secret
