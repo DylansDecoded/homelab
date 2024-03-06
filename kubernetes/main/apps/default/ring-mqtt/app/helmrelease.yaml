@@ -62,10 +62,9 @@ spec:
     service:
       main:
         ports:
-          rtsp:
+          http:
             port: 8554
-          web-ui:
-            port: 55123
+
     persistence:
       config:
         enabled: true
