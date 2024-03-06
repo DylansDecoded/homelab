@@ -59,14 +59,14 @@ spec:
               limits:
                 memory: 4Gi
           gluetun:
-            dependsOn: main
             image:
-              repository: docker.io/qmcgaw/gluetun
-              tag: v3.37.0
+              repository: ghcr.io/qdm12/gluetun
+              tag: latest@sha256:ea17355896ba98a4bfaf975bcda3993c2c94178188fb3efbfaefbdccb99edd65
             env:
               VPN_SERVICE_PROVIDER: custom
               VPN_TYPE: wireguard
               VPN_INTERFACE: wg0
+              FIREWALL_INPUT_PORTS: "8080"
               VPN_PORT_FORWARDING: "on"
               DOT: "off"
               FIREWALL_OUTBOUND_SUBNETS: "10.42.0.0/16,10.43.0.0/16"
@@ -89,12 +89,12 @@ spec:
                 value: "8080"
               - name: PORT_FORWARDED
                 value: "/tmp/gluetun/forwarded_port"
-        # pod:
-        #   securityContext:
-        #     fsGroup: 568
-        #     fsGroupChangePolicy: "OnRootMismatch"
-        #     supplementalGroups:
-        #       - 65539
+        pod:
+          securityContext:
+            fsGroup: 568
+            fsGroupChangePolicy: "OnRootMismatch"
+            supplementalGroups:
+              - 65539
     service:
       main:
         ports:
