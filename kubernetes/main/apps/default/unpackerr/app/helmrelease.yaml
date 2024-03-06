@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.5.0
+      version: 2.6.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -35,7 +35,9 @@ spec:
               tag: 0.13.1@sha256:04fcb43fa70e6db88331962760607842cdf19889e6d35d9d2fde0cf6a1550eaf
             env:
               TZ: America/New_York
-              UN_WEBSERVER_METRICS: "true"
+              UN_WEBSERVER_METRICS: true
+              UN_WEBSERVER_LOG_FILE: /logs
+              UN_ACTIVITY: true
               UN_SONARR_0_URL: http://sonarr.default.svc.cluster.local
               UN_SONARR_0_PATHS_0: /media/Downloads/qbittorrent/complete/sonarr
               UN_RADARR_0_URL: http://radarr.default.svc.cluster.local
@@ -51,7 +53,7 @@ spec:
               requests:
                 cpu: 10m
               limits:
-                memory: 2Gi
+                memory: 4Gi
         pod:
           securityContext:
             runAsUser: 568
@@ -69,6 +71,8 @@ spec:
       main:
         enabled: true
     persistence:
+      logs:
+        type: emptyDir
       media:
         type: nfs
         server: 10.1.30.210
