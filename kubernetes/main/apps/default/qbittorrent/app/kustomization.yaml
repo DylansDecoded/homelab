@@ -5,12 +5,8 @@ kind: Kustomization
 resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
-  - ./policy.yaml
   - ../../../../templates/volsync
 configMapGenerator:
-  - name: qbittorrent-dnsdist.conf
-    files:
-      - dnsdist.conf=./resources/dnsdist.conf
   - name: qbittorrent-scripts
     files:
       - completed.sh=./resources/completed.sh

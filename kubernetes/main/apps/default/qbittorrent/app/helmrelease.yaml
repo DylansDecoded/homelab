@@ -58,25 +58,18 @@ spec:
                 cpu: 200m
               limits:
                 memory: 4Gi
-          dnsdist:
-            image:
-              repository: docker.io/powerdns/dnsdist-18
-              tag: 1.8.3
           gluetun:
+            dependsOn: main
             image:
               repository: ghcr.io/qmcgaw/gluetun
               tag: 3.35.0
             env:
               VPN_SERVICE_PROVIDER: custom
               VPN_TYPE: wireguard
+              VPN_INTERFACE: wg0
               VPN_PORT_FORWARDING: "on"
               DOT: "off"
-              DNS_ADDRESS: "127.0.0.2"
-             VPN_DNS_ADDRESSES
-                value: "127.0.0.2"
-              - name: FIREWALL_OUTBOUND_SUBNETS
-                # Allow access to k3s subnets
-                value: "10.42.0.0/16,10.43.0.0/16"
+              FIREWALL_OUTBOUND_SUBNETS: "10.42.0.0/16,10.43.0.0/16"
             envFrom:
               - secretRef:
                   name: gluetun-secret
@@ -84,14 +77,24 @@ spec:
               capabilities:
                 add:
                   - NET_ADMIN
-          annotations:
-            configmap.reloader.stakater.com/reload: qbittorrent-dnsdist
-        pod:
-          securityContext:
-            fsGroup: 568
-            fsGroupChangePolicy: "OnRootMismatch"
-            supplementalGroups:
-              - 65539
+          port-forward:
+            dependsOn: gluetun
+            image:
+              repository: docker.io/snoringdragon/gluetun-qbittorrent-port-manager
+              tag: "1.0"
+            env:
+              - name: QBITTORRENT_SERVER
+                value: localhost
+              - name: QBITTORRENT_PORT
+                value: "8080"
+              - name: PORT_FORWARDED
+                value: "/tmp/gluetun/forwarded_port"
+        # pod:
+        #   securityContext:
+        #     fsGroup: 568
+        #     fsGroupChangePolicy: "OnRootMismatch"
+        #     supplementalGroups:
+        #       - 65539
     service:
       main:
         ports:
@@ -117,6 +120,21 @@ spec:
       config:
         enabled: true
         existingClaim: qbittorrent
+        advancedMounts:
+          main:
+            main:
+              - path: /config
+
+      gluetun-data:
+        type: emptyDir
+        advancedMounts:
+          main:
+            gluetun:
+              - path: /tmp/gluetun
+            port-forward:
+              - path: /tmp/gluetun
+                readOnly: true
+
       completed-script:
         type: configMap
         name: qbittorrent-scripts
@@ -125,9 +143,10 @@ spec:
           - path: /scripts/completed.sh
             subPath: completed.sh
             readOnly: true
+
       media:
         type: nfs
-        server: truenas.robsonhome.cloud
+        server: 10.1.30.210
         path: /mnt/tank/nfs/media
         globalMounts:
           - path: /media
