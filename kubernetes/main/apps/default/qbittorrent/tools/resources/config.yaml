@@ -106,6 +106,10 @@ trackers:
     urls: ["uhdbits.org"]
     required_seed_ratio: 1.01
     required_seed_days: 0
+  - name: feernopeer
+    urls: ["feernopeer.com"]
+    required_seed_ratio: 0
+    required_seed_days: 0
 
   # - name: TeamOS
   #   urls:

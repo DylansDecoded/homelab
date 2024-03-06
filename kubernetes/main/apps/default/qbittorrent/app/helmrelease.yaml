@@ -40,6 +40,7 @@ spec:
               tag: 4.6.3@sha256:a4ad890e8c4a287c17d12ca22eb1d84a046aba2efbd882bf7d6eb12459f6a70c
             env:
               TZ: America/New_York
+              UMASK: "022"
               QBITTORRENT__PORT: &port 8080
               # QBITTORRENT__BT_PORT: &bittorrentPort 58462
               QBITTORRENT__WebUI__AlternativeUIEnabled: false
@@ -53,51 +54,61 @@ spec:
             securityContext:
               runAsUser: 568
               runAsGroup: 568
+              runAsNonRoot: true
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
             resources:
               requests:
                 cpu: 200m
               limits:
                 memory: 4Gi
+
           gluetun:
             image:
               repository: ghcr.io/qdm12/gluetun
-              tag: latest@sha256:ea17355896ba98a4bfaf975bcda3993c2c94178188fb3efbfaefbdccb99edd65
+              tag: v3.37.0
             env:
-              - name: VPN_SERVICE_PROVIDER
-                value: custom
-              - name: VPN_TYPE
-                value: wireguard
-              - name: VPN_INTERFACE
-                value: wg0
-              - name: FIREWALL_INPUT_PORTS
-                value: "8080"
-              - name: VPN_PORT_FORWARDING_PROVIDER
-                value: protonvpn
-              - name: VPN_PORT_FORWARDING
-                value: "on"
-              - name: DOT
-                value: "off"
-              - name: FIREWALL_OUTBOUND_SUBNETS
-                value: "10.42.0.0/16,10.43.0.0/16"
+              VPN_SERVICE_PROVIDER: custom
+              VPN_TYPE: wireguard
+              VPN_INTERFACE: wg0
+              VPN_ENDPOINT_PORT: 51820
+              VPN_PORT_FORWARDING: on
+              VPN_PORT_FORWARDING_PROVIDER: protonvpn
+              FIREWALL_INPUT_PORTS: 8080
+              FIREWALL_OUTBOUND_SUBNETS: 10.42.0.0/16,10.43.0.0/16
             envFrom:
               - secretRef:
-                  name: gluetun-secret
+                  name: qbittorrent-secret
             securityContext:
               capabilities:
                 add:
                   - NET_ADMIN
+              allowPrivilegeEscalation: false
+
           port-forward:
-            dependsOn: gluetun
             image:
-              repository: docker.io/snoringdragon/gluetun-qbittorrent-port-manager
-              tag: "1.0"
+              repository: ghcr.io/bjw-s/gluetun-qb-port-sync
+              tag: v0.0.1
             env:
-              - name: QBITTORRENT_SERVER
-                value: localhost
-              - name: QBITTORRENT_PORT
-                value: "8080"
-              - name: PORT_FORWARDED
-                value: "/tmp/gluetun/forwarded_port"
+              GLUETUN_CONTROL_SERVER_HOST: localhost
+              GLUETUN_CONTROL_SERVER_PORT: 8000
+              QBITTORRENT_HOST: localhost
+              QBITTORRENT_WEBUI_PORT: *port
+              CRON_ENABLED: true
+              CRON_SCHEDULE: "*/5 * * * *"
+              LOG_TIMESTAMP: false
+            securityContext:
+              runAsUser: 568
+              runAsGroup: 568
+              runAsNonRoot: true
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: false
+              capabilities:
+                drop:
+                  - ALL
         pod:
           securityContext:
             fsGroup: 568
@@ -134,28 +145,22 @@ spec:
             main:
               - path: /config
 
-      gluetun-data:
-        type: emptyDir
-        advancedMounts:
-          main:
-            gluetun:
-              - path: /tmp/gluetun
-            port-forward:
-              - path: /tmp/gluetun
-                readOnly: true
-
       completed-script:
         type: configMap
         name: qbittorrent-scripts
         defaultMode: 0775
-        globalMounts:
-          - path: /scripts/completed.sh
-            subPath: completed.sh
-            readOnly: true
+        advancedMounts:
+          main:
+            main:
+              - path: /scripts/completed.sh
+                subPath: completed.sh
+                readOnly: true
 
       media:
         type: nfs
         server: 10.1.30.210
         path: /mnt/tank/nfs/media
-        globalMounts:
-          - path: /media
+        advancedMounts:
+          main:
+            main:
+              - path: /data/media
