@@ -1,9 +1,9 @@
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: runner-home-cluster
-  namespace: arc-system
+  name: arc-home-ops
 spec:
   interval: 30m
   chart:
@@ -14,7 +14,6 @@ spec:
         kind: HelmRepository
         name: actions-runner-controller
         namespace: flux-system
-  maxHistory: 2
   install:
     remediation:
       retries: 3
@@ -24,23 +23,32 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
+  valuesFrom:
+    - targetPath: githubConfigSecret.github_app_id
+      kind: Secret
+      name: actions-runner-controller-auth-secret
+      valuesKey: ACTION_RUNNER_CONTROLLER_GITHUB_APP_ID
+    - targetPath: githubConfigSecret.github_app_installation_id
+      kind: Secret
+      name: actions-runner-controller-auth-secret
+      valuesKey: ACTION_RUNNER_CONTROLLER_GITHUB_INSTALLATION_ID
+    - targetPath: githubConfigSecret.github_app_private_key
+      kind: Secret
+      name: actions-runner-controller-auth-secret
+      valuesKey: ACTION_RUNNER_CONTROLLER_GITHUB_PRIVATE_KEY
   values:
     runnerScaleSetName: arc-runner-set-homelab
     githubConfigUrl: https://github.com/DylansDecoded/homelab
     minRunners: 1
-    maxRunners: 3
+    maxRunners: 6
     containerMode:
       type: dind
-  valuesFrom:
-    - kind: Secret
-      name: actions-runner-controller-auth
-      valuesKey: ACTION_RUNNER_CONTROLLER_GITHUB_APP_ID
-      targetPath: githubConfigSecret.github_app_id
-    - kind: Secret
-      name: actions-runner-controller-auth
-      valuesKey: ACTION_RUNNER_CONTROLLER_GITHUB_INSTALLATION_ID
-      targetPath: githubConfigSecret.github_app_installation_id
-    - kind: Secret
-      name: actions-runner-controller-auth
-      valuesKey: ACTION_RUNNER_CONTROLLER_GITHUB_PRIVATE_KEY
-      targetPath: githubConfigSecret.github_app_private_key
+    template:
+      spec:
+        containers:
+          - name: runner
+            image: ghcr.io/onedr0p/actions-runner:2.314.1@sha256:338d851a66c4942f7a33d4dc3d0ff1459e05e31e258153242521e9f8e4c64dd7
+            command: ["/home/runner/run.sh"]
+    controllerServiceAccount:
+      name: actions-runner-controller-gha-rs-controller
+      namespace: actions-runner-system
