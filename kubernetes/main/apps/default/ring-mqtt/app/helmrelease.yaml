@@ -59,11 +59,15 @@ spec:
                 memory: 512Mi
             securityContext:
               privileged: true
+
     service:
       main:
         ports:
           http:
             port: 8554
+
+    ingress:
+      enabled: true
 
     persistence:
       config:
