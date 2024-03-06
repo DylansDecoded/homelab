@@ -62,7 +62,7 @@ spec:
             dependsOn: main
             image:
               repository: docker.io/qmcgaw/gluetun
-              tag: 3.37.0
+              tag: v3.37.0
             env:
               VPN_SERVICE_PROVIDER: custom
               VPN_TYPE: wireguard
