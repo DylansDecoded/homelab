@@ -8,9 +8,6 @@ area/docs:
       - any-glob-to-any-file:
           - "docs/**/*"
           - "README.md"
-area/infrastructure:
-  - changed-files:
-      - any-glob-to-any-file: "infrastructure/**/*"
 area/github:
   - changed-files:
       - any-glob-to-any-file: ".github/**/*"

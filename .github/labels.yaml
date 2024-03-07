@@ -13,8 +13,6 @@
 # Clusters
 - name: cluster/main
   color: "ffc300"
-- name: cluster/storage
-  color: "ffc300"
 # Renovate Types
 - name: renovate/ansible
   color: "027fa0"
