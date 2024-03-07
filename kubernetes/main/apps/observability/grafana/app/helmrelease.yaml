@@ -131,22 +131,14 @@ spec:
             editable: true
             options:
               path: /var/lib/grafana/dashboards/prometheus-folder
-          # - name: thanos
-          #   orgId: 1
-          #   folder: Thanos
-          #   type: file
-          #   disableDeletion: false
-          #   editable: true
-          #   options:
-          #     path: /var/lib/grafana/dashboards/thanos-folder
-          # - name: unifi
-          #   orgId: 1
-          #   folder: Unifi
-          #   type: file
-          #   disableDeletion: false
-          #   editable: true
-          #   options:
-          #     path: /var/lib/grafana/dashboards/unifi-folder
+          - name: thanos
+            orgId: 1
+            folder: Thanos
+            type: file
+            disableDeletion: false
+            editable: true
+            options:
+              path: /var/lib/grafana/dashboards/thanos-folder
     datasources:
       datasources.yaml:
         apiVersion: 1
@@ -194,11 +186,6 @@ spec:
           revision: 25
           datasource:
             - { name: DS_PROMETHEUS, value: Prometheus }
-        node-exporter-full:
-          # renovate: depName="Node Exporter Full"
-          gnetId: 1860
-          revision: 33
-          datasource: Prometheus
         redis:
           gnetId: 763
           revision: 6
