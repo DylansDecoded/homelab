@@ -1,2 +1,0 @@
-- name: install netboot.xyz
-  include_tasks: netbootxyz.yaml
