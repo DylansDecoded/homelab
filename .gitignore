@@ -11,6 +11,9 @@ kubeconfig
 *.key
 github-deploy-key
 
+# Archived files
+**/.archive/**
+
 # Ansible
 .venv*
 .vscode
