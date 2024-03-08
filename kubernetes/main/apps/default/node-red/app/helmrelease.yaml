@@ -31,7 +31,7 @@ spec:
           main:
             image:
               repository: docker.io/nodered/node-red
-              tag: 3.1.6@sha256:922bd92928bbd5be0b36fcf5e2a5a3d98af30e2aa4ad2fb6398d0c0c1e5b4612
+              tag: 3.1.6@sha256:3d968a967d27b37388ea14019a75b2b2660b208ae3b500269c71e01eca67f28a
             env:
               TZ: America/New_York
               NODE_RED_OAUTH_ISSUER_URL: https://auth.robsonhome.cloud
