@@ -94,7 +94,9 @@ spec:
       dnsDiscovery:
         sidecarsService: kube-prometheus-stack-thanos-discovery
         sidecarsNamespace: observability
-      stores: ["thanos.robsonhome.cloud:10901"]
+      # stores: ["thanos.robsonhome.cloud:10901"]
+      nodeSelector:
+        node-role.kubernetes.io/worker: "true"
       networkPolicy:
         enabled: false
     bucketweb:
