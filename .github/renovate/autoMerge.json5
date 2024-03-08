@@ -1,19 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  packageRules: [
+  "packageRules": [
     {
-      matchDatasources: [
-        "docker",
-        "github-tags"
-      ],
-      automerge: true,
-      automergeType: "branch",
-      ignoreTests: true,
-      platformCommit: true,
-      matchUpdateTypes: [
-        "minor",
-        "patch",
-      ]
+      "description": "Automerge non-major updates",
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
     }
   ]
 }
