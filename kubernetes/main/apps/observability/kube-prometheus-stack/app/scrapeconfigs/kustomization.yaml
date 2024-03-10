@@ -5,5 +5,5 @@ kind: Kustomization
 resources:
   - ./kube-vip.yaml
   - ./minio.yaml
-  # - ./node-exporter.yaml
+  - ./node-exporter.yaml
   # - ./zigbee-controller.yaml

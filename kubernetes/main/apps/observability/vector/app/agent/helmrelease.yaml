@@ -22,10 +22,9 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3
-  uninstall:
-    keepHistory: false
   dependsOn:
     - name: vector-aggregator
+      namespace: observability
   values:
     controllers:
       main:
