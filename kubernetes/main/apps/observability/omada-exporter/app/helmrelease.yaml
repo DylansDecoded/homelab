@@ -1,0 +1,51 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2beta2.json
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
+kind: HelmRelease
+metadata:
+  name: omada-exporter
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: omada-exporter
+      version: 0.9.0å
+      sourceRef:
+        kind: HelmRepository
+        name: omada-exporter
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    podAnnotations:
+      reloader.stakater.com/auto: "true"
+    replicaCount: 1
+    omada:
+      host: $OMADA_HOST
+      username: $OMADA_USERNAME
+      password: $OMADA_PASSWORD
+      site: $OMADA_SITE
+      insecure: true
+      request_timeout: 15
+    serviceMonitor:
+      enabled: true
+    fullnameOverride: "omada-exporter"
+    podSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
+      runAsNonRoot: true
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities: { drop: ["ALL"] }
+    service:
+      type: ClusterIP
+      port: 9202
