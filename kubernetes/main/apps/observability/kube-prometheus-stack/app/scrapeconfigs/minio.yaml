@@ -6,5 +6,5 @@ metadata:
 spec:
   scheme: HTTPS
   staticConfigs:
-    - targets: ["https://s3.robsonhome.cloud"]
+    - targets: ["s3.robsonhome.cloud:9000"]
   metricsPath: /minio/v2/metrics/cluster

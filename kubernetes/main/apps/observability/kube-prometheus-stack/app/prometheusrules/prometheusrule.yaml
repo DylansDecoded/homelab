@@ -18,7 +18,8 @@ spec:
           for: 15m
           labels:
             severity: critical
-    - name: oom
+
+    - name: k8s-hosts
       rules:
         - alert: OOMKilled
           annotations:
@@ -26,3 +27,38 @@ spec:
           expr: (kube_pod_container_status_restarts_total - kube_pod_container_status_restarts_total offset 10m >= 1) and ignoring (reason) min_over_time(kube_pod_container_status_last_terminated_reason{reason="OOMKilled"}[10m]) == 1
           labels:
             severity: critical
+
+        - alert: RebootRequired
+          annotations:
+            description: Node(s) require a manual reboot
+            summary: Reboot daemon has failed to do so for 24 hours
+          expr: max(kured_reboot_required) != 0
+          for: 24h
+          labels:
+            severity: warning
+        - alert: RebootScheduled
+          annotations:
+            description: Node Reboot Scheduled
+            summary: Node {{$labels.node}} has been scheduled to reboot
+          expr: kured_reboot_required > 0
+          for: 5m
+          labels:
+            severity: warning
+
+        - alert: HostHighCpuLoad
+          expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 80
+          for: 0m
+          labels:
+            severity: warning
+          annotations:
+            summary: Host high CPU load (instance {{ $labels.instance }})
+            description: "CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+        - alert: HostPhysicalComponentTooHot
+          expr: node_hwmon_temp_celsius > 75
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: Host physical component too hot (instance {{ $labels.instance }})
+            description: "Physical hardware component too hot\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
