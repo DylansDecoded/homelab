@@ -6,7 +6,7 @@ metadata:
   name: github
 spec:
   type: github
-  address: https://github.com/Dylansdecoded/homelab
+  address: https://github.com/DylansDecoded/homelab
   secretRef:
     name: github-token-secret
 ---
