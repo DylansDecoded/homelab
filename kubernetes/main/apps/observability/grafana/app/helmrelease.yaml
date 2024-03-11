@@ -29,12 +29,12 @@ spec:
     - name: loki
       namespace: observability
   values:
-    # extraInitContainers:
-    #   - name: 01-init-db
-    #     image: ghcr.io/onedr0p/postgres-init:16
-    #     envFrom:
-    #       - secretRef:
-    #           name: &secret grafana-secret
+    extraInitContainers:
+      - name: 01-init-db
+        image: ghcr.io/onedr0p/postgres-init:16
+        envFrom:
+          - secretRef:
+              name: &secret grafana-secret
     replicas: 2
     env:
       GF_AUTH_GENERIC_OAUTH_API_URL: https://auth.robsonhome.cloud/api/oidc/userinfo
