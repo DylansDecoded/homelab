@@ -317,7 +317,6 @@ spec:
           datasource: Prometheus
       omada:
         omada-overview:
-          # renovate: depName="Omada: Client Insights - Prometheus"
           gnetId: 16343
           revision: 2
           datasource: Prometheus
