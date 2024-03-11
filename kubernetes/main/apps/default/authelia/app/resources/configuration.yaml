@@ -52,8 +52,7 @@ notifier:
     username: "${AUTHELIA_SMTP_USERNAME}"
     password: "${AUTHELIA_SMTP_PASSWORD}"
     sender: authelia@robsonhome.cloud
-    host: "${AUTHELIA_SMTP_HOST}"
-    port: 587
+    address: "${AUTHELIA_SMTP_HOST}"
 
 totp:
   disable: false
