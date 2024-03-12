@@ -30,11 +30,11 @@ spec:
       namespace: volsync-system
   values:
     controllers:
-      main:
+      zwave-js-ui:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/zwave-js/zwave-js-ui
               tag: 9.9.1
