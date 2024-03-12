@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: grafana
+  name: &app grafana
 spec:
   interval: 30m
   chart:
@@ -29,56 +29,34 @@ spec:
     - name: loki
       namespace: observability
   values:
-    extraInitContainers:
-      - name: 01-init-db
-        image: ghcr.io/onedr0p/postgres-init:16
-        envFrom:
-          - secretRef:
-              name: &secret grafana-secret
     replicas: 2
+    podAnnotations:
+      reloader.stakater.com/auto: "true"
     env:
-      GF_AUTH_GENERIC_OAUTH_API_URL: https://auth.robsonhome.cloud/api/oidc/userinfo
-      GF_AUTH_GENERIC_OAUTH_AUTH_URL: https://auth.robsonhome.cloud/api/oidc/authorization
-      GF_AUTH_GENERIC_OAUTH_CLIENT_ID: grafana
-      GF_AUTH_GENERIC_OAUTH_TOKEN_URL: https://auth.robsonhome.cloud/api/oidc/token
+      GF_PANELS_DISABLE_SANITIZE_HTML: true
       GF_DATE_FORMATS_USE_BROWSER_LOCALE: true
       GF_EXPLORE_ENABLED: true
-      GF_FEATURE_TOGGLES_ENABLE: publicDashboards
-      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: natel-discrete-panel,pr0ps-trackmap-panel,panodata-map-panel
-      GF_SECURITY_COOKIE_SAMESITE: grafana
-      GF_SERVER_ROOT_URL: https://grafana.robsonhome.cloud
-    envFromSecrets:
-      - name: *secret
+      GF_SECURITY_COOKIE_SAMESITE: *app
     grafana.ini:
       analytics:
         check_for_updates: false
         check_for_plugin_updates: false
         reporting_enabled: false
-      auth:
-        oauth_auto_login: true
-        oauth_allow_insecure_email_lookup: true
-      auth.generic_oauth:
-        enabled: true
-        name: Authelia
-        icon: signin
-        scopes: openid profile email groups
-        empty_scopes: false
-        login_attribute_path: preferred_username
-        groups_attribute_path: groups
-        name_attribute_path: name
-        use_pkce: true
-      auth.generic_oauth.group_mapping:
-        org_id: 1
-        role_attribute_path: |
-          contains(groups[*], 'admins') && 'Admin' || contains(groups[*], 'people') && 'Viewer'
       auth.basic:
         enabled: false
+        disable_login_form: true
       auth.anonymous:
-        enabled: false
-        # org_id: 1
-        # org_role: Viewer
-      news:
-        news_feed_enabled: false
+        enabled: true
+        org: Stuff
+        org_role: Editor
+    deploymentStrategy:
+      type: RollingUpdate
+    resources:
+      requests:
+        cpu: 23m
+        memory: 127M
+      limits:
+        memory: 219M
     dashboardProviders:
       dashboardproviders.yaml:
         apiVersion: 1
