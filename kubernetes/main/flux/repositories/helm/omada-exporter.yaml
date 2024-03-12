@@ -3,7 +3,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
-  name: omada_exporter
+  name: charlie-haley
   namespace: flux-system
 spec:
   interval: 30m
