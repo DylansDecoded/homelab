@@ -8,11 +8,11 @@ spec:
   interval: 30m
   chart:
     spec:
-      chart: omada-exporter
+      chart: omada_exporter
       version: 0.9.0
       sourceRef:
         kind: HelmRepository
-        name: charlie-haley
+        name: omada-exporter
         namespace: flux-system
   maxHistory: 2
   install:
