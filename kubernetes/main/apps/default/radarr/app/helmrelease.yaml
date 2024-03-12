@@ -28,7 +28,7 @@ spec:
       namespace: rook-ceph
   values:
     controllers:
-      main:
+      radarr:
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
@@ -40,7 +40,7 @@ spec:
               - secretRef:
                   name: radarr-secret
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/onedr0p/radarr-develop
               tag: 5.4.1.8654@sha256:f59912e61010a72d38f9973b1695329889666355df09d18d15ec4f95ff45ed13

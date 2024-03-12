@@ -24,11 +24,11 @@ spec:
     keepHistory: false
   values:
     controllers:
-      main:
+      node-red:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
-          main:
+          app:
             image:
               repository: docker.io/nodered/node-red
               tag: 3.1.6@sha256:3d968a967d27b37388ea14019a75b2b2660b208ae3b500269c71e01eca67f28a

@@ -28,11 +28,11 @@ spec:
       namespace: default
   values:
     controllers:
-      main:
+      home-assistant-code:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/coder/code-server
               tag: 4.22.0

@@ -25,7 +25,7 @@ spec:
     keepHistory: false
   values:
     controllers:
-      main:
+      autobrr:
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
@@ -37,7 +37,7 @@ spec:
               - secretRef:
                   name: autobrr-secret
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/autobrr/autobrr
               tag: v1.39.1@sha256:7149943f3f6a528ea653662272e8a2c78156cdbf51fd3313911eb57a03378a50

@@ -30,11 +30,11 @@ spec:
       namespace: volsync-system
   values:
     controllers:
-      main:
+      tautulli:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/onedr0p/tautulli
               tag: 2.13.4@sha256:6651957d4678206e0dc9d389f23d88067ffc40dbc601893140daa45ffca8b728

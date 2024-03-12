@@ -26,7 +26,7 @@ spec:
     keepHistory: false
   values:
     controllers:
-      main:
+      miniflux:
         replicas: 2
         strategy: RollingUpdate
         annotations:
@@ -41,7 +41,7 @@ spec:
               - secretRef:
                   name: miniflux-secret
         containers:
-          main:
+          app:
             image:
               repository: ghcr.io/miniflux/miniflux
               tag: 2.0.50-distroless
