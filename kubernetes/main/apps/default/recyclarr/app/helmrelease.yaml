@@ -64,12 +64,8 @@ spec:
             runAsNonRoot: true
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
-    service:
-      app:
-        enabled: false
     persistence:
       config:
-        enabled: true
         existingClaim: recyclarr
       config-file:
         type: configMap

@@ -86,6 +86,7 @@ spec:
             supplementalGroups: [10000]
     service:
       app:
+        controller: sabnzbd
         ports:
           http:
             port: *port
@@ -98,7 +99,7 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: app
                   port: http
         tls:
           - hosts:

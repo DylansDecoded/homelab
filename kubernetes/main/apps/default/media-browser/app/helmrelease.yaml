@@ -76,6 +76,7 @@ spec:
             supplementalGroups: [10000]
     service:
       app:
+        controller: media-browser
         ports:
           http:
             port: *port
@@ -88,7 +89,7 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: app
                   port: http
         tls:
           - hosts:

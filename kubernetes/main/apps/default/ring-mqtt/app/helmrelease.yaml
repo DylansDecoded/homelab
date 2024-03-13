@@ -33,7 +33,7 @@ spec:
       namespace: volsync-system
   values:
     controllers:
-      app:
+      ring-mqtt:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
@@ -62,26 +62,24 @@ spec:
 
     service:
       app:
+        controller: ring-mqtt
         ports:
           http:
             port: 8554
-
-    ingress:
-      enabled: true
 
     persistence:
       config:
         enabled: true
         existingClaim: *app
         advancedMounts:
-          app:
+          ring-mqtt:
             app:
               - path: /data
       config-file:
         type: configMap
         name: ring-mqtt-configmap
         advancedMounts:
-          app:
+          ring-mqtt:
             app:
               - path: /data/config.json
                 subPath: config.json
@@ -89,7 +87,7 @@ spec:
         type: configMap
         name: ring-mqtt-configmap
         advancedMounts:
-          app:
+          ring-mqtt:
             app:
               - path: /data/ring-state.json
                 subPath: ring-state.json

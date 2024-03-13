@@ -89,6 +89,7 @@ spec:
             supplementalGroups: [10000]
     service:
       app:
+        controller: sonarr
         ports:
           http:
             port: *port
@@ -101,7 +102,7 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: main
                   port: http
         tls:
           - hosts:

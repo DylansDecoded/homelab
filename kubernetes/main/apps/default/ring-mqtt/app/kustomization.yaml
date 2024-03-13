@@ -7,12 +7,12 @@ resources:
   - ./pvc.yaml
   - ./helmrelease.yaml
   # - ../../../../templates/volsync
-configMapGenerator:
-  - name: ring-mqtt-configmap
-    files:
-      - config.json=./resources/config.json
-      - ring-state.json=./resources/ring-state.json
-generatorOptions:
-  disableNameSuffixHash: true
-  annotations:
-    kustomize.toolkit.fluxcd.io/substitute: disabled
+# configMapGenerator:
+#   - name: ring-mqtt-configmap
+#     files:
+#       - config.json=./resources/config.json
+#       - ring-state.json=./resources/ring-state.json
+# generatorOptions:
+#   disableNameSuffixHash: true
+#   annotations:
+#     kustomize.toolkit.fluxcd.io/substitute: disabled

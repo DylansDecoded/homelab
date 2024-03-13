@@ -64,6 +64,7 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
     service:
       app:
+        controller: mosquitto
         type: LoadBalancer
         annotations:
           external-dns.alpha.kubernetes.io/hostname: mosquitto.robsonhome.cloud
@@ -73,7 +74,6 @@ spec:
             port: 1883
     persistence:
       config:
-        enabled: true
         existingClaim: mosquitto
         globalMounts:
           - path: /data
@@ -81,15 +81,15 @@ spec:
         type: configMap
         name: mosquitto-configmap
         advancedMounts:
-          main:
-            main:
+          mosquitto:
+            app:
               - path: /mosquitto/config/mosquitto.conf
                 subPath: mosquitto.conf
       secret-file:
         type: secret
         name: mosquitto-secret
         advancedMounts:
-          main:
+          mosquitto:
             init-config:
               - path: /tmp/secret
       external-config:

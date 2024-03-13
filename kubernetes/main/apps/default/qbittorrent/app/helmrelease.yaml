@@ -41,7 +41,7 @@ spec:
             env:
               TZ: America/New_York
               UMASK: "022"
-              QBITTORRENT__PORT: &port 8080
+              QBITTORRENT__PORT: &port 80
               # QBITTORRENT__BT_PORT: &bittorrentPort 58462
               QBITTORRENT__WebUI__AlternativeUIEnabled: false
               QBT_Preferences__WebUI__AuthSubnetWhitelistEnabled: true
@@ -117,6 +117,10 @@ spec:
               - 65539
     service:
       app:
+        controller: qbittorrent
+        type: LoadBalancer
+        annotations:
+          io.cilium/lb-ipam-ips: 10.45.0.22
         ports:
           http:
             port: *port
@@ -126,11 +130,11 @@ spec:
         enabled: true
         className: internal
         hosts:
-          - host: &host "qbittorrent.robsonhome.cloud"
+          - host: &host qb.robsonhome.cloud
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
@@ -138,29 +142,20 @@ spec:
 
     persistence:
       config:
-        enabled: true
         existingClaim: qbittorrent
-        advancedMounts:
-          app:
-            app:
-              - path: /config
-
-      completed-script:
-        type: configMap
-        name: qbittorrent-scripts
-        defaultMode: 0775
-        advancedMounts:
-          app:
-            app:
-              - path: /scripts/completed.sh
-                subPath: completed.sh
-                readOnly: true
-
+      # completed-script:
+      #   type: configMap
+      #   name: qbittorrent-scripts
+      #   defaultMode: 0775
+      #   advancedMounts:
+      #     qbittorrent:
+      #       app:
+      #         - path: /scripts/completed.sh
+      #           subPath: completed.sh
+      #           readOnly: true
       media:
         type: nfs
         server: 10.1.30.210
         path: /mnt/tank/nfs/media
-        advancedMounts:
-          app:
-            app:
-              - path: /data/media
+        globalMounts:
+          - path: /media

@@ -89,6 +89,7 @@ spec:
             supplementalGroups: [10000]
     service:
       app:
+        controller: radarr
         ports:
           http:
             port: *port
@@ -101,7 +102,7 @@ spec:
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
