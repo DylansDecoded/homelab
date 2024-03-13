@@ -58,9 +58,10 @@ spec:
             runAsGroup: 568
             runAsNonRoot: true
         serviceMonitor:
-          enabled: true
+
         service:
           app:
+            controller: omada-exporter
             ports:
               http:
                 port: 9202
