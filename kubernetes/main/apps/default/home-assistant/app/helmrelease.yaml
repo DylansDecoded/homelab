@@ -76,7 +76,6 @@ spec:
             port: 8123
     ingress:
       app:
-        enabled: true
         className: external
         annotations:
           external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
@@ -85,14 +84,17 @@ spec:
             paths:
               - path: /
                 service:
-                  name: app
+                  identifier: app
                   port: http
         tls:
           - hosts:
               - *host
     persistence:
       config:
-        enabled: true
         existingClaim: home-assistant
+      logs:
+        type: emptyDir
+        globalMounts:
+          - path: /config/logs
       tmp:
         type: emptyDir
