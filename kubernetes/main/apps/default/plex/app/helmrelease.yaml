@@ -1,10 +1,11 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta2.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: plex
 spec:
+  interval: 30m
   chart:
     spec:
       chart: app-template
@@ -14,6 +15,14 @@ spec:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
   dependsOn:
     - name: intel-device-plugin-gpu
       namespace: kube-system
@@ -21,7 +30,6 @@ spec:
       namespace: rook-ceph
     - name: volsync
       namespace: volsync-system
-  interval: 30m
   values:
     controllers:
       plex:
@@ -97,7 +105,6 @@ spec:
 
     persistence:
       config:
-        enabled: true
         existingClaim: plex
 
       plex-cache:
