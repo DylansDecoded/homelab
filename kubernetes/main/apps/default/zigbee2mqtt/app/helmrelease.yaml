@@ -74,6 +74,11 @@ spec:
             envFrom:
               - secretRef:
                   name: zigbee2mqtt-secret
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -83,7 +88,6 @@ spec:
                 cpu: 10m
               limits:
                 memory: 512Mi
-
         pod:
           securityContext:
             runAsUser: 568
@@ -93,26 +97,23 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
     service:
       app:
+        controller: zigbee2mqtt
         ports:
           http:
             port: *port
-
     ingress:
       app:
-        enabled: true
         className: internal
         hosts:
           - host: &host zigbee.robsonhome.cloud
             paths:
               - path: /
                 service:
-                  name: main
+                  identifier: app
                   port: http
         tls:
           - hosts:
               - *host
-
     persistence:
       config:
-        enabled: true
         existingClaim: zigbee2mqtt
