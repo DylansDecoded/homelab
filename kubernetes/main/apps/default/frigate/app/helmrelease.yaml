@@ -86,6 +86,7 @@ spec:
             intel.feature.node.kubernetes.io/gpu: "true"
     service:
       app:
+        controller: frigate
         ports:
           http:
             port: *port
@@ -100,7 +101,7 @@ spec:
             paths:
               - path: /
                 service:
-                  name: app
+                  identifier: app
                   port: http
         tls:
           - hosts:
