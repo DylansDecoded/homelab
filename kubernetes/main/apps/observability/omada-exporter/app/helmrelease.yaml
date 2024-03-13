@@ -3,16 +3,16 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: &app omada-exporter
+  name: omada-exporter
 spec:
   interval: 30m
   chart:
     spec:
-      chart: omada_exporter
-      version: 0.9.0
+      chart: app-template
+      version: 3.0.2
       sourceRef:
         kind: HelmRepository
-        name: omada-exporter
+        name: bjw-s
         namespace: flux-system
   maxHistory: 2
   install:
@@ -25,27 +25,42 @@ spec:
   uninstall:
     keepHistory: false
   values:
-    podAnnotations:
-      reloader.stakater.com/auto: "true"
-    replicaCount: 1
-    omada:
-      host: $OMADA_HOST
-      username: $OMADA_USERNAME
-      password: $OMADA_PASSWORD
-      site: $OMADA_SITE
-      insecure: true
-      request_timeout: 15
-    serviceMonitor:
-      enabled: true
-    fullnameOverride: *app
-    podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      runAsNonRoot: true
-    securityContext:
-      allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: true
-      capabilities: { drop: ["ALL"] }
-    service:
-      type: ClusterIP
-      port: 9202
+    controllers:
+      omada-exporter:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/charlie-haley/omada_exporter
+              tag: v0.13.0
+            env:
+              OMADA_SITE: homelab
+              OMADA_INSECURE: true
+              OMADA_REQUEST_TIMEOUT: 15
+            envFrom:
+              - secretRef:
+                  name: omada-exporter-secret
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                memory: 128Mi
+                cpu: 100m
+              limits:
+                memory: 256Mi
+                cpu: 200m
+        pod:
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            runAsNonRoot: true
+        serviceMonitor:
+          enabled: true
+        service:
+          app:
+            ports:
+              http:
+                port: 9202

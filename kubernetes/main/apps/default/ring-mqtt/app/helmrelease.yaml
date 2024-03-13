@@ -33,11 +33,11 @@ spec:
       namespace: volsync-system
   values:
     controllers:
-      main:
+      app:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
-          main:
+          app:
             image:
               repository: docker.io/tsightler/ring-mqtt
               tag: 5.6.3
@@ -61,7 +61,7 @@ spec:
               privileged: true
 
     service:
-      main:
+      app:
         ports:
           http:
             port: 8554
@@ -74,22 +74,22 @@ spec:
         enabled: true
         existingClaim: *app
         advancedMounts:
-          main:
-            main:
+          app:
+            app:
               - path: /data
       config-file:
         type: configMap
         name: ring-mqtt-configmap
         advancedMounts:
-          main:
-            main:
+          app:
+            app:
               - path: /data/config.json
                 subPath: config.json
       ring-state:
         type: configMap
         name: ring-mqtt-configmap
         advancedMounts:
-          main:
-            main:
+          app:
+            app:
               - path: /data/ring-state.json
                 subPath: ring-state.json

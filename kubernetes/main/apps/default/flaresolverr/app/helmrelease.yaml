@@ -59,14 +59,14 @@ spec:
               limits:
                 memory: 1Gi
     service:
-      main:
+      app:
         ports:
           http:
             port: *port
           metrics:
             port: *metricsPort
     serviceMonitor:
-      main:
+      app:
         enabled: true
         endpoints:
           - port: metrics

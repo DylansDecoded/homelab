@@ -116,13 +116,13 @@ spec:
             supplementalGroups:
               - 65539
     service:
-      main:
+      app:
         ports:
           http:
             port: *port
 
     ingress:
-      main:
+      app:
         enabled: true
         className: internal
         hosts:
@@ -141,8 +141,8 @@ spec:
         enabled: true
         existingClaim: qbittorrent
         advancedMounts:
-          main:
-            main:
+          app:
+            app:
               - path: /config
 
       completed-script:
@@ -150,8 +150,8 @@ spec:
         name: qbittorrent-scripts
         defaultMode: 0775
         advancedMounts:
-          main:
-            main:
+          app:
+            app:
               - path: /scripts/completed.sh
                 subPath: completed.sh
                 readOnly: true
@@ -161,6 +161,6 @@ spec:
         server: 10.1.30.210
         path: /mnt/tank/nfs/media
         advancedMounts:
-          main:
-            main:
+          app:
+            app:
               - path: /data/media

@@ -77,15 +77,15 @@ spec:
                 matchLabels:
                   app.kubernetes.io/name: *app
     service:
-      main:
+      app:
         ports:
           http:
             port: *port
     serviceMonitor:
-      main:
+      app:
         enabled: true
     ingress:
-      main:
+      app:
         enabled: true
         className: external
         annotations:

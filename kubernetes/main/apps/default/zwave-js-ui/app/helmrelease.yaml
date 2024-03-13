@@ -68,7 +68,7 @@ spec:
           nodeSelector:
             zooz.feature.node.kubernetes.io/zwave: "true"
     service:
-      main:
+      app:
         ports:
           http:
             port: *port
@@ -76,11 +76,11 @@ spec:
             port: 3000
 
     serviceMonitor:
-      main:
+      app:
         enabled: true
 
     ingress:
-      main:
+      app:
         enabled: true
         className: internal
         hosts:

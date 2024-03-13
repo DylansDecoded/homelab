@@ -63,12 +63,12 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
             supplementalGroups: [10000]
     service:
-      main:
+      app:
         ports:
           http:
             port: 5656
     serviceMonitor:
-      main:
+      app:
         enabled: true
     persistence:
       logs:

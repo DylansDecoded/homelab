@@ -83,10 +83,10 @@ spec:
       create: true
       name: *app
     service:
-      main:
+      app:
         ports:
           http:
             port: *port
     serviceMonitor:
-      main:
+      app:
         enabled: true

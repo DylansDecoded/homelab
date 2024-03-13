@@ -77,12 +77,12 @@ spec:
             runAsGroup: 568
             runAsNonRoot: true
     service:
-      main:
+      app:
         ports:
           http:
             port: *port
     ingress:
-      main:
+      app:
         enabled: true
         className: internal
         hosts:

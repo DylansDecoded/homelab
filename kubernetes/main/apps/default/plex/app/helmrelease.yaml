@@ -68,7 +68,7 @@ spec:
                 memory: 8Gi
 
     service:
-      main:
+      app:
         type: LoadBalancer
         externalTrafficPolicy: Cluster
         annotations:
@@ -77,7 +77,7 @@ spec:
           http:
             port: 32400
     ingress:
-      main:
+      app:
         enabled: true
         className: external
         annotations:

@@ -3,9 +3,9 @@
 apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: HelmRepository
 metadata:
-  name: charlie-haley
+  name: omada-exporter
   namespace: flux-system
 spec:
   interval: 30m
-  url: https://charts.charliehaley.dev
+  url: https://charts.charliehaley.dev/charts/chart
   timeout: 3m

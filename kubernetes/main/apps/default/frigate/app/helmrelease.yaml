@@ -85,14 +85,14 @@ spec:
             google.feature.node.kubernetes.io/coral: "true"
             intel.feature.node.kubernetes.io/gpu: "true"
     service:
-      main:
+      app:
         ports:
           http:
             port: *port
           rtsp:
             port: 8554
     ingress:
-      main:
+      app:
         enabled: true
         className: internal
         hosts:

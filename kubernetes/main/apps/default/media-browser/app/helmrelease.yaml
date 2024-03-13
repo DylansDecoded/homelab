@@ -28,11 +28,11 @@ spec:
       namespace: rook-ceph
   values:
     controllers:
-      main:
+      media-browser:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
-          main:
+          app:
             image:
               repository: docker.io/filebrowser/filebrowser
               tag: v2.27.0@sha256:00b75afd52a92e4525e3bcaf61caa2a31b8d878a5b371380686b1145cb0424fd
@@ -75,12 +75,12 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
             supplementalGroups: [10000]
     service:
-      main:
+      app:
         ports:
           http:
             port: *port
     ingress:
-      main:
+      app:
         enabled: true
         className: internal
         hosts:

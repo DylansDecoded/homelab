@@ -69,12 +69,12 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
 
     service:
-      main:
+      app:
         ports:
           http:
             port: 8123
     ingress:
-      main:
+      app:
         enabled: true
         className: external
         annotations:

@@ -61,13 +61,13 @@ spec:
             fsGroup: 1000
             fsGroupChangePolicy: OnRootMismatch
     service:
-      main:
+      app:
         ports:
           http:
             port: 1880
 
     ingress:
-      main:
+      app:
         enabled: true
         className: internal
         annotations:
