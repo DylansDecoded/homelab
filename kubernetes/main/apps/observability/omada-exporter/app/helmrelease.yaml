@@ -57,19 +57,19 @@ spec:
             runAsGroup: 568
             runAsNonRoot: true
 
-        service:
-          app:
-            controller: omada-exporter
-            ports:
-              http:
-                port: 9202
+    service:
+      app:
+        controller: omada-exporter
+        ports:
+          http:
+            port: 9202
 
-        serviceMonitor:
-          app:
-            serviceName: omada-exporter
-            endpoints:
-              - port: http
-                scheme: http
-                path: /metrics
-                interval: 1m
-                scrapeTimeout: 10s
+    serviceMonitor:
+      app:
+        serviceName: omada-exporter
+        endpoints:
+          - port: http
+            scheme: http
+            path: /metrics
+            interval: 1m
+            scrapeTimeout: 10s
