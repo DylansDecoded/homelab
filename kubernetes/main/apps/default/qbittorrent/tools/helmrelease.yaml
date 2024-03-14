@@ -77,7 +77,7 @@ spec:
               - unregistered
               # - --dry-run
               - --server
-              - qbittorrent.downloads.svc.cluster.local
+              - qbittorrent.default.svc.cluster.local
               - --port
               - "8080"
             resources: *resources
@@ -93,7 +93,7 @@ spec:
               - reannounce
               - --process-seeding
               - --server
-              - qbittorrent.downloads.svc.cluster.local
+              - qbittorrent.default.svc.cluster.local
               - --port
               - "8080"
             resources: *resources
