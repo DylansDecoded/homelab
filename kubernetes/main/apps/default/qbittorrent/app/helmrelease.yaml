@@ -43,13 +43,15 @@ spec:
               QBITTORRENT__PORT: &port 8080
               QBITTORRENT__WebUI__AlternativeUIEnabled: false
               QBT_Preferences__WebUI__AuthSubnetWhitelistEnabled: true
-              QBT_Preferences__WebUI__AuthSubnetWhitelist: >-
-                10.42.0.0/16,
-                10.1.1.0/24,
-                10.1.10.0/24,
-                10.1.20.0/24,
-                10.1.33.0/24,
-                10.1.40.0/24
+              QBT_Application__MemoryWorkingSetLimit: 3000
+              QBT_Preferences__WebUI__LocalHostAuth: false
+              QBT_Preferences__WebUI__AuthSubnetWhitelist: |-
+                10.42.0.0/16, 10.1.1.0/24, 10.1.10.0/24, 10.1.40.0/24
+              QBT_BitTorrent__Session__InterfaceAddress:
+                valueFrom:
+                  fieldRef:
+                    fieldPath: status.podIP
+              QBT_BitTorrent__Session__InterfaceName: eth0
             securityContext:
               runAsUser: 568
               runAsGroup: 568
