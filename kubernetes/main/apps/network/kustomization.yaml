@@ -8,8 +8,8 @@ resources:
   - ./notifications.yaml
   # Flux-Kustomizations
   - ./cloudflared/ks.yaml
-  # - ./echo-server/ks.yaml
-  # - ./external-dns/ks.yaml
+  - ./echo-server/ks.yaml
+  - ./external-dns/ks.yaml
   - ./nginx/ks.yaml
 
   # Standard Kustomizations
