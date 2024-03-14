@@ -23,8 +23,11 @@ metadata:
   namespace: network
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  labels:
+    app.kubernetes.io/name: truenas
+    app.kubernetes.io/instance: truenas
 spec:
-  ingressClassName: internal
+  ingressClassName: internal-nginx
   rules:
     - host: &host truenas.robsonhome.cloud
       http:
