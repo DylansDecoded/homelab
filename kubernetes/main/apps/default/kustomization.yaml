@@ -9,7 +9,7 @@ resources:
   # Flux-Kustomizations
   - ./authelia/ks.yaml
   - ./autobrr/ks.yaml
-  # - ./cross-seed/ks.yaml
+  - ./cross-seed/ks.yaml
   - ./flaresolverr/ks.yaml
   - ./frigate/ks.yaml
   - ./home-assistant/ks.yaml
@@ -19,7 +19,7 @@ resources:
   # - ./media-browser/ks.yaml
   - ./miniflux/ks.yaml
   - ./mosquitto/ks.yaml
-  - ./node-red/ks.yaml
+  # - ./node-red/ks.yaml
   # - ./overseerr/ks.yaml
   - ./plex/ks.yaml
   - ./prowlarr/ks.yaml
