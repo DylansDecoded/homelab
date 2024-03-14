@@ -16,7 +16,7 @@ module.exports = {
         authorizationURL: process.env.NODE_RED_OAUTH_AUTH_URL,
         tokenURL: process.env.NODE_RED_OAUTH_TOKEN_URL,
         userInfoURL: process.env.NODE_RED_OAUTH_USER_URL,
-        clientID: "nodered",
+        clientID: "node-red",
         clientSecret: process.env.NODE_RED_OAUTH_CLIENT_SECRET,
         callbackURL: process.env.NODE_RED_OAUTH_CALLBACK_URL,
         scope: ["email", "profile", "openid"],
@@ -26,7 +26,7 @@ module.exports = {
         },
       },
     },
-    users: [{ username: "steven", permissions: ["*"] }],
+    users: [{ username: "dylan", permissions: ["*"] }],
   },
 
   uiPort: process.env.PORT || 1880,
