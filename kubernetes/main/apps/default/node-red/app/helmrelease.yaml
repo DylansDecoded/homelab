@@ -86,16 +86,13 @@ spec:
               - *host
     persistence:
       data:
-        existingClaim: node-red
-        advancedMounts:
-          node-red:
-            app:
-              - path: /data
-
-      config-file:
+        existingClaim: *app
+      settings:
         type: configMap
         name: node-red-configmap
         globalMounts:
           - path: /data/settings.js
             subPath: settings.js
             readOnly: true
+      tmp:
+        type: emptyDir
