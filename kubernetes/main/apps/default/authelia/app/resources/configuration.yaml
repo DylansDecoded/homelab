@@ -1,4 +1,5 @@
 ---
+# Note: Authelia vars should be escaped with $${VAR_NAME} to avoid interpolation by Flux
 authentication_backend:
   password_reset:
     disable: true
@@ -29,7 +30,7 @@ session:
   expiration: 1h
   remember_me: 1M
   cookies:
-    - name: robsonhome_session
+    - name: devbu_session
       domain: robsonhome.cloud
       authelia_url: https://auth.robsonhome.cloud
       default_redirection_url: https://robsonhome.cloud
@@ -46,24 +47,19 @@ session:
         - host: redis-node-2.redis-headless.database.svc.cluster.local
           port: 26379
 
-notifier:
-  disable_startup_check: true
-  smtp:
-    username: "${AUTHELIA_SMTP_USERNAME}"
-    password: "${AUTHELIA_SMTP_PASSWORD}"
-    sender: authelia@robsonhome.cloud
-    address: smtp://smtp.protonmail.ch:587
+# notifier:
+#   disable_startup_check: true
+#   smtp:
+#     address: smtp-relay.default.svc.cluster.local:25
+#     sender: Authelia <authelia@robsonhome.cloud>
+#     disable_require_tls: true
 
 totp:
   disable: false
   issuer: authelia.com
 
 webauthn:
-  disable: false
-  display_name: Authelia
-  attestation_conveyance_preference: indirect
-  user_verification: discouraged
-  timeout: 60s
+  disable: true
 
 duo_api:
   disable: true
@@ -72,10 +68,8 @@ access_control:
   default_policy: two_factor
   networks:
     - name: internal
-      networks:
-        - 10.0.0.0/8
-        - 172.16.0.0/12
-        - 192.168.0.0/16
+      networks: ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+  rules: []
 
 identity_providers:
   oidc:
@@ -83,8 +77,8 @@ identity_providers:
       endpoints: ["authorization", "token", "revocation", "introspection"]
       allowed_origins_from_client_redirect_uris: true
     clients:
-      - client_id: grafana
-        client_name: Grafana
+      - client_name: Grafana
+        client_id: grafana
         client_secret: "$${GRAFANA_OAUTH_CLIENT_SECRET}"
         public: false
         authorization_policy: two_factor
@@ -92,8 +86,8 @@ identity_providers:
         scopes: ["openid", "profile", "groups", "email"]
         redirect_uris: ["https://grafana.robsonhome.cloud/login/generic_oauth"]
         userinfo_signed_response_alg: none
-      - client_id: miniflux
-        client_name: Miniflux
+      - client_name: Miniflux
+        client_id: miniflux
         client_secret: "$${MINIFLUX_OAUTH_CLIENT_SECRET}"
         public: false
         authorization_policy: two_factor
@@ -101,13 +95,4 @@ identity_providers:
         scopes: ["openid", "profile", "groups", "email"]
         redirect_uris:
           ["https://miniflux.robsonhome.cloud/oauth2/oidc/callback"]
-        userinfo_signed_response_alg: none
-      - client_id: nodered
-        client_name: Node-RED
-        client_secret: "$${NODE_RED_OAUTH_CLIENT_SECRET}"
-        public: false
-        authorization_policy: two_factor
-        pre_configured_consent_duration: 1y
-        scopes: ["openid", "profile", "groups", "email"]
-        redirect_uris: ["https://nr.robsonhome.cloud/auth/strategy/callback"]
         userinfo_signed_response_alg: none
