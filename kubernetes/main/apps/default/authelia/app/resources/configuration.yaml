@@ -83,8 +83,8 @@ identity_providers:
       endpoints: ["authorization", "token", "revocation", "introspection"]
       allowed_origins_from_client_redirect_uris: true
     clients:
-      - client_name: Grafana
-        client_id: grafana
+      - client_id: grafana
+        client_name: Grafana
         client_secret: "$${GRAFANA_OAUTH_CLIENT_SECRET}"
         public: false
         authorization_policy: two_factor
@@ -92,8 +92,8 @@ identity_providers:
         scopes: ["openid", "profile", "groups", "email"]
         redirect_uris: ["https://grafana.robsonhome.cloud/login/generic_oauth"]
         userinfo_signed_response_alg: none
-      - client_name: Miniflux
-        client_id: miniflux
+      - client_id: miniflux
+        client_name: Miniflux
         client_secret: "$${MINIFLUX_OAUTH_CLIENT_SECRET}"
         public: false
         authorization_policy: two_factor
@@ -102,8 +102,8 @@ identity_providers:
         redirect_uris:
           ["https://miniflux.robsonhome.cloud/oauth2/oidc/callback"]
         userinfo_signed_response_alg: none
-      - client_name: Node-RED
-        client_id: nodered
+      - client_id: nodered
+        client_name: Node-RED
         client_secret: "$${NODE_RED_OAUTH_CLIENT_SECRET}"
         public: false
         authorization_policy: two_factor
