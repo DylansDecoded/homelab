@@ -3,7 +3,7 @@ module.exports = {
   delay: 20,
   qbittorrentUrl: "http://qbittorrent.default.svc.cluster.local",
   torznab: [
-    `http://prowlarr.default.svc.cluster.local/1/api?apikey=$${process.env.PROWLARR_API_KEY}`,  // fnp
+    `http://prowlarr.default.svc.cluster.local/1/api?apikey=$${process.env.PROWLARR_API_KEY}` // fnp
     // `http://prowlarr.default.svc.cluster.local/8/api?apikey=$${process.env.PROWLARR_API_KEY}`,  // ptp
     // `http://prowlarr.default.svc.cluster.local/11/api?apikey=$${process.env.PROWLARR_API_KEY}`, // btn
     // `http://prowlarr.default.svc.cluster.local/20/api?apikey=$${process.env.PROWLARR_API_KEY}`, // tl
