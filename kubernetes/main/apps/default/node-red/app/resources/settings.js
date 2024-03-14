@@ -12,21 +12,21 @@ module.exports = {
       icon: "fa-cloud",
       strategy: require("passport-openidconnect").Strategy,
       options: {
-        issuer: process.env.NODE_RED_OAUTH_ISSUER_URL,
-        authorizationURL: process.env.NODE_RED_OAUTH_AUTH_URL,
-        tokenURL: process.env.NODE_RED_OAUTH_TOKEN_URL,
-        userInfoURL: process.env.NODE_RED_OAUTH_USER_URL,
+        issuer: "https://auth.robsonhome.cloud",
+        authorizationURL: "https://auth.robsonhome.cloud/api/oidc/authorization",
+        tokenURL: "https://auth.robsonhome.cloud/api/oidc/token",
+        userInfoURL: "https://auth.robsonhome.cloud/api/oidc/userinfo",
         clientID: "nodered",
         clientSecret: process.env.NODE_RED_OAUTH_CLIENT_SECRET,
-        callbackURL: process.env.NODE_RED_OAUTH_CALLBACK_URL,
+        callbackURL: "https://nr.robsonhome.cloud/auth/strategy/callback",
         scope: ["email", "profile", "openid"],
         proxy: true,
         verify: function (issuer, profile, done) {
-          done(null, profile);
+          done(null, profile)
         },
       },
     },
-    users: [{ username: "dylan", permissions: ["*"] }],
+    users: [{username: "dylan", permissions: ["*"]}],
   },
 
   uiPort: process.env.PORT || 1880,
@@ -82,4 +82,4 @@ module.exports = {
 
   mqttReconnectTime: 15000,
   serialReconnectTime: 15000,
-};
+}
