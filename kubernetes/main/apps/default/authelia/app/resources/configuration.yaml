@@ -49,10 +49,10 @@ session:
 notifier:
   disable_startup_check: true
   smtp:
-    username: "${AUTHELIA_SMTP_USERNAME}"
-    password: "${AUTHELIA_SMTP_PASSWORD}"
+    username: ${AUTHELIA_SMTP_USERNAME}
+    password: ${AUTHELIA_SMTP_PASSWORD}
     sender: authelia@robsonhome.cloud
-    address: "${AUTHELIA_SMTP_HOST}"
+    address: smtp://smtp.protonmail.ch:587
 
 totp:
   disable: false
