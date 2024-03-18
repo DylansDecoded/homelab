@@ -7,7 +7,7 @@ module.exports = {
     `http://prowlarr.default.svc.cluster.local/2/api?apikey=$${process.env.PROWLARR_API_KEY}`, // ipt
     `http://prowlarr.default.svc.cluster.local/3/api?apikey=$${process.env.PROWLARR_API_KEY}` // milk
   ],
-  port: process.env.CROSSSEED_PORT || 80,
+  port: process.env.CROSSSEED_PORT || 2468,
   apiAuth: false,
   action: "inject",
   includeEpisodes: false,

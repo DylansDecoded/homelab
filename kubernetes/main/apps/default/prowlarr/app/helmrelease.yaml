@@ -27,52 +27,45 @@ spec:
       prowlarr:
         annotations:
           reloader.stakater.com/auto: "true"
-        initContainers:
-          init-db:
-            image:
-              repository: ghcr.io/onedr0p/postgres-init
-              tag: 16
-            envFrom: &envFrom
-              - secretRef:
-                  name: prowlarr-secret
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/prowlarr-develop
-              tag: 1.14.3.4333@sha256:af90aa422bf142df26cf70aaebab5fd609f68cc5639ebfe643b4547fee8c76e3
+              repository: ghcr.io/onedr0p/prowlarr-nightly
+              tag: 1.15.0.4337@sha256:907ff20a72bd2ab6aa2ae47bf5563195584f5fd3e932e9f0f7d2196bfa1d9e3a
             env:
               COMPlus_EnableDiagnostics: "0"
               PROWLARR__INSTANCE_NAME: Prowlarr
-              PROWLARR__PORT: &port 80
+              PROWLARR__PORT: &port 9696
               PROWLARR__LOG_LEVEL: info
+              PROWLARR__ANALYTICS_ENABLED: "False"
               PROWLARR__AUTHENTICATION_METHOD: External
-              PROWLARR__THEME: dark
-              TZ: America/New_York
-            envFrom: *envFrom
+              PROWLARR__API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: prowlarr-secret
+                    key: PROWLARR_API_KEY
             probes:
-              liveness: &probes
+              liveness:
                 enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /ping
-                    port: *port
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
+              readiness:
+                enabled: true
               startup:
-                enabled: false
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+            resources:
+              requests:
+                cpu: 18m
+                memory: 128Mi
+              limits:
+                memory: 256Mi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
-            resources:
-              requests:
-                cpu: 10m
-              limits:
-                memory: 1Gi
+              capabilities:
+                drop:
+                  - ALL
         pod:
           securityContext:
             runAsUser: 568
@@ -102,6 +95,4 @@ spec:
               - *host
     persistence:
       config:
-        type: emptyDir
-      tmp:
-        type: emptyDir
+        existingClaim: prowlarr-config
