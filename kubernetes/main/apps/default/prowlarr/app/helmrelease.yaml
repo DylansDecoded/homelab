@@ -95,4 +95,4 @@ spec:
               - *host
     persistence:
       config:
-        existingClaim: prowlarr-config
+        existingClaim: prowlarr
