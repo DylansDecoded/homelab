@@ -27,45 +27,50 @@ spec:
       prowlarr:
         annotations:
           reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 16
+            envFrom: &envFrom
+              - secretRef:
+                  name: prowlarr-secret
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/prowlarr-nightly
-              tag: 1.15.0.4337@sha256:907ff20a72bd2ab6aa2ae47bf5563195584f5fd3e932e9f0f7d2196bfa1d9e3a
+              repository: ghcr.io/onedr0p/prowlarr-develop
+              tag: 1.14.3.4333@sha256:af90aa422bf142df26cf70aaebab5fd609f68cc5639ebfe643b4547fee8c76e3
             env:
               COMPlus_EnableDiagnostics: "0"
               PROWLARR__INSTANCE_NAME: Prowlarr
-              PROWLARR__PORT: &port 9696
+              PROWLARR__PORT: &port 2468
               PROWLARR__LOG_LEVEL: info
-              PROWLARR__ANALYTICS_ENABLED: "False"
               PROWLARR__AUTHENTICATION_METHOD: External
-              PROWLARR__API_KEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: prowlarr-secret
-                    key: PROWLARR_API_KEY
+              PROWLARR__THEME: dark
+              TZ: America/New_York
+            envFrom: *envFrom
             probes:
-              liveness:
+              liveness: &probes
                 enabled: true
-              readiness:
-                enabled: true
-              startup:
-                enabled: true
+                custom: true
                 spec:
-                  failureThreshold: 30
-                  periodSeconds: 5
-            resources:
-              requests:
-                cpu: 18m
-                memory: 128Mi
-              limits:
-                memory: 256Mi
+                  httpGet:
+                    path: /ping
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities:
-                drop:
-                  - ALL
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 1Gi
         pod:
           securityContext:
             runAsUser: 568
@@ -81,7 +86,6 @@ spec:
             port: *port
     ingress:
       app:
-        enabled: true
         className: internal
         hosts:
           - host: &host "{{ .Release.Name }}.robsonhome.cloud"
@@ -95,4 +99,6 @@ spec:
               - *host
     persistence:
       config:
-        existingClaim: prowlarr
+        type: emptyDir
+      tmp:
+        type: emptyDir
