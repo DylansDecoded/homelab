@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: prowlarr
+  name: cross-seed
 spec:
   interval: 30m
   chart:
@@ -22,63 +22,54 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
+  dependsOn:
+    - name: qbittorrent
+      namespace: default
   values:
     controllers:
       cross-seed:
         annotations:
-          confimap.reloader.stakater.com/reload: cross-seed-configmap
-          secret.reloader.stakater.com/reload: cross-seed-secret
-
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/cross-seed/cross-seed
+              tag: 5.9.2@sha256:6abdca45f0ecfd8d23a3035beefa716a14b66f23c14854631fe369d1ad346f1e
+            env:
+              TZ: America/New_York
+              CROSSSEED_PORT: &port 80
+            envFrom:
+              - secretRef:
+                  name: cross-seed-secret
+            args: ["daemon"]
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 512Mi
         pod:
           securityContext:
             runAsUser: 568
             runAsGroup: 568
             runAsNonRoot: true
             fsGroup: 568
-            fsGroupChangePolicy: "OnRootMismatch"
-
-        containers:
-          app:
-            image:
-              repository: ghcr.io/cross-seed/cross-seed
-              tag: 5.9.2
-            args:
-              - daemon
-            env:
-              CROSSSEED_PORT: &port 2468
-            envFrom:
-              - secretRef:
-                  name: cross-seed-secret
-            probes:
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
-              startup:
-                enabled: true
-                spec:
-                  failureThreshold: 30
-                  periodSeconds: 5
-            resources:
-              requests:
-                cpu: 10m
-                memory: 128Mi
-              limits:
-                memory: 256Mi
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities:
-                drop:
-                  - ALL
-
+            fsGroupChangePolicy: OnRootMismatch
+            supplementalGroups: [10000]
     service:
       app:
         controller: cross-seed
         ports:
           http:
             port: *port
-
     persistence:
       config:
         type: emptyDir
@@ -90,6 +81,4 @@ spec:
             subPath: config.js
             readOnly: true
       qbittorrent:
-        existingClaim: qbittorrent-config
-        globalMounts:
-          - path: /qbittorrent
+        existingClaim: qbittorrent
