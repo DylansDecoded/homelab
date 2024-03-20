@@ -32,6 +32,13 @@ spec:
       qbittorrent:
         annotations:
           reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
+            supplementalGroups: [10000]
         containers:
           app:
             image:
@@ -110,12 +117,7 @@ spec:
               capabilities:
                 drop:
                   - ALL
-        pod:
-          securityContext:
-            fsGroup: 568
-            fsGroupChangePolicy: "OnRootMismatch"
-            supplementalGroups:
-              - 65539
+
     service:
       app:
         controller: qbittorrent
@@ -141,10 +143,25 @@ spec:
     persistence:
       config:
         existingClaim: qbittorrent
+        advancedMounts:
+          qbittorrent:
+            app:
+              - path: /config
+      scripts:
+        type: configMap
+        name: qbittorrent-scripts
+        defaultMode: 0775
+        advancedMounts:
+          qbittorrent:
+            app:
+              - path: /scripts
+                readOnly: true
 
       media:
         type: nfs
         server: 10.1.30.210
         path: /mnt/tank/nfs/media
-        globalMounts:
-          - path: /media
+        advancedMounts:
+          qbittorrent:
+            app:
+              - path: /data/media
