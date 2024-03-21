@@ -1,9 +1,9 @@
 {
-  "mqtt_url": "mqtt://{MQTTUSER}:{MQTTPASSWORD}@mosquitto.default.svc.cluster.local:1883",
+  "mqtt_url": "mqtt://$${MQTTUSER}:$${MQTTPASSWORD}@mosquitto.default.svc.cluster.local:1883",
   "mqtt_options": "",
   "livestream_user": "",
   "livestream_pass": "",
-  "disarm_code": "{DISARMCODE}",
+  "disarm_code": "$${DISARMCODE}",
   "enable_cameras": true,
   "enable_modes": false,
   "enable_panic": false,
