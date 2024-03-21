@@ -82,6 +82,7 @@ spec:
     persistence:
       data:
         existingClaim: *app
+
       settings:
         type: configMap
         name: node-red-configmap
