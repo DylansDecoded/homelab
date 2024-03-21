@@ -123,7 +123,7 @@ spec:
 
       media:
         type: nfs
-        server: truenas.robsonhome.cloud
+        server: 10.1.30.210
         path: /mnt/tank/media
         globalMounts:
           - path: /data/media
