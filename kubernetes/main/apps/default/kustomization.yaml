@@ -16,11 +16,11 @@ resources:
   # - ./homepage/ks.yaml
   # - ./jellyfin/ks.yaml
   - ./lldap/ks.yaml
-  # - ./media-browser/ks.yaml
+  - ./media-browser/ks.yaml
   - ./miniflux/ks.yaml
   - ./mosquitto/ks.yaml
   # - ./node-red/ks.yaml
-  # - ./overseerr/ks.yaml
+  - ./overseerr/ks.yaml
   - ./plex/ks.yaml
   - ./prowlarr/ks.yaml
   - ./qbittorrent/ks.yaml
