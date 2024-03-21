@@ -94,7 +94,7 @@ spec:
               capabilities:
                 add:
                   - NET_ADMIN
-              allowPrivilegeEscalation: false
+              allowPrivilegeEscalation: true
 
           port-forward:
             image:
@@ -159,8 +159,8 @@ spec:
 
       media:
         type: nfs
-        server: 10.1.30.210
-        path: /mnt/tank/nfs/media
+        server: truenas.robsonhome.cloud
+        path: /mnt/tank/media
         advancedMounts:
           qbittorrent:
             app:
