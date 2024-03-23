@@ -79,6 +79,6 @@ spec:
               - *host
     persistence:
       config:
-        existingClaim: config-xteve
+        existingClaim: xteve
       tmp:
         type: emptyDir
