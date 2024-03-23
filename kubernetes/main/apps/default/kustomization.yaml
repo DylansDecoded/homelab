@@ -14,13 +14,12 @@ resources:
   - ./frigate/ks.yaml
   - ./home-assistant/ks.yaml
   # - ./homepage/ks.yaml
-  # - ./jellyfin/ks.yaml
   - ./lldap/ks.yaml
   - ./media-browser/ks.yaml
   - ./miniflux/ks.yaml
   - ./mosquitto/ks.yaml
   # - ./node-red/ks.yaml
-  - ./overseerr/ks.yaml
+  # - ./overseerr/ks.yaml
   - ./plex/ks.yaml
   - ./prowlarr/ks.yaml
   - ./qbittorrent/ks.yaml
@@ -30,7 +29,6 @@ resources:
   - ./sabnzbd/ks.yaml
   - ./sonarr/ks.yaml
   - ./tautulli/ks.yaml
-  # - ./unpackerr/ks.yaml
-  - ./xteve/ks.yaml
+  # - ./xteve/ks.yaml
   - ./zigbee2mqtt/ks.yaml
   - ./zwave-js-ui/ks.yaml
