@@ -29,7 +29,7 @@ spec:
       namespace: volsync-system
   values:
     controllers:
-      app:
+      overseerr:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
@@ -54,8 +54,6 @@ spec:
                   timeoutSeconds: 1
                   failureThreshold: 3
               readiness: *probes
-              startup:
-                enabled: false
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -80,7 +78,6 @@ spec:
             port: *port
     ingress:
       app:
-        enabled: true
         className: external
         annotations:
           external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
@@ -92,8 +89,7 @@ spec:
                   identifier: app
                   port: http
         tls:
-          - hosts:
-              - *host
+          - hosts: [*host]
     persistence:
       config:
         existingClaim: overseerr
