@@ -9,12 +9,16 @@ data:
   config.yaml: |
     endpoints:
       - name: "${APP}"
-        group: external
-        url: "https://${GATUS_SUBDOMAIN:-${APP}}.robsonhome.cloud${GATUS_PATH:-/}"
+        group: guarded
+        url: 1.1.1.1
         interval: 1m
-        client:
-          dns-resolver: tcp://1.1.1.1:53
+        ui:
+          hide-hostname: true
+          hide-url: true
+        dns:
+          query-name: "${GATUS_SUBDOMAIN:-${APP}}.robsonhome.cloud"
+          query-type: A
         conditions:
-          - "[STATUS] == ${GATUS_STATUS:-200}"
+          - "len([BODY]) == 0"
         alerts:
           - type: pushover

@@ -5,9 +5,11 @@ kind: Kustomization
 resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
-  - ./notifications.yaml
   # Flux-Kustomizations
+  - ./alertmanager-silencer/ks.yaml
+  - ./gatus/ks.yaml
   - ./grafana/ks.yaml
+  - ./kromgo/ks.yaml
   - ./kube-prometheus-stack/ks.yaml
   - ./loki/ks.yaml
   - ./omada-exporter/ks.yaml
