@@ -5,7 +5,7 @@ kind: Kustomization
 resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
-  - ../../../../templates/external-services
+  - ../../../../templates/gatus/external-services
 configMapGenerator:
   - name: authelia-configmap
     files:
