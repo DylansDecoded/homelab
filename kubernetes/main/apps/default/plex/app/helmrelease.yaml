@@ -65,8 +65,8 @@ spec:
               tag: 1.40.1.8227-c0dd5a73e@sha256:4ca8db0ffa1bee5a2976a0385cc43368112e81a2485b80d0fff3b04c9d5bd1ca
             env:
               TZ: America/New_York
-              PLEX_ADVERTISE_URL: https://plex.robsonhome.cloud:443,http://10.45.0.20:32400
-              PLEX_NO_AUTH_NETWORKS: 10.1.1.0/24,10.1.10.0/24,10.1.40.0/24
+              PLEX_ADVERTISE_URL: http://10.45.0.20:32400,https://plex.robsonhome.cloud:443
+              PLEX_NO_AUTH_NETWORKS: 10.42.0.0/16
             resources:
               requests:
                 cpu: 100m
@@ -85,15 +85,15 @@ spec:
         ports:
           http:
             port: 32400
+
     ingress:
       app:
-        enabled: true
         className: external
         annotations:
           external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
-          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+          nginx.ingress.kubernetes.io/backend-protocol: HTTPS
         hosts:
-          - host: &host "{{ .Release.Name }}.robsonhome.cloud"
+          - host: &host plex.robsonhome.cloud
             paths:
               - path: /
                 service:
@@ -106,20 +106,37 @@ spec:
     persistence:
       config:
         existingClaim: plex
+        advancedMounts:
+          plex:
+            app:
+              - path: /config
 
       plex-cache:
         existingClaim: plex-cache
-        globalMounts:
-          - path: /config/Library/Application Support/Plex Media Server/Cache
-      tmp:
+        advancedMounts:
+          plex:
+            app:
+              - path: /config/Library/Application Support/Plex Media Server/Cache
+
+      logs:
         type: emptyDir
+        advancedMounts:
+          plex:
+            app:
+              - path: /logs
+
       transcode:
         type: emptyDir
+        advancedMounts:
+          plex:
+            app:
+              - path: /transcode
 
       media:
         type: nfs
         server: 10.1.30.210
         path: /mnt/tank/media
-        globalMounts:
-          - path: /media
-            readOnly: true
+        advancedMounts:
+          plex:
+            app:
+              - path: /data/media
