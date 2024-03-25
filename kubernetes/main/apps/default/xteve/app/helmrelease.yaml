@@ -38,7 +38,12 @@ spec:
               tag: master@sha256:e2e57bf2d687a8e714a82950cafc33eb95063177443618d9cb4f96bc8e70bb95
             env:
               TZ: America/New_York
-
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"
     service:
       app:
         controller: xteve
