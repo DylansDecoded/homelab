@@ -8,74 +8,13 @@ vars:
 env:
   PATH: "{{.ROOT_DIR}}/.venv/bin:$PATH"
   VIRTUAL_ENV: "{{.ROOT_DIR}}/.venv"
-  INFRA_DIR: "{{.ROOT_DIR}}/infrastructure/ansible"
   ANSIBLE_COLLECTIONS_PATH: "{{.ROOT_DIR}}/.venv/galaxy"
   ANSIBLE_ROLES_PATH: "{{.ROOT_DIR}}/.venv/galaxy/ansible_roles"
-  ANSIBLE_VARS_ENABLED: "host_group_vars,community.sops.sops"
-  # K8S_AUTH_KUBECONFIG: "{{.ROOT_DIR}}/kubeconfig"
+  ANSIBLE_VARS_ENABLED: "host_group_vars"
 
 tasks:
-  deps:
-    desc: Set up Ansible dependencies for the environment
-    cmds:
-      - task: .venv
-
-  list-drives:
-    desc: List drives in inventory
-    summary: |
-      Args:
-        group: Ansible inventory group to use (required)
-        ansible_directory: Ansible inventory to use (required)
-
-    cmd: |
-      ansible {{.group}} --inventory {{.ANSIBLE_DIR}}/{{.ansible_directory}}/inventory/hosts.yaml -m \
-      command -a "lsblk -f" {{.CLI_ARGS}}
-
-  setup-pis:
-    desc: Set up Raspberry Pis
-    summary: |
-      Args:
-        playbook: Playbook to run (required)
-    cmd: |
-      ansible-playbook --inventory {{.ANSIBLE_DIR}}/raspberrypi/inventory/hosts.yaml \
-      {{.ANSIBLE_DIR}}/raspberrypi/playbooks/{{.playbook}}.yaml {{.CLI_ARGS}}
-
-  run-infra:
-    desc: Run infrastructure setup ansible playbooks
-    summary: |
-      Args:
-        playbook: Playbook to run (required)
-    cmd: |
-      ansible-playbook --inventory {{.ROOT_DIR}}/infrastructure/ansible/inventory/hosts.yaml \
-      {{.INFRA_DIR}}/playbooks/{{.playbook}}.yaml {{.CLI_ARGS}}
-
-  run-kubernetes:
-    desc: Run an Ansible playbook for configuring a cluster
-    summary: |
-      Args:
-        cluster: Cluster to run command against (required)
-        playbook: Playbook to run (required)
-    prompt: Run Ansible playbook '{{.playbook}}' against the '{{.cluster}}' cluster... continue?
-    deps: ["deps"]
-    cmd: |
-      .venv/bin/ansible-playbook \
-        --inventory {{.ANSIBLE_KUBERNETES_DIR}}/{{.cluster}}/inventory/hosts.yaml \
-        {{.ANSIBLE_KUBERNETES_DIR}}/{{.cluster}}/playbooks/{{.playbook}}.yaml {{.CLI_ARGS}}
-    preconditions:
-      - { msg: "Argument (cluster) is required", sh: "test -n {{.cluster}}" }
-      - { msg: "Argument (playbook) is required", sh: "test -n {{.playbook}}" }
-      - { msg: "Venv not found", sh: "test -d {{.ROOT_DIR}}/.venv" }
-      - {
-          msg: "Inventory not found",
-          sh: "test -f {{.ANSIBLE_KUBERNETES_DIR}}/{{.cluster}}/inventory/hosts.yaml",
-        }
-      - {
-          msg: "Playbook not found",
-          sh: "test -f {{.ANSIBLE_KUBERNETES_DIR}}/{{.cluster}}/playbooks/{{.playbook}}.yaml",
-        }
-
-  .venv:
-    internal: true
+  venv:
+    desc: Set up Python virtual environment
     cmds:
       - true && {{.PYTHON_BIN}} -m venv {{.ROOT_DIR}}/.venv
       - .venv/bin/python3 -m pip install --upgrade pip setuptools wheel
@@ -86,3 +25,22 @@ tasks:
       - "{{.ANSIBLE_DIR}}/requirements.yaml"
     generates:
       - "{{.ROOT_DIR}}/.venv/pyvenv.cfg"
+
+  run:
+    desc: Run an Ansible playbook for configuring a cluster
+    summary: |
+      Args:
+        cluster: Cluster to run command against (required)
+        playbook: Playbook to run (required)
+    prompt: Run Ansible playbook '{{.playbook}}' against the '{{.cluster}}' cluster ... continue?
+    deps: ["venv"]
+    cmd: |
+      .venv/bin/ansible-playbook \
+        --inventory {{.ANSIBLE_DIR}}/{{.cluster}}/inventory/hosts.yaml \
+        {{.ANSIBLE_DIR}}/{{.cluster}}/playbooks/{{.playbook}}.yaml {{.CLI_ARGS}}
+    requires:
+      vars: ["cluster", "playbook"]
+    preconditions:
+      - test -d {{.ROOT_DIR}}/.venv
+      - test -f {{.ANSIBLE_DIR}}/{{.cluster}}/inventory/hosts.yaml
+      - test -f {{.ANSIBLE_DIR}}/{{.cluster}}/playbooks/{{.playbook}}.yaml
