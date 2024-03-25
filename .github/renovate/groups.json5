@@ -8,7 +8,7 @@
         "gha-runner-scale-set-controller",
         "gha-runner-scale-set"
       ],
-      "matchDatasources": ["helm", "docker"],
+      "matchDatasources": ["docker", "helm"],
       "group": {
         "commitMessageTopic": "{{{groupName}}} group"
       },
@@ -40,6 +40,17 @@
       "groupName": "System Upgrade Controller",
       "matchPackagePatterns": ["system-upgrade-controller"],
       "matchDatasources": ["docker", "github-releases"],
+      "group": {
+        "commitMessageTopic": "{{{groupName}}} group"
+      },
+      "separateMinorPatch": true
+    },
+    {
+      "description": ["Volsync Group"],
+      "groupName": "Volsync",
+      "matchPackagePatterns": ["volsync"],
+      "matchDatasources": ["docker", "helm"],
+      "matchUpdateTypes": ["minor", "patch"],
       "group": {
         "commitMessageTopic": "{{{groupName}}} group"
       },
