@@ -38,14 +38,6 @@ spec:
               tag: master@sha256:e2e57bf2d687a8e714a82950cafc33eb95063177443618d9cb4f96bc8e70bb95
             env:
               TZ: America/New_York
-    pod:
-      securityContext:
-        runAsUser: 568
-        runAsGroup: 568
-        fsGroup: 568
-        fsGroupChangePolicy: "OnRootMismatch"
-        supplementalGroups:
-          - 1000
 
     service:
       app:
