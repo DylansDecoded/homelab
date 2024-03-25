@@ -29,7 +29,7 @@ spec:
       namespace: volsync-system
   values:
     controllers:
-      xteve:
+      threadfin:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
