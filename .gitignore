@@ -1,15 +1,20 @@
-# Trash
 .DS_Store
 Thumbs.db
-# k8s
-.archive
-kubeconfig
-.decrypted~*.yaml
-.config.env
+.private/
+.venv/
+.task/
+.terraform
+*.tfvars
+.decrypted~*
+*.secret.env
+*.secret.yaml
 *.agekey
 *.pub
 *.key
-github-deploy-key
+*.pem
+kubeconfig
+talosconfig
+config.xml
 
 # Archived files
 **/.archive/**
