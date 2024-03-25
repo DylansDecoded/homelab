@@ -3,13 +3,14 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: &app threadfin
+  name: xteve
 spec:
   interval: 30m
   chart:
     spec:
       chart: app-template
       version: 3.0.4
+      interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -29,65 +30,52 @@ spec:
       namespace: volsync-system
   values:
     controllers:
-      threadfin:
-        annotations:
-          reloader.stakater.com/auto: "true"
+      xteve:
         containers:
           app:
-            nameOverride: *app
             image:
-              repository: fyb3roptik/threadfin
-              tag: 1.0.24@sha256:c7008756e2334aa409781f43ac42f1d4185b3a3827b43b3e9ff79b164fe62611
-              pullPolicy: IfNotPresent
+              repository: ghcr.io/xm3u/xm3u
+              tag: master@sha256:e2e57bf2d687a8e714a82950cafc33eb95063177443618d9cb4f96bc8e70bb95
             env:
               TZ: America/New_York
-              THREADFIN_BRANCH: main
-              THREADFIN_DEBUG: 0
-              THREADFIN_PORT: &port 34400
-            resources:
-              requests:
-                cpu: 20m
-              limits:
-                memory: 1024Mi
-            probes:
-              liveness:
-                enabled: true
-              readiness:
-                enabled: true
-              startup:
-                enabled: true
-                spec:
-                  failureThreshold: 30
-                  periodSeconds: 5
-
-            # securityContext:
-            #   allowPrivilegeEscalation: false
-            #   readOnlyRootFilesystem: true
-            #   capabilities: { drop: ["ALL"] }
+    pod:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: "OnRootMismatch"
 
     service:
       app:
-        controller: threadfin
+        controller: xteve
+        type: LoadBalancer
+        externalTrafficPolicy: Cluster
+        annotations:
+          io.cilium/lb-ipam-ips: 10.45.0.26
         ports:
           http:
             port: 34400
 
     ingress:
       app:
-        enabled: true
         className: internal
         hosts:
-          - host: &host "threadfin.robsonhome.cloud"
+          - host: &host "xteve.robsonhome.cloud"
             paths:
               - path: /
+                pathType: Prefix
                 service:
                   identifier: app
                   port: http
+
         tls:
           - hosts:
               - *host
+
     persistence:
-      config:
-        existingClaim: threadfin
-        globalMounts:
-          - path: /home/threadfin/conf
+      data:
+        existingClaim: xteve
+        advancedMounts:
+          xteve:
+            app:
+              - path: /data
