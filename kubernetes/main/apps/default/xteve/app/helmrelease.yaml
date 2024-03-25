@@ -67,7 +67,5 @@ spec:
               - *host
 
     persistence:
-      data:
+      config:
         existingClaim: xteve
-        globalMounts:
-          - path: /data
