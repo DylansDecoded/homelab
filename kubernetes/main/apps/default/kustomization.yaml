@@ -6,6 +6,7 @@ resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
   # Flux-Kustomizations
+  - ./atuin/ks.yaml
   - ./authelia/ks.yaml
   - ./autobrr/ks.yaml
   - ./cross-seed/ks.yaml
@@ -17,17 +18,18 @@ resources:
   - ./media-browser/ks.yaml
   - ./miniflux/ks.yaml
   - ./mosquitto/ks.yaml
-  # - ./node-red/ks.yaml
+  - ./node-red/ks.yaml
   - ./overseerr/ks.yaml
   - ./plex/ks.yaml
   - ./prowlarr/ks.yaml
   - ./qbittorrent/ks.yaml
   - ./radarr/ks.yaml
   - ./recyclarr/ks.yaml
-  # - ./ring-mqtt/ks.yaml
+  - ./ring-mqtt/ks.yaml
   - ./sabnzbd/ks.yaml
   - ./sonarr/ks.yaml
   - ./tautulli/ks.yaml
-  # - ./xteve/ks.yaml
+  - ./thelounge/ks.yaml
+  - ./xteve/ks.yaml
   - ./zigbee2mqtt/ks.yaml
   - ./zwave-js-ui/ks.yaml

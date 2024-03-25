@@ -69,12 +69,12 @@ spec:
 
     persistence:
       config:
-        enabled: true
         existingClaim: *app
         advancedMounts:
           ring-mqtt:
             app:
               - path: /data
+
       config-file:
         type: configMap
         name: ring-mqtt-configmap
@@ -83,11 +83,11 @@ spec:
             app:
               - path: /data/config.json
                 subPath: config.json
-      ring-state:
-        type: configMap
-        name: ring-mqtt-configmap
-        advancedMounts:
-          ring-mqtt:
-            app:
-              - path: /data/ring-state.json
-                subPath: ring-state.json
+      # ring-state:
+      #   type: configMap
+      #   name: ring-mqtt-configmap
+      #   advancedMounts:
+      #     ring-mqtt:
+      #       app:
+      #         - path: /data/ring-state.json
+      #           subPath: ring-state.json
