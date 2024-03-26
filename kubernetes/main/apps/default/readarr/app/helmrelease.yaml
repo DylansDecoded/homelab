@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: &app readarr
+  name: radarr
 spec:
   interval: 30m
   chart:
@@ -27,9 +27,57 @@ spec:
       namespace: rook-ceph
   values:
     controllers:
-      readarr:
+      radarr:
         annotations:
           reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 16
+            envFrom: &envFrom
+              - secretRef:
+                  name: radarr-secret
+        containers:
+          app:
+            image:
+              repository: ghcr.io/onedr0p/radarr-develop
+              tag: 5.4.3.8677@sha256:5af64ec397048c9c86a306b18072aa4c1ce60cd7ce6674c111ef59517ea96ea0
+            env:
+              COMPlus_EnableDiagnostics: "0"
+              PUSHOVER_DEBUG: "false"
+              RADARR__AUTHENTICATION_METHOD: External
+              RADARR__AUTHENTICATION_REQUIRED: DisabledForLocalAddresses
+              RADARR__INSTANCE_NAME: Radarr
+              RADARR__PORT: &port 80
+              RADARR__LOG_LEVEL: info
+              RADARR__THEME: dark
+              TZ: America/New_York
+            envFrom: *envFrom
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: false
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 1Gi
         pod:
           securityContext:
             runAsUser: 568
@@ -38,23 +86,12 @@ spec:
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
             supplementalGroups: [10000]
-        containers:
-          app:
-            image:
-              repository: ghcr.io/onedr0p/readarr-develop
-              tag: 4.0.2.1367@sha256:9b5b9fa01709fca02bbc7fe3ccb97fb54df88fff64913747fdaf29d3d5cad608
-            env:
-              TZ: America/New_York
-              READARR__LOG_LEVEL: info
-            envFrom:
-              - secretRef:
-                  name: readarr-secret
     service:
       app:
-        controller: readarr
+        controller: radarr
         ports:
           http:
-            port: 8787
+            port: *port
     ingress:
       app:
         enabled: true
@@ -71,11 +108,11 @@ spec:
               - *host
     persistence:
       config:
-        existingClaim: *app
+        existingClaim: radarr
 
       pushover-notify:
         type: configMap
-        name: readarr-configmap
+        name: radarr-configmap
         defaultMode: 0775
         globalMounts:
           - path: /scripts/pushover-notify.sh

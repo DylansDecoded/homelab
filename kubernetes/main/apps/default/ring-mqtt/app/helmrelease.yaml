@@ -36,7 +36,14 @@ spec:
       ring-mqtt:
         annotations:
           reloader.stakater.com/auto: "true"
-        containers:
+        pod:
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
+            supplementalGroups: [10000]
           app:
             image:
               repository: docker.io/tsightler/ring-mqtt
@@ -70,19 +77,17 @@ spec:
     persistence:
       config:
         existingClaim: *app
-        advancedMounts:
-          ring-mqtt:
-            app:
-              - path: /data
+        globalMounts:
+          - path: /data
 
-      config-file:
-        type: configMap
-        name: ring-mqtt-configmap
-        advancedMounts:
-          ring-mqtt:
-            app:
-              - path: /data/config.json
-                subPath: config.json
+      # config-file:
+      #   type: configMap
+      #   name: ring-mqtt-configmap
+      #   advancedMounts:
+      #     ring-mqtt:
+      #       app:
+      #         - path: /data/config.json
+      #           subPath: config.json
       # ring-state:
       #   type: configMap
       #   name: ring-mqtt-configmap

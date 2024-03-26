@@ -2,10 +2,10 @@
 # shellcheck disable=SC2154
 
 PUSHOVER_DEBUG="${PUSHOVER_DEBUG:-"true"}"
-# kubectl port-forward service/radarr -n default 7878:80
+# kubectl port-forward service/readarr -n default 7878:80
 # export PUSHOVER_TOKEN="";
 # export PUSHOVER_USER_KEY="";
-# export radarr_eventtype=Download;
+# export readarr_eventtype=Download;
 # ./notify.sh
 
 CONFIG_FILE="/config/config.xml" && [[ "${PUSHOVER_DEBUG}" == "true" ]] && CONFIG_FILE="config.xml"
@@ -42,40 +42,40 @@ fi
 #
 # Send Notification on Test
 #
-if [[ "${radarr_eventtype:-}" == "Test" ]]; then
+if [[ "${readarr_eventtype:-}" == "Test" ]]; then
     PUSHOVER_TITLE="Test Notification"
-    PUSHOVER_MESSAGE="Howdy this is a test notification from ${radarr_instancename:-Radarr}"
+    PUSHOVER_MESSAGE="Howdy this is a test notification from ${readarr_instancename:-readarr}"
 fi
 
 #
 # Send notification on Download or Upgrade
 #
-if [[ "${radarr_eventtype:-}" == "Download" ]]; then
-    if [[ "${radarr_isupgrade}" == "True" ]]; then pushover_title="Upgraded"; else pushover_title="Downloaded"; fi
+if [[ "${readarr_eventtype:-}" == "Download" ]]; then
+    if [[ "${readarr_isupgrade}" == "True" ]]; then pushover_title="Upgraded"; else pushover_title="Downloaded"; fi
     printf -v PUSHOVER_TITLE "Movie %s" "${pushover_title}"
     printf -v PUSHOVER_MESSAGE "<b>%s (%s)</b><small>\n%s</small><small>\n\n<b>Client:</b> %s</small><small>\n<b>Quality:</b> %s</small><small>\n<b>Size:</b> %s</small>" \
-        "${radarr_movie_title}" \
-        "${radarr_movie_year}" \
-        "${radarr_movie_overview}" \
-        "${radarr_download_client}" \
-        "${radarr_moviefile_quality}" \
-        "$(numfmt --to iec --format "%8.2f" "${radarr_release_size}")"
-    printf -v PUSHOVER_URL "%s/movie/%s" "${radarr_applicationurl:-localhost}" "${radarr_movie_tmdbid}"
-    printf -v PUSHOVER_URL_TITLE "View movie in %s" "${radarr_instancename:-Radarr}"
+        "${readarr_movie_title}" \
+        "${readarr_movie_year}" \
+        "${readarr_movie_overview}" \
+        "${readarr_download_client}" \
+        "${readarr_moviefile_quality}" \
+        "$(numfmt --to iec --format "%8.2f" "${readarr_release_size}")"
+    printf -v PUSHOVER_URL "%s/movie/%s" "${readarr_applicationurl:-localhost}" "${readarr_movie_tmdbid}"
+    printf -v PUSHOVER_URL_TITLE "View movie in %s" "${readarr_instancename:-readarr}"
 fi
 
 #
 # Send notification on Manual Interaction Required
 #
-if [[ "${radarr_eventtype:-}" == "ManualInteractionRequired" ]]; then
+if [[ "${readarr_eventtype:-}" == "ManualInteractionRequired" ]]; then
     PUSHOVER_PRIORITY="1"
     printf -v PUSHOVER_TITLE "Movie requires manual interaction"
     printf -v PUSHOVER_MESSAGE "<b>%s (%s)</b><small>\n<b>Client:</b> %s</small>" \
-        "${radarr_movie_title}" \
-        "${radarr_movie_year}" \
-        "${radarr_download_client}"
-    printf -v PUSHOVER_URL "%s/activity/queue" "${radarr_applicationurl:-localhost}"
-    printf -v PUSHOVER_URL_TITLE "View queue in %s" "${radarr_instancename:-Radarr}"
+        "${readarr_movie_title}" \
+        "${readarr_movie_year}" \
+        "${readarr_download_client}"
+    printf -v PUSHOVER_URL "%s/activity/queue" "${readarr_applicationurl:-localhost}"
+    printf -v PUSHOVER_URL_TITLE "View queue in %s" "${readarr_instancename:-readarr}"
 fi
 
 notification=$(jq -n \

@@ -8,7 +8,7 @@ resources:
   - ./helmrelease.yaml
   - ../../../../templates/gatus/guarded
 configMapGenerator:
-  - name: readarr-configmap
+  - name: radarr-configmap
     files:
       - pushover-notify.sh=./resources/pushover-notify.sh
 generatorOptions:
