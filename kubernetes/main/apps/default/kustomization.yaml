@@ -17,7 +17,7 @@ resources:
   - ./lldap/ks.yaml
   - ./media-browser/ks.yaml
   - ./miniflux/ks.yaml
-  # - ./mosquitto/ks.yaml
+  - ./mosquitto/ks.yaml
   - ./node-red/ks.yaml
   - ./overseerr/ks.yaml
   # - ./plex/ks.yaml
