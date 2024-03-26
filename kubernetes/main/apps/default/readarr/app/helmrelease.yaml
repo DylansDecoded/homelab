@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: radarr
+  name: readarr
 spec:
   interval: 30m
   chart:
@@ -27,7 +27,7 @@ spec:
       namespace: rook-ceph
   values:
     controllers:
-      radarr:
+      readarr:
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
@@ -37,7 +37,7 @@ spec:
               tag: 16
             envFrom: &envFrom
               - secretRef:
-                  name: radarr-secret
+                  name: readarr-secret
         containers:
           app:
             image:
@@ -88,7 +88,7 @@ spec:
             supplementalGroups: [10000]
     service:
       app:
-        controller: radarr
+        controller: readarr
         ports:
           http:
             port: *port
@@ -108,7 +108,7 @@ spec:
               - *host
     persistence:
       config:
-        existingClaim: radarr
+        existingClaim: readarr
 
       pushover-notify:
         type: configMap
