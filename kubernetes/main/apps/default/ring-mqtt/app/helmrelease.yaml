@@ -33,16 +33,16 @@ spec:
       namespace: volsync-system
   values:
     controllers:
-      initContainers:
-        init-config:
-          image:
-            repository: docker.io/tsightler/ring-mqtt
-            tag: 5.6.3
-          command: ["/bin/sh", "-c"]
-          args: ["./init-ring-mqtt.js"]
       ring-mqtt:
         annotations:
           reloader.stakater.com/auto: "true"
+        initContainers:
+          init-config:
+            image:
+              repository: docker.io/tsightler/ring-mqtt
+              tag: 5.6.3
+            command: ["/bin/sh", "-c"]
+            args: ["./init-ring-mqtt.js"]
         pod:
           securityContext:
             runAsUser: 1000
