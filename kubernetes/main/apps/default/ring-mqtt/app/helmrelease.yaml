@@ -44,6 +44,7 @@ spec:
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
             supplementalGroups: [10000]
+        containers:
           app:
             image:
               repository: docker.io/tsightler/ring-mqtt
