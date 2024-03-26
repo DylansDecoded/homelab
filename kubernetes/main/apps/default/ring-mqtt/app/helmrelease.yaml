@@ -33,6 +33,13 @@ spec:
       namespace: volsync-system
   values:
     controllers:
+      initContainers:
+        init-config:
+          image:
+            repository: docker.io/tsightler/ring-mqtt
+            tag: 5.6.3
+          command: ["/bin/sh", "-c"]
+          args: ["./init-ring-mqtt.js"]
       ring-mqtt:
         annotations:
           reloader.stakater.com/auto: "true"
@@ -78,22 +85,28 @@ spec:
     persistence:
       config:
         existingClaim: *app
-        globalMounts:
-          - path: /data
+        advancedMounts:
+          ring-mqtt:
+            app:
+              - path: /app/data
 
-      # config-file:
-      #   type: configMap
-      #   name: ring-mqtt-configmap
-      #   advancedMounts:
-      #     ring-mqtt:
-      #       app:
-      #         - path: /data/config.json
-      #           subPath: config.json
-      # ring-state:
-      #   type: configMap
-      #   name: ring-mqtt-configmap
-      #   advancedMounts:
-      #     ring-mqtt:
-      #       app:
-      #         - path: /data/ring-state.json
-      #           subPath: ring-state.json
+      tmp:
+        type: emptyDir
+
+      config-file:
+        type: configMap
+        name: ring-mqtt-configmap
+        advancedMounts:
+          ring-mqtt:
+            app:
+              - path: /data/config.json
+                subPath: config.json
+
+      ring-state:
+        type: configMap
+        name: ring-state-configmap
+        advancedMounts:
+          ring-mqtt:
+            app:
+              - path: /data/ring-state.json
+                subPath: ring-state.json
