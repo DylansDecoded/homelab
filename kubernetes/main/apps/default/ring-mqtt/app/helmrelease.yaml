@@ -36,13 +36,6 @@ spec:
       ring-mqtt:
         annotations:
           reloader.stakater.com/auto: "true"
-        initContainers:
-          init-config:
-            image:
-              repository: docker.io/tsightler/ring-mqtt
-              tag: 5.6.3
-            command: ["/bin/sh", "-c"]
-            args: ["./init-ring-mqtt.js"]
         pod:
           securityContext:
             runAsUser: 1000
@@ -99,7 +92,7 @@ spec:
         advancedMounts:
           ring-mqtt:
             app:
-              - path: /data/config.json
+              - path: /app/data/config.json
                 subPath: config.json
 
       ring-state:
@@ -108,5 +101,5 @@ spec:
         advancedMounts:
           ring-mqtt:
             app:
-              - path: /data/ring-state.json
+              - path: /app/data/ring-state.json
                 subPath: ring-state.json
