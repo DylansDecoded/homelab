@@ -49,30 +49,26 @@ spec:
               READARR__PORT: &port 80
               READARR__LOG_LEVEL: info
             envFrom: *envFrom
+            resources:
+              requests:
+                cpu: 15m
+                memory: 160M
+              limits:
+                memory: 330M
             probes:
-              liveness: &probes
+              liveness:
                 enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /ping
-                    port: *port
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
+              readiness:
+                enabled: true
               startup:
-                enabled: false
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
-            resources:
-              requests:
-                cpu: 10m
-              limits:
-                memory: 1Gi
         pod:
           securityContext:
             runAsUser: 568
@@ -107,7 +103,7 @@ spec:
 
       pushover-notify:
         type: configMap
-        name: radarr-configmap
+        name: readarr-configmap
         defaultMode: 0775
         globalMounts:
           - path: /scripts/pushover-notify.sh
