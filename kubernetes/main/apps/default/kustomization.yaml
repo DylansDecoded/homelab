@@ -22,7 +22,7 @@ resources:
   - ./plex/ks.yaml
   - ./prowlarr/ks.yaml
   - ./qbittorrent/ks.yaml
-  - ./readarr/ks.yaml
+  # - ./readarr/ks.yaml
   - ./radarr/ks.yaml
   - ./recyclarr/ks.yaml
   # - ./ring-mqtt/ks.yaml
