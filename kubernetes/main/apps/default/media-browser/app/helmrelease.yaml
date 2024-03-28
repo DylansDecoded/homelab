@@ -40,7 +40,7 @@ spec:
             env:
               TZ: America/New_York
               FB_DATABASE: /config/filebrowser.db
-              FB_ROOT: /media
+              FB_ROOT: /data/media
               FB_LOG: stdout
               FB_NOAUTH: true
             probes:
@@ -97,7 +97,6 @@ spec:
               - *host
     persistence:
       config:
-        enabled: true
         existingClaim: media-browser
       media:
         type: nfs
