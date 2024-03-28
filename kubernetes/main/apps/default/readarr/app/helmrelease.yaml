@@ -22,9 +22,6 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
   values:
     controllers:
       readarr:
@@ -34,21 +31,23 @@ spec:
           init-db:
             image:
               repository: ghcr.io/onedr0p/postgres-init
-              tag: 16
-            envFrom: &envFrom
+              tag: 16.2
+              pullPolicy: IfNotPresent
+            envFrom:
               - secretRef:
                   name: readarr-secret
         containers:
           app:
             image:
               repository: ghcr.io/onedr0p/readarr-develop
-              tag: 0.3.21.2475@sha256:a9f41c3c444318d3cb0b23f8950dd42fde01f564544dd4477fcb7b1acd1bdef4
+              tag: 0.3.21.2475
             env:
-              TZ: "UTC"
               READARR__INSTANCE_NAME: Readarr
               READARR__PORT: &port 80
               READARR__LOG_LEVEL: info
-            envFrom: *envFrom
+            envFrom:
+              - secretRef:
+                  name: readarr-secret
             resources:
               requests:
                 cpu: 15m
@@ -65,10 +64,6 @@ spec:
                 spec:
                   failureThreshold: 30
                   periodSeconds: 5
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
         pod:
           securityContext:
             runAsUser: 568
@@ -76,7 +71,8 @@ spec:
             runAsNonRoot: true
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups: [10000]
+            supplementalGroups:
+              - 10000
     service:
       app:
         controller: readarr
@@ -100,15 +96,6 @@ spec:
     persistence:
       config:
         existingClaim: readarr
-
-      pushover-notify:
-        type: configMap
-        name: readarr-configmap
-        defaultMode: 0775
-        globalMounts:
-          - path: /scripts/pushover-notify.sh
-            subPath: pushover-notify.sh
-            readOnly: true
       tmp:
         type: emptyDir
 

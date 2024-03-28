@@ -6,10 +6,10 @@ module.exports = {
     `http://prowlarr.default.svc.cluster.local:9696/1/api?apikey=$${process.env.PROWLARR_API_KEY}`, // fnp
     `http://prowlarr.default.svc.cluster.local:9696/2/api?apikey=$${process.env.PROWLARR_API_KEY}`, // ipt
     `http://prowlarr.default.svc.cluster.local:9696/3/api?apikey=$${process.env.PROWLARR_API_KEY}`, // milk
-    `http://prowlarr.default.svc.cluster.local:9696/7/api?apikey=$${process.env.PROWLARR_API_KEY}`, //rarbg
     `http://prowlarr.default.svc.cluster.local:9696/8/api?apikey=$${process.env.PROWLARR_API_KEY}`, //ttg
     `http://prowlarr.default.svc.cluster.local:9696/9/api?apikey=$${process.env.PROWLARR_API_KEY}`, //st
-    `http://prowlarr.default.svc.cluster.local:9696/10/api?apikey=$${process.env.PROWLARR_API_KEY}`, //bs
+    `http://prowlarr.default.svc.cluster.local:9696/11/api?apikey=$${process.env.PROWLARR_API_KEY}` //nzbg,
+    `http://prowlarr.default.svc.cluster.local:9696/44/api?apikey=$${process.env.PROWLARR_API_KEY}` //1337x,
   ],
   port: process.env.CROSSSEED_PORT || 80,
   apiAuth: false,
