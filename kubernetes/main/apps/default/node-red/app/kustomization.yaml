@@ -6,10 +6,11 @@ resources:
   - ./externalsecret.yaml
   - ./helmrelease.yaml
   - ../../../../templates/volsync
+  - ../../../../templates/gatus/guarded
 configMapGenerator:
   - name: node-red-configmap
     files:
-      - settings.js=./resources/settings.js
+      - config/settings.js
 generatorOptions:
   disableNameSuffixHash: true
   annotations:

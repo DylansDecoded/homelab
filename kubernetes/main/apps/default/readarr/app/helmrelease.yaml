@@ -83,7 +83,7 @@ spec:
         enabled: true
         className: internal
         hosts:
-          - host: &host "{{ .Release.Name }}.robsonhome.cloud"
+          - host: &host readarr.robsonhome.cloud
             paths:
               - path: /
                 service:
@@ -95,8 +95,10 @@ spec:
     persistence:
       config:
         existingClaim: readarr
-      tmp:
-        type: emptyDir
+        advancedMounts:
+          readarr:
+            app:
+              - path: /config
 
       media:
         type: nfs

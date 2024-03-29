@@ -26,7 +26,7 @@ module.exports = {
         },
       },
     },
-    users: [{username: "dylan", permissions: ["*"]}],
+    users: [{username: "bernd", permissions: ["*"]}],
   },
 
   uiPort: process.env.PORT || 1880,

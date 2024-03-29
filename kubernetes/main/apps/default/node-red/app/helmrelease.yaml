@@ -15,7 +15,10 @@ spec:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-
+  dependsOn:
+    - name: rook-ceph-cluster
+    - name: volsync
+    - name: external-secrets-stores
   values:
     controllers:
       node-red:
@@ -33,16 +36,16 @@ spec:
           app:
             image:
               repository: docker.io/nodered/node-red
-              tag: 3.1.7
+              tag: 3.1.8
             envFrom:
               - secretRef:
                   name: node-red-secret
             resources:
               requests:
                 cpu: 5m
-                memory: 512Mi
+                memory: 256Mi
               limits:
-                memory: 512Mi
+                memory: 256Mi
 
     service:
       app:
@@ -53,7 +56,9 @@ spec:
 
     ingress:
       app:
-        className: internal
+        className: external
+        annotations:
+          external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
         hosts:
           - host: &hostName nodered.robsonhome.cloud
             paths:
@@ -75,7 +80,9 @@ spec:
       config-file:
         type: configMap
         name: node-red-configmap
-        globalMounts:
-          - path: /data/settings.js
-            subPath: settings.js
-            readOnly: true
+        advancedMounts:
+          node-red:
+            app:
+              - path: /data/settings.js
+                subPath: settings.js
+                readOnly: true
