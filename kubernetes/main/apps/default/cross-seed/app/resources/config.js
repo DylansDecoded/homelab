@@ -4,11 +4,10 @@ module.exports = {
   qbittorrentUrl: "http://qbittorrent.default.svc.cluster.local:8080",
   torznab: [
     `http://prowlarr.default.svc.cluster.local:9696/1/api?apikey=$${process.env.PROWLARR_API_KEY}`,
-    `http://prowlarr.default.svc.cluster.local:9696/2/api?apikey=$${process.env.PROWLARR_API_KEY}`,
     `http://prowlarr.default.svc.cluster.local:9696/3/api?apikey=$${process.env.PROWLARR_API_KEY}`,
     `http://prowlarr.default.svc.cluster.local:9696/45/api?apikey=$${process.env.PROWLARR_API_KEY}`,
+    `http://prowlarr.default.svc.cluster.local:9696/45/api?apikey=$${process.env.PROWLARR_API_KEY}`,
     `http://prowlarr.default.svc.cluster.local:9696/81/api?apikey=$${process.env.PROWLARR_API_KEY}`,
-    `http://prowlarr.default.svc.cluster.local:9696/82/api?apikey=$${process.env.PROWLARR_API_KEY}`,
   ],
   port: process.env.CROSSSEED_PORT || 80,
   apiAuth: false,
