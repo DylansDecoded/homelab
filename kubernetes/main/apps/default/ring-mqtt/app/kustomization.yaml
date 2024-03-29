@@ -7,3 +7,11 @@ resources:
   - ./pvc.yaml
   - ./helmrelease.yaml
   - ../../../../templates/gatus/guarded
+configMapGenerator:
+  - name: ring-mqtt-configmap
+    files:
+      - resources/config.json
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled

@@ -81,3 +81,13 @@ spec:
           ring-mqtt:
             app:
               - path: /data
+
+      config-file:
+        type: configMap
+        name: ring-mqtt-configmap
+        advancedMounts:
+          ring-mqtt:
+            app:
+              - path: /data/config.json
+                subPath: config.json
+                readOnly: true
