@@ -83,8 +83,8 @@ spec:
               - path: /data
 
       config-file:
-        type: configMap
-        name: ring-mqtt-configmap
+        type: secret
+        name: ring-mqtt-config-secret
         advancedMounts:
           ring-mqtt:
             app:
