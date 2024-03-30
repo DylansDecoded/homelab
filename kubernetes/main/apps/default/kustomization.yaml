@@ -17,12 +17,12 @@ resources:
   - ./media-browser/ks.yaml
   - ./miniflux/ks.yaml
   - ./mosquitto/ks.yaml
-  # - ./node-red/ks.yaml
+  - ./node-red/ks.yaml
   - ./overseerr/ks.yaml
   - ./plex/ks.yaml
   - ./prowlarr/ks.yaml
   - ./qbittorrent/ks.yaml
-  # - ./readarr/ks.yaml
+  - ./readarr/ks.yaml
   - ./radarr/ks.yaml
   - ./recyclarr/ks.yaml
   - ./ring-mqtt/ks.yaml
