@@ -26,4 +26,5 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 1Gi
+      VOLSYNC_STORAGECLASS: ceph-filesystem
+      VOLSYNC_CAPACITY: 2Gi

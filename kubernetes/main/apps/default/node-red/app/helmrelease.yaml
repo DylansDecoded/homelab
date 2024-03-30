@@ -65,7 +65,7 @@ spec:
               - *hostName
 
     persistence:
-      data:
+      config:
         existingClaim: node-red
         advancedMounts:
           node-red:
@@ -75,9 +75,7 @@ spec:
       config-file:
         type: configMap
         name: node-red-configmap
-        advancedMounts:
-          node-red:
-            app:
-              - path: /data/settings.js
-                subPath: settings.js
-                readOnly: true
+        globalMounts:
+          - path: /data/settings.js
+            subPath: settings.js
+            readOnly: true
