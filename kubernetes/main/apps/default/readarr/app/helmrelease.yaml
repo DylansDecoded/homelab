@@ -27,26 +27,35 @@ spec:
       readarr:
         annotations:
           reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
+            supplementalGroups: [10000]
+
         initContainers:
           init-db:
             image:
               repository: ghcr.io/onedr0p/postgres-init
-              tag: 16
-            envFrom:
+              tag: 16.2
+              pullPolicy: IfNotPresent
+            envFrom: &envFrom
               - secretRef:
                   name: readarr-secret
+
         containers:
           app:
             image:
               repository: ghcr.io/onedr0p/readarr-develop
-              tag: 0.3.21.2475
+              tag: 0.3.21.2475@sha256:a9f41c3c444318d3cb0b23f8950dd42fde01f564544dd4477fcb7b1acd1bdef4
             env:
+              TZ: "UTC"
               READARR__INSTANCE_NAME: Readarr
               READARR__PORT: &port 80
               READARR__LOG_LEVEL: info
-            envFrom:
-              - secretRef:
-                  name: readarr-secret
+            envFrom: *envFrom
             resources:
               requests:
                 cpu: 15m
@@ -63,21 +72,28 @@ spec:
                 spec:
                   failureThreshold: 30
                   periodSeconds: 5
-        pod:
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            runAsNonRoot: true
-            fsGroup: 568
-            fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups:
-              - 10000
     service:
       app:
         controller: readarr
         ports:
           http:
             port: *port
+    probes:
+      liveness: &probes
+        enabled: true
+        custom: true
+        spec:
+          httpGet:
+            path: /ping
+            port: *port
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+      readiness: *probes
+      startup:
+        enabled: false
+
     ingress:
       app:
         enabled: true
@@ -95,10 +111,9 @@ spec:
     persistence:
       config:
         existingClaim: readarr
-        advancedMounts:
-          readarr:
-            app:
-              - path: /config
+
+      tmp:
+        type: emptyDir
 
       media:
         type: nfs
