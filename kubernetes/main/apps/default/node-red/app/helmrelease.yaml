@@ -52,9 +52,7 @@ spec:
 
     ingress:
       app:
-        className: external
-        annotations:
-          external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
+        className: internal
         hosts:
           - host: &hostName nodered.robsonhome.cloud
             paths:
@@ -73,10 +71,13 @@ spec:
           node-red:
             app:
               - path: /data
+
       config-file:
         type: configMap
         name: node-red-configmap
-        globalMounts:
-          - path: /data/settings.js
-            subPath: settings.js
-            readOnly: true
+        advancedMounts:
+          node-red:
+            app:
+              - path: /data/settings.js
+                subPath: settings.js
+                readOnly: true
