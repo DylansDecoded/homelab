@@ -3,42 +3,27 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: arc-home-ops
+  name: gha-runner-scale-set
 spec:
   interval: 30m
   chart:
     spec:
       chart: gha-runner-scale-set
-      version: 0.8.3
+      version: 0.9.0
       sourceRef:
         kind: HelmRepository
         name: actions-runner-controller
         namespace: flux-system
-  maxHistory: 2
   install:
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
-  values:
-    runnerScaleSetName: arc-runner-set-home-ops
-    githubConfigUrl: https://github.com/DylansDecoded/homelab
-    minRunners: 1
-    maxRunners: 6
-    containerMode:
-      type: dind
-    template:
-      spec:
-        containers:
-          - name: runner
-            image: ghcr.io/onedr0p/actions-runner:2.314.1@sha256:ce221cd0936c29b121fe90e985b682a6cb6428f1416b9a131cd5313ac7a3e420
-            command: ["/home/runner/run.sh"]
-    controllerServiceAccount:
-      name: actions-runner-controller-gha-rs-controller
+  dependsOn:
+    - name: gha-runner-scale-set-controller
       namespace: actions-runner-system
   valuesFrom:
     - targetPath: githubConfigSecret.github_app_id
@@ -53,3 +38,20 @@ spec:
       kind: Secret
       name: actions-runner-controller-auth-secret
       valuesKey: ACTION_RUNNER_CONTROLLER_GITHUB_PRIVATE_KEY
+  values:
+    nameOverride: gha-runner-scale-set
+    runnerScaleSetName: gha-runner-scale-set
+    githubConfigUrl: https://github.com/DylansDecoded/homelab
+    minRunners: 1
+    maxRunners: 4
+    containerMode:
+      type: dind
+    template:
+      spec:
+        containers:
+          - name: runner
+            image: ghcr.io/onedr0p/actions-runner:2.315.0@sha256:08ea5f7f4768d07be9975a2190ffc5ab2df44e77e173f4cda96f9906dffdaadd
+            command: ["/home/runner/run.sh"]
+    controllerServiceAccount:
+      name: gha-runner-scale-set-controller
+      namespace: actions-runner-system
