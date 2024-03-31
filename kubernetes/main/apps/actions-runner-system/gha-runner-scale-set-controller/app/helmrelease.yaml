@@ -43,15 +43,12 @@ spec:
     runnerScaleSetName: gha-runner-scale-set
     githubConfigUrl: https://github.com/DylansDecoded/homelab
     minRunners: 1
-    maxRunners: 6
+    maxRunners: 3
     containerMode:
       type: dind
-    template:
-      spec:
-        containers:
-          - name: runner
-            image: ghcr.io/onedr0p/actions-runner:2.315.0@sha256:8960c2a8a04a09fe7ed07a4b913a210f0abddd01feecb0956bb08b8bb043446f
-            command: ["/home/runner/run.sh"]
-    controllerServiceAccount:
-      name: gha-runner-scale-set-controller
-      namespace: actions-runner-system
+    # template:
+    #   spec:
+    #     containers:
+    #       - name: runner
+    #         image: ghcr.io/onedr0p/actions-runner:2.315.0@sha256:8960c2a8a04a09fe7ed07a4b913a210f0abddd01feecb0956bb08b8bb043446f
+    #         command: ["/home/runner/run.sh"]
