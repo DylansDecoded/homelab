@@ -135,8 +135,8 @@ spec:
       media:
         type: nfs
         server: 10.1.30.210
-        path: /mnt/tank/media
+        path: /mnt/tank/nfs/media
         advancedMounts:
           plex:
             app:
-              - path: /data/media
+              - path: /media
