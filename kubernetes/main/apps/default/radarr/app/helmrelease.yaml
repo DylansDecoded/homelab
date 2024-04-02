@@ -124,6 +124,6 @@ spec:
       media:
         type: nfs
         server: 10.1.30.210
-        path: /mnt/tank/media
+        path: /mnt/tank/nfs/media
         globalMounts:
           - path: /media
