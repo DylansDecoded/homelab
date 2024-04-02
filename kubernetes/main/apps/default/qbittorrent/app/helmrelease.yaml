@@ -35,10 +35,11 @@ spec:
           secret.reloader.stakater.com/reload: qbittorrent-secret
         pod:
           securityContext:
+            runAsUser: 568
+            runAsGroup: 568
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups:
-              - 10000
+            supplementalGroups: [10000]
         containers:
           app:
             image:
