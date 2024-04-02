@@ -37,14 +37,12 @@ spec:
             envFrom: &envFrom
               - secretRef:
                   name: readarr-secret
-
         containers:
           app:
             image:
               repository: ghcr.io/onedr0p/readarr-develop
-              tag: 0.3.21.2475@sha256:a9f41c3c444318d3cb0b23f8950dd42fde01f564544dd4477fcb7b1acd1bdef4
+              tag: 0.3.21.2465
             env:
-              TZ: "UTC"
               READARR__INSTANCE_NAME: Readarr
               READARR__PORT: &port 80
               READARR__LOG_LEVEL: info
