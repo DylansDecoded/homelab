@@ -24,7 +24,7 @@ spec:
           app:
             image:
               repository: docker.io/nodered/node-red
-              tag: 3.1.8
+              tag: 3.1.8@sha256:4f2bdf69cc3fb62ec60a746ca8db10245cc0ee353b10aa3e66ec0bfbf920c407
             envFrom:
               - secretRef:
                   name: node-red-secret
@@ -78,3 +78,5 @@ spec:
           - path: /data/settings.js
             subPath: settings.js
             readOnly: true
+      tmp:
+        type: emptyDir
