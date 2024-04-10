@@ -81,22 +81,22 @@ spec:
         config:
           osdsPerDevice: "1"
         nodes:
-          - name: k3s-01
+          - name: kube-01
             devices:
               - name: /dev/disk/by-id/ata-SAMSUNG_MZ7KM960HMJP-00005_S3HSNWAJ300236B
-          - name: k3s-02
+          - name: kube-02
             devices:
               - name: /dev/disk/by-id/ata-SAMSUNG_MZ7KM960HAHP-000FU_S2TLNX0J900056
-          - name: k3s-03
+          - name: kube-03
             devices:
               - name: /dev/disk/by-id/ata-SAMSUNG_MZ7KM960HAHP-00005_S2HTNX0H415045
-          - name: k3s-04
+          - name: kube-04
             devices:
               - name: /dev/disk/by-id/ata-SAMSUNG_MZ7KM960HAHP-00005_S2HTNX0H413743
-          - name: k3s-05
+          - name: kube-05
             devices:
               - name: /dev/disk/by-id/ata-SAMSUNG_MZ7KM960HAHP-00005_S2HTNXAH300874
-          - name: k3s-06
+          - name: kube-06
             devices:
               - name: /dev/disk/by-id/ata-SAMSUNG_MZ7KM960HAHP-00005_S2HTNX0H414441
     placement:
