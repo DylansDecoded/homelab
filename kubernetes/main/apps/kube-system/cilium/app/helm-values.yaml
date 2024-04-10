@@ -20,7 +20,6 @@ cluster:
   name: kubernetes
 containerRuntime:
   integration: containerd
-devices: mainif
 enableRuntimeDeviceDetection: true
 endpointRoutes:
   enabled: true
@@ -38,7 +37,7 @@ k8sServicePort: 7445
 kubeProxyReplacement: true
 kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
 l2announcements:
-  enabled: true
+  enabled: false
 gatewayAPI:
   enabled: true
 loadBalancer:
