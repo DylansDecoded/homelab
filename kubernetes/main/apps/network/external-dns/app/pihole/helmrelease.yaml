@@ -34,7 +34,7 @@ spec:
               repository: registry.k8s.io/external-dns/external-dns
               tag: v0.14.1@sha256:7bb4c52748dec4fa2df1a8df7b94355c9677c70378cfe555ee4eb9a476409f0c
             env:
-              EXTERNAL_DNS_PIHOLE_SERVER: http://pihole.robsonhome.cloud
+              EXTERNAL_DNS_PIHOLE_SERVER: http://10.1.100.53
               EXTERNAL_DNS_PIHOLE_PASSWORD:
                 valueFrom:
                   secretKeyRef:
