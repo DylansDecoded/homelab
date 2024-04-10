@@ -1,22 +1,21 @@
-# vps_servers:
-#   vars:
-#     ansible_python_interpreter: /usr/bin/python3
-#   hosts:
-#     tailscale-01:
-#       ansible_host: 149.28.58.160
-#       ansible_user: dylan
-#       #ansible_ssh_pass: "{{ vault_tailscale_user_password }}"
-#       ansible_ssh_private_key_file: ~/.ssh/id_ed25519
+vps_servers:
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  hosts:
+    tailscale-01:
+      ansible_host: 149.28.58.160
+      ansible_user: dylan
+      #ansible_ssh_pass: "{{ vault_tailscale_user_password }}"
+      ansible_ssh_private_key_file: ~/.ssh/id_ed25519
 
-# pis:
-#   vars:
-#     ansible_user: dylanrobson
-#     ansible_python_interpreter: /usr/bin/python3
-#   hosts:
-#     ns01:
-#       ansible_host: 10.1.100.20
-#       dns_title: master
-#       storage_network_address: 10.101.101.20
+pi4-nodes:
+  vars:
+    ansible_user: dylanrobson
+    ansible_python_interpreter: /usr/bin/python3
+  hosts:
+    pi4-node-02:
+      ansible_host: 10.1.30.202
+
 docker:
   vars:
     ansible_user: dylan
