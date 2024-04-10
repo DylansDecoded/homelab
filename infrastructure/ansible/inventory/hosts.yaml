@@ -22,9 +22,8 @@ docker:
     ansible_user: dylan
     ansible_python_interpreter: /usr/bin/python3
   hosts:
-    ring-mqtt:
-      ansible_host: 10.1.30.31
-      storage_network_address: 10.101.101.31
+    netboot:
+      ansible_host: 10.1.30.5
 dns:
   vars:
     ansible_user: dylanrobson
