@@ -8,20 +8,26 @@ vars:
   TALHELPER_CONFIG_FILE: "{{.TALOS_DIR}}/talconfig.yaml"
 
 env:
-  TALOSCONFIG: "{{.KUBERNETES_DIR}}/main/talosconfig.yaml"
+  TALOSCONFIG: "{{.TALOS_DIR}}/clusterconfig/talosconfig"
 
 tasks:
   bootstrap:
     desc: Bootstrap the Talos cluster
     dir: "{{.TALOS_DIR}}"
     cmds:
-      # - task: bootstrap-gensecret
-      - task: bootstrap-genconfig
       - task: bootstrap-apply
       - task: bootstrap-install
       - task: fetch-kubeconfig
       - task: bootstrap-apps
       - talosctl health --server=false
+
+  bootstrap-etcd:
+    desc: Bootstrap Etcd
+    cmd: until talosctl --context {{.cluster}} --nodes {{.controller}} bootstrap; do sleep 10; done
+    requires:
+      vars:
+        - cluster
+        - controller
 
   bootstrap-gensecret:
     desc: Generate the Talos secrets
@@ -111,7 +117,7 @@ tasks:
   fetch-kubeconfig:
     desc: Generate talos kubeconfig
     dir: "{{.TALOS_DIR}}"
-    cmd: until talhelper gencommand kubeconfig --extra-flags "{{.ROOT_DIR}} --force" | bash; do sleep 10; done
+    cmd: until talhelper gencommand kubeconfig --extra-flags "{{.ROOT_DIR}}/kubernetes/main --force" | bash; do sleep 10; done
 
   soft-nuke:
     desc: Resets nodes back to maintenance mode so you can re-deploy again straight after

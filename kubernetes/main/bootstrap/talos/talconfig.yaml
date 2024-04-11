@@ -36,7 +36,6 @@ nodes:
             gateway: "10.1.33.1"
         vip:
           ip: "10.1.33.254"
-
   - hostname: "kube-02"
     ipAddress: "10.1.33.12"
     installDisk: "/dev/nvme0n1"
@@ -54,7 +53,6 @@ nodes:
             gateway: "10.1.33.1"
         vip:
           ip: "10.1.33.254"
-
   - hostname: "kube-03"
     ipAddress: "10.1.33.13"
     installDisk: "/dev/nvme0n1"
@@ -72,7 +70,6 @@ nodes:
             gateway: "10.1.33.1"
         vip:
           ip: "10.1.33.254"
-
   - hostname: "kube-04"
     ipAddress: "10.1.33.14"
     installDisk: "/dev/nvme0n1"
@@ -88,15 +85,14 @@ nodes:
         routes:
           - network: 0.0.0.0/0
             gateway: "10.1.33.1"
-
-  - hostname: "kube-06"
-    ipAddress: "10.1.33.16"
+  - hostname: "kube-05"
+    ipAddress: "10.1.33.15"
     installDisk: "/dev/nvme0n1"
     talosImageURL: factory.talos.dev/installer/7567ee38c5eacd1e7fc950f7c6c0c536630075928024238d562b12133b3f4efd
     controlPlane: false
     networkInterfaces:
       - deviceSelector:
-          hardwareAddr: "ac:e2:d3:15:fd:f9"
+          hardwareAddr: "10:62:e5:00:4c:12"
         dhcp: false
         addresses:
           - "10.1.33.15/24"
@@ -104,7 +100,6 @@ nodes:
         routes:
           - network: 0.0.0.0/0
             gateway: "10.1.33.1"
-
   - hostname: "kube-06"
     ipAddress: "10.1.33.16"
     installDisk: "/dev/nvme0n1"
@@ -128,7 +123,6 @@ patches:
       files:
         - op: create
           path: /etc/cri/conf.d/20-customization.part
-          permissions: 0
           content: |-
             [plugins."io.containerd.grpc.v1.cri"]
               enable_unprivileged_ports = true
@@ -138,32 +132,11 @@ patches:
             [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
               discard_unpacked_layers = false
 
-        - op: overwrite
-          path: /etc/nfsmount.conf
-          permissions: 420
-          content: |-
-            [ NFSMount_Global_Options ]
-            nfsvers=4.2
-            hard=True
-            noatime=True
-            nodiratime=True
-            rsize=131072
-            wsize=131072
-            nconnect=8
-
   # Disable search domain everywhere
   - |-
     machine:
       network:
         disableSearchDomain: true
-
-  # Configure NTP
-  - |-
-    machine:
-      time:
-        disabled: false
-        servers:
-          - 10.1.33.1
 
   # Enable cluster discovery
   - |-
@@ -191,6 +164,13 @@ patches:
         nameservers:
           - 10.1.100.53
 
+  # Configure NTP
+  - |-
+    machine:
+      time:
+        disabled: false
+        servers: ["time.cloudflare.com"]
+
   # Custom sysctl settings
   - |-
     machine:
@@ -210,39 +190,11 @@ patches:
             type: bind
             source: /var/openebs/local
             options: ["bind", "rshared", "rw"]
-  - |-
-    machine:
-      kubelet:
-        extraArgs:
-            feature-gates: GracefulNodeShutdown=true,NewVolumeManagerReconstruction=false
-            image-gc-high-threshold: "55"
-            image-gc-low-threshold: "50"
-            rotate-server-certificates: "true"
-  # udev rules general
-  - |-
-    machine:
-      udev:
-        rules:
-          - ACTION=="add", SUBSYSTEM=="thunderbolt", ATTR{authorized}=="0", ATTR{authorized}="1"
-          - SUBSYSTEM=="drm", KERNEL=="renderD*", GROUP="44", MODE="0660"
-          - SUBSYSTEM=="apex", MODE="0660", GROUP="44"
+
+
 
 controlPlane:
-  schematic:
-    customization:
-      systemExtensions:
-        officialExtensions:
-          - siderolabs/intel-ucode
-          - siderolabs/i915-ucode
-          - siderolabs/gasket-driver
   patches:
-    # Control Plane Node Labels
-    - |-
-      machine:
-        nodeLabels:
-          topology.kubernetes.io/region: main
-          topology.kubernetes.io/zone: m
-
     # Cluster configuration
     - |-
       cluster:
@@ -279,24 +231,4 @@ controlPlane:
             allowedRoles: ["os:admin"]
             allowedKubernetesNamespaces: ["system-upgrade"]
 
-worker:
-  schematic:
-    customization:
-      systemExtensions:
-        officialExtensions:
-          - siderolabs/intel-ucode
-          - siderolabs/i915-ucode
-          - siderolabs/gasket-driver
-  patches:
-    # Control Plane Node Labels
-    - |-
-      machine:
-        nodeLabels:
-          topology.kubernetes.io/region: main
-          topology.kubernetes.io/zone: m
 
-    # CoreDNS Settings
-    - |-
-      cluster:
-        coreDNS:
-          disabled: true
