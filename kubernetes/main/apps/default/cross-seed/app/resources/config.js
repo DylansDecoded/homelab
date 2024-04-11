@@ -3,13 +3,11 @@ module.exports = {
   delay: 20,
   qbittorrentUrl: "http://qbittorrent.default.svc.cluster.local:8080",
   torznab: [
-    `http://prowlarr.default.svc.cluster.local:9696/1/api?apikey=$${process.env.PROWLARR_API_KEY}`, // fnp
-    `http://prowlarr.default.svc.cluster.local:9696/2/api?apikey=$${process.env.PROWLARR_API_KEY}`, // ipt
-    `http://prowlarr.default.svc.cluster.local:9696/3/api?apikey=$${process.env.PROWLARR_API_KEY}`, // milk
-    `http://prowlarr.default.svc.cluster.local:9696/7/api?apikey=$${process.env.PROWLARR_API_KEY}`, //rarbg
-    `http://prowlarr.default.svc.cluster.local:9696/8/api?apikey=$${process.env.PROWLARR_API_KEY}`, //ttg
-    `http://prowlarr.default.svc.cluster.local:9696/9/api?apikey=$${process.env.PROWLARR_API_KEY}`, //st
-    `http://prowlarr.default.svc.cluster.local:9696/10/api?apikey=$${process.env.PROWLARR_API_KEY}`, //bs
+    `http://prowlarr.default.svc.cluster.local:9696/1/api?apikey=$${process.env.PROWLARR_API_KEY}`,
+    `http://prowlarr.default.svc.cluster.local:9696/3/api?apikey=$${process.env.PROWLARR_API_KEY}`,
+    `http://prowlarr.default.svc.cluster.local:9696/45/api?apikey=$${process.env.PROWLARR_API_KEY}`,
+    `http://prowlarr.default.svc.cluster.local:9696/45/api?apikey=$${process.env.PROWLARR_API_KEY}`,
+    `http://prowlarr.default.svc.cluster.local:9696/81/api?apikey=$${process.env.PROWLARR_API_KEY}`,
   ],
   port: process.env.CROSSSEED_PORT || 80,
   apiAuth: false,

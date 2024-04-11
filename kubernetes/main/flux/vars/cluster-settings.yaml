@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cluster-settings
+  namespace: flux-system
+data:
+  TIMEZONE: "America/New_York"
+  CLUSTER_CIDR: "10.42.0.0/16"
+  NODE_CIDR: "10.1.33.0/24"
+  BGP_ADVERTISED_CIDR: "10.45.0.0/16"
+  CLUSTER_CLOUDFLARE_TUNNEL_ID: "e901488f-a148-4024-b5a7-8537e7b42287"

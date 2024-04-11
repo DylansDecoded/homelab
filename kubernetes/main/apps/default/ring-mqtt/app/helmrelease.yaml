@@ -36,14 +36,14 @@ spec:
       ring-mqtt:
         annotations:
           reloader.stakater.com/auto: "true"
+
         pod:
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            runAsNonRoot: true
+            runAsUser: 568
+            runAsGroup: 568
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups: [10000]
+
         containers:
           app:
             image:
@@ -56,7 +56,6 @@ spec:
               ENABLEPANIC: "true"
               MQTTHASSTOPIC: hass/status
               MQTTPORT: 1883
-              DEBUG: "ring-mqtt"
             envFrom:
               - secretRef:
                   name: ring-mqtt-secret
@@ -77,29 +76,18 @@ spec:
 
     persistence:
       config:
-        existingClaim: *app
+        existingClaim: ring-mqtt
         advancedMounts:
           ring-mqtt:
             app:
-              - path: /app/data
-
-      tmp:
-        type: emptyDir
+              - path: /data
 
       config-file:
-        type: configMap
-        name: ring-mqtt-configmap
+        type: secret
+        name: ring-mqtt-config-secret
         advancedMounts:
           ring-mqtt:
             app:
-              - path: /app/data/config.json
+              - path: /data/config.json
                 subPath: config.json
-
-      ring-state:
-        type: configMap
-        name: ring-state-configmap
-        advancedMounts:
-          ring-mqtt:
-            app:
-              - path: /app/data/ring-state.json
-                subPath: ring-state.json
+                readOnly: true

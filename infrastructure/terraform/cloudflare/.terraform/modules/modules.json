@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"onepassword_item","Source":"git::https://github.com/bjw-s/terraform-1password-item.git?ref=main","Dir":".terraform/modules/onepassword_item"}]}

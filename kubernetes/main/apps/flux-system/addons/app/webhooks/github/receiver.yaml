@@ -2,7 +2,7 @@
 apiVersion: notification.toolkit.fluxcd.io/v1
 kind: Receiver
 metadata:
-  name: homelab-ops
+  name: github-receiver
 spec:
   type: github
   events:

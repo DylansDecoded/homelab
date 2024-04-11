@@ -1,0 +1,13 @@
+{
+    "workbench.colorTheme": "Palenight Theme",
+    "workbench.tips.enabled": false,
+    "workbench.statusBar.visible": true,
+    "sops.beta": true,
+    "sops.binPath": "$HOME/opt/homebrew/bin/sops",
+    "sops.configPath": ".sops.yaml",
+    "sops.defaults.ageKeyFile": "$SOPS_AGE_KEY_FILE",
+    "sops-edit.onlyUseButtons": true,
+    "python.analysis.addImport.exactMatchOnly": true,
+    "autoDocstring.docstringFormat": "pep257",
+    "autoDocstring.startOnNewLine": true
+}

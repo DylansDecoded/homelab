@@ -1,0 +1,32 @@
+- name: configure network
+  include_tasks: networking.yaml
+
+- name: Create bind9 folder
+  file:
+    path: "/home/{{ me.user }}/bind9"
+    state: directory
+
+- name: Create Config Directory
+  file:
+    path: "/home/{{ me.user }}/bind9/config"
+    state: directory
+
+- name: Copy docker-compose.yaml to bind9 directory
+  copy:
+    src: files/docker-compose.yaml
+    dest: "/home/{{ me.user }}/bind9/"
+
+- name: Copy files to bind9 config folder
+  copy:
+    src: files/named.conf
+    dest: "/home/{{ me.user }}/bind9/config/"
+
+- name: Copy rndc.conf to bind9 config folder
+  copy:
+    src: files/rndc.conf
+    dest: "/home/{{ me.user }}/bind9/config/"
+
+- name: Copy zone file to bind9 config folder
+  copy:
+    src: files/robsonhome-cloud.zone
+    dest: "/home/{{ me.user }}/bind9/config/"

@@ -16,7 +16,7 @@ metadata:
   namespace: network
 subsets:
   - addresses:
-      - ip: 10.1.30.80
+      - ip: 10.1.30.210
     ports:
       - port: 9001
 ---
@@ -37,7 +37,7 @@ metadata:
   namespace: network
 subsets:
   - addresses:
-      - ip: 10.1.30.80
+      - ip: 10.1.30.210
     ports:
       - port: 9000
 

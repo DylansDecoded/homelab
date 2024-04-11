@@ -35,22 +35,22 @@ spec:
           secret.reloader.stakater.com/reload: qbittorrent-secret
         pod:
           securityContext:
+            runAsUser: 568
+            runAsGroup: 568
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups:
-              - 10000
+            supplementalGroups: [10000]
         containers:
           app:
             image:
               repository: ghcr.io/onedr0p/qbittorrent
-              tag: 4.6.4@sha256:85f185207a81ec03e84b8302db06f1694c533c99e0efdb2acf0316d554d332e3
+              tag: 4.6.4@sha256:cb8a7df4e63bf410834af7846b6d5eee4f10748d03819ee7218015c5b0332a29
             env:
               TZ: America/New_York
               UMASK: "022"
               QBITTORRENT__PORT: &port 8080
               QBITTORRENT__WebUI__AlternativeUIEnabled: false
               QBT_Preferences__WebUI__AuthSubnetWhitelistEnabled: true
-              QBT_Application__MemoryWorkingSetLimit: 3000
               QBT_Preferences__WebUI__LocalHostAuth: false
               QBT_Preferences__WebUI__AuthSubnetWhitelist: |-
                 10.42.0.0/16, 10.1.1.0/24, 10.1.10.0/24, 10.1.40.0/24
@@ -72,12 +72,12 @@ spec:
               requests:
                 cpu: 200m
               limits:
-                memory: 4Gi
+                memory: 2Gi
 
           gluetun:
             image:
               repository: ghcr.io/qdm12/gluetun
-              tag: v3.37.0
+              tag: v3.38.0
             env:
               VPN_SERVICE_PROVIDER: custom
               VPN_TYPE: wireguard
@@ -159,9 +159,9 @@ spec:
 
       media:
         type: nfs
-        server: 10.1.30.210
-        path: /mnt/tank/media
+        server: 10.1.10.210
+        path: /mnt/tank/nfs/media
         advancedMounts:
           qbittorrent:
             app:
-              - path: /data/media
+              - path: /media

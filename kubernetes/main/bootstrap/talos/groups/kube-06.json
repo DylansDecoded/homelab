@@ -1,0 +1,8 @@
+{
+  "id": "kube-06",
+  "name": "kube-06",
+  "profile": "kube-06",
+  "selector": {
+    "mac": "ac:e2:d3:15:fd:f9"
+  }
+}

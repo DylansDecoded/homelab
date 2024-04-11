@@ -6,7 +6,7 @@ metadata:
   name: github
 spec:
   type: github
-  address: https://github.com/DylansDecoded/homelab
+  address: https://github.com/onedr0p/home-ops
   secretRef:
     name: github-token-secret
 ---
@@ -21,6 +21,4 @@ spec:
   eventSeverity: info
   eventSources:
     - kind: Kustomization
-      name: "*"
-    - kind: HelmRelease
       name: "*"

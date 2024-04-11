@@ -74,3 +74,17 @@ spec:
     persistence:
       config:
         existingClaim: xteve
+        advancedMounts:
+          xteve:
+            app:
+              - path: /config
+
+      m3s-playlist:
+        type: secret
+        name: xteve-m3u-secret
+        advancedMounts:
+          xteve:
+            app:
+              - path: /config/iptv.m3u
+                subPath: iptv.m3u
+                readOnly: true

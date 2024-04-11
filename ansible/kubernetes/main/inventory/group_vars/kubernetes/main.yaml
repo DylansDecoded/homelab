@@ -14,7 +14,7 @@ k3s_registries:
     public.ecr.aws:
     quay.io:
     registry.k8s.io:
-k3s_release_version: v1.29.1+k3s1
+k3s_release_version: v1.29.3+k3s1
 k3s_server_manifests_urls:
   # Essential Prometheus Operator CRDs (the rest are installed with the kube-prometheus-stack helm release)
   - url: https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.71.0/example/prometheus-operator-crd/monitoring.coreos.com_podmonitors.yaml
