@@ -132,6 +132,18 @@ patches:
             [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
               discard_unpacked_layers = false
 
+        - op: overwrite
+          path: /etc/nfsmount.conf
+          content: |-
+            [ NFSMount_Global_Options ]
+            nfsvers=4.2
+            hard=True
+            noatime=True
+            nodiratime=True
+            rsize=131072
+            wsize=131072
+            nconnect=8
+
   # Disable search domain everywhere
   - |-
     machine:
@@ -163,14 +175,13 @@ patches:
       network:
         nameservers:
           - 10.1.100.53
-          - 10.1.33.1
 
   # Configure NTP
   - |-
     machine:
       time:
         disabled: false
-        servers: ["time.cloudflare.com"]
+        servers: ["10.1.33.1"]
 
   # Custom sysctl settings
   - |-
@@ -191,8 +202,6 @@ patches:
             type: bind
             source: /var/openebs/local
             options: ["bind", "rshared", "rw"]
-
-
 
 controlPlane:
   patches:
@@ -231,5 +240,3 @@ controlPlane:
             enabled: true
             allowedRoles: ["os:admin"]
             allowedKubernetesNamespaces: ["system-upgrade"]
-
-
