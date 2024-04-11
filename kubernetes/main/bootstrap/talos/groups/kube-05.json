@@ -1,0 +1,8 @@
+{
+  "id": "kube-05",
+  "name": "kube-05",
+  "profile": "kube-05",
+  "selector": {
+    "mac": "10:62:e5:00:4c:12"
+  }
+}

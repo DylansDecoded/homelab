@@ -1,0 +1,26 @@
+---
+- hosts: kubernetes
+  become: true
+  gather_facts: true
+  any_errors_fatal: true
+  tasks:
+    - name: Prepare new System
+      notify: Reboot
+      block:
+        - name: Configure Users
+          user:
+            name: "{{ item }}"
+            update_password: always
+            password: "{{ newpassword|password_hash('sha512') }}"
+          loop: [root, "{{ ansible_user }}"]
+
+        - name: Prepare new System | Update apt
+          apt:
+            update_cache: yes
+            cache_valid_time: 3600
+            upgrade: dist
+  handlers:
+    - name: Reboot
+      reboot:
+        msg: Rebooting nodes
+        reboot_timeout: 3600

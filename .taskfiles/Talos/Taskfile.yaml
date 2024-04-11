@@ -4,18 +4,18 @@ version: "3"
 
 vars:
   TALOS_DIR: "{{.KUBERNETES_DIR}}/main/bootstrap/talos"
-  TALHELPER_SECRET_FILE: "{{.TALOS_DIR}}/talsecret.sops.yaml"
+  TALHELPER_SECRET_FILE: "{{.TALOS_DIR}}/talsecret.secret.sops.yaml"
   TALHELPER_CONFIG_FILE: "{{.TALOS_DIR}}/talconfig.yaml"
 
 env:
-  TALOSCONFIG: "{{.TALOS_DIR}}/clusterconfig/talosconfig"
+  TALOSCONFIG: "{{.KUBERNETES_DIR}}/main/talosconfig.yaml"
 
 tasks:
   bootstrap:
     desc: Bootstrap the Talos cluster
     dir: "{{.TALOS_DIR}}"
     cmds:
-      - task: bootstrap-gensecret
+      # - task: bootstrap-gensecret
       - task: bootstrap-genconfig
       - task: bootstrap-apply
       - task: bootstrap-install
@@ -56,7 +56,7 @@ tasks:
   bootstrap-apply:
     desc: Apply the Talos configs to the nodes
     dir: "{{.TALOS_DIR}}"
-    cmd: talhelper gencommand apply --extra-flags=--insecure | bash
+    cmd: talhelper gencommand apply | bash
     preconditions:
       - {
           msg: "Missing talhelper config file",

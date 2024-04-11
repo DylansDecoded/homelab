@@ -8,6 +8,25 @@ vps_servers:
       #ansible_ssh_pass: "{{ vault_tailscale_user_password }}"
       ansible_ssh_private_key_file: ~/.ssh/id_ed25519
 
+kubernetes:
+  vars:
+    ansible_user: root
+    ansible_ssh_pass: "{{ vault_root_password }}"
+    ansible_python_interpreter: /usr/bin/python3
+  hosts:
+    kube-01:
+      ansible_host: 10.1.33.11
+    kube-02:
+      ansible_host: 10.1.33.12
+    kube-03:
+      ansible_host: 10.1.33.13
+    kube-04:
+      ansible_host: 10.1.33.14
+    kube-05:
+      ansible_host: 10.1.33.15
+    kube-06:
+      ansible_host: 10.1.33.16
+
 pi4-nodes:
   vars:
     ansible_user: dylanrobson
