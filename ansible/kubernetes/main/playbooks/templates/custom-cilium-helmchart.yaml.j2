@@ -13,57 +13,43 @@ spec:
   bootstrap: true
   valuesContent: |-
     cluster:
-    name: main
-    id: 1
-
-    cni:
-      exclusive: false
-
+      name: main
+      id: 1
     bgp:
       enabled: false
       announce:
         loadbalancerIP: true
         podCIDR: false
-
     bgpControlPlane:
       enabled: true
-
     bandwidthManager:
       enabled: true
       bbr: true
-
     bpf:
       masquerade: true
-      tproxy: true
-
+    endpointRoutes:
+      enabled: true
     cgroup:
       automount:
         enabled: false
       hostRoot: /sys/fs/cgroup
-
     autoDirectNodeRoutes: true
-    ipv4NativeRoutingCIDR: 10.42.0.0/16
-    routingMode: native
     containerRuntime:
       integration: containerd
-
+    endpointRoutes:
+      enabled: true
+    hubble:
+      enabled: false
     ipam:
       mode: kubernetes
-
-    hubble:
-      enabled: true
-      serviceMonitor:
-        enabled: false
-
     ipv4NativeRoutingCIDR: "{{ k3s_server['cluster-cidr'] }}"
     k8sServiceHost: 127.0.0.1
-    k8sServicePort: 7445
+    k8sServicePort: 6444
     kubeProxyReplacement: true
     kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
     loadBalancer:
       algorithm: maglev
       mode: dsr
-    l7Proxy: true
     localRedirectPolicy: true
     operator:
       rollOutPods: true

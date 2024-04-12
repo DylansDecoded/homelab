@@ -1,20 +1,9 @@
 ---
+k3s_release_version: v1.29.3+k3s1
 k3s_install_hard_links: true
 k3s_become: true
 k3s_etcd_datastore: true
 k3s_registration_address: 10.1.33.254
-k3s_registries:
-  mirrors:
-    docker.io:
-    gcr.io:
-    ghcr.io:
-    k8s.gcr.io:
-    lscr.io:
-    mcr.microsoft.com:
-    public.ecr.aws:
-    quay.io:
-    registry.k8s.io:
-k3s_release_version: v1.29.3+k3s1
 k3s_server_manifests_urls:
   # Essential Prometheus Operator CRDs (the rest are installed with the kube-prometheus-stack helm release)
   - url: https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.71.0/example/prometheus-operator-crd/monitoring.coreos.com_podmonitors.yaml
