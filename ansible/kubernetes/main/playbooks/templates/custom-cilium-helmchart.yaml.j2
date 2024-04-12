@@ -12,37 +12,58 @@ spec:
   targetNamespace: kube-system
   bootstrap: true
   valuesContent: |-
-    autoDirectNodeRoutes: true
+    cluster:
+    name: main
+    id: 1
+
+    cni:
+      exclusive: false
+
+    bgp:
+      enabled: false
+      announce:
+        loadbalancerIP: true
+        podCIDR: false
+
+    bgpControlPlane:
+      enabled: true
+
+    bandwidthManager:
+      enabled: true
+      bbr: true
+
     bpf:
       masquerade: true
+      tproxy: true
+
     cgroup:
       automount:
         enabled: false
       hostRoot: /sys/fs/cgroup
-    cluster:
-      id: 1
-      name: kubernetes
+
+    autoDirectNodeRoutes: true
+    ipv4NativeRoutingCIDR: 10.42.0.0/16
+    routingMode: native
     containerRuntime:
       integration: containerd
-      socketPath: /var/run/k3s/containerd/containerd.sock
-    devices: mainif
-    enableRuntimeDeviceDetection: true
-    endpointRoutes:
-      enabled: true
-    hubble:
-      enabled: false
+
     ipam:
       mode: kubernetes
+
+    hubble:
+      enabled: true
+      serviceMonitor:
+        enabled: false
+
     ipv4NativeRoutingCIDR: "{{ k3s_server['cluster-cidr'] }}"
     k8sServiceHost: 127.0.0.1
-    k8sServicePort: 6444
+    k8sServicePort: 7445
     kubeProxyReplacement: true
     kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
-    l2announcements:
-      enabled: true
     loadBalancer:
       algorithm: maglev
       mode: dsr
+    l7Proxy: true
     localRedirectPolicy: true
     operator:
       rollOutPods: true

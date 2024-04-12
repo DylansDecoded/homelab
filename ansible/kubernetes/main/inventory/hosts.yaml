@@ -1,6 +1,8 @@
 ---
 kubernetes:
   vars:
+    ansible_become_user: root
+    ansible_become_pass: "{{ vault_root_password }}"
     ansible_user: dylan
     ansible_ssh_port: 22
   children:

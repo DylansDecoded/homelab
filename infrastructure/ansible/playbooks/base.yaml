@@ -8,18 +8,33 @@
       notify: Reboot
       block:
 
-        - name: Configure Users
+        - name: Configure Root Password
+          become: true
           user:
-            name: "{{ item }}"
+            name: root
             update_password: always
-            password: "{{ newpassword|password_hash('sha512') }}"
-          loop: [root, "{{ ansible_user }}"]
+            password: "{{ vault_root_password | password_hash('sha512') }}"
 
-        - name: Prepare new System | Update apt
-          apt:
-            update_cache: yes
-            cache_valid_time: 3600
-            upgrade: dist
+        - name: Configure Root Password
+          become: true
+          user:
+            name: dylan
+            update_password: always
+            password: "{{ vault_default_password | password_hash('sha512') }}"
+
+        - name: Grant main sudo access
+          lineinfile:
+            path: /etc/sudoers
+            line: "{{ me.user }} ALL=(ALL) NOPASSWD: ALL"
+            validate: 'visudo -cf %s'
+          become: true
+
+        - name: User Configuration | SSH keys
+          authorized_key:
+            user: "{{ me.user }}"
+            key: "https://github.com/DylansDecoded.keys"
+            state: present
+
 
   handlers:
     - name: Reboot

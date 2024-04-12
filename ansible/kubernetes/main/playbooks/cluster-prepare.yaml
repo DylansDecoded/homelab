@@ -23,7 +23,7 @@
 
         - name: Packages | Install common packages
           apt:
-            name: i965-va-driver-shaders,apt-transport-https,ca-certificates,conntrack,curl,dirmngr,gdisk,gnupg,hdparm,htop,intel-gpu-tools,intel-media-va-driver-non-free,iperf3,iptables,iputils-ping,ipvsadm,libseccomp2,lm-sensors,neofetch,net-tools,nfs-common,nvme-cli,open-iscsi,parted,psmisc,python3,python3-apt,python3-kubernetes,python3-yaml,smartmontools,socat,software-properties-common,unzip,util-linux, python-babel-localedata, python3-babel, python3-jinja2, python3-json-pointer, python3-jsonpatch, python3-jsonschema,python3-markupsafe, python3-pyrsistent, python3-tz, ubuntu-server-minimal, python3-openshift
+            name: sudo,i965-va-driver-shaders,apt-transport-https,ca-certificates,conntrack,curl,dirmngr,gdisk,gnupg,hdparm,htop,intel-gpu-tools,intel-media-va-driver-non-free,iperf3,iptables,iputils-ping,ipvsadm,libseccomp2,lm-sensors,neofetch,net-tools,nfs-common,nvme-cli,open-iscsi,parted,psmisc,python3,python3-apt,python3-kubernetes,python3-yaml,smartmontools,socat,software-properties-common,unzip,util-linux, python-babel-localedata, python3-babel, python3-jinja2, python3-json-pointer, python3-jsonpatch, python3-jsonschema,python3-markupsafe, python3-pyrsistent, python3-tz, ubuntu-server-minimal, python3-openshift
             install_recommends: false
 
 

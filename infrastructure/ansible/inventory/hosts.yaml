@@ -10,8 +10,9 @@ vps_servers:
 
 kubernetes:
   vars:
-    ansible_user: root
-    ansible_ssh_pass: "{{ vault_root_password }}"
+    ansible_user: dylan
+    ansible_password: "{{ vault_ansible_user_password }}"
+    ansible_become_password: "{{ vault_ansible_user_password }}"
     ansible_python_interpreter: /usr/bin/python3
   hosts:
     kube-01:
