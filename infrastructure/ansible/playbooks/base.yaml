@@ -7,6 +7,7 @@
     - name: Prepare new System
       notify: Reboot
       block:
+
         - name: Configure Users
           user:
             name: "{{ item }}"
@@ -19,6 +20,7 @@
             update_cache: yes
             cache_valid_time: 3600
             upgrade: dist
+
   handlers:
     - name: Reboot
       reboot:

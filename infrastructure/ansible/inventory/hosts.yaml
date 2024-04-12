@@ -32,6 +32,8 @@ pi4-nodes:
     ansible_user: dylanrobson
     ansible_python_interpreter: /usr/bin/python3
   hosts:
+    pi4-node-01:
+      ansible_host: 10.1.30.201
     pi4-node-02:
       ansible_host: 10.1.30.202
 
