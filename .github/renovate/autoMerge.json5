@@ -11,11 +11,11 @@
     },
     {
       "description": ["Auto-merge GitHub Actions for minor and patch"],
-      "matchManagers": ["github-actions"],
-      "matchDatasources": ["github-tags"],
+      "matchDatasources": ["helm"],
       "automerge": true,
-      "automergeType": "branch",
-      "matchUpdateTypes": ["minor", "patch"]
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackageNames: ["kube-prometheus-stack"],
+      ignoreTests: false
     }
   ]
 }
