@@ -22,8 +22,6 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -38,27 +36,23 @@ spec:
           app:
             image:
               repository: ghcr.io/onedr0p/home-assistant
-              tag: 2024.3.3@sha256:a4c2b7a75e8d5168a9e9f78d9d9f7f36435e2da07899e7faf5f6e3cdc4eebe56
+              tag: 2024.4.3@sha256:393ff4d7da4af9f5766d409754257afa6baecb8944f6788dc3da53e9ae659dd8
             env:
               TZ: America/New_York
+              HASS_HTTP_TRUSTED_PROXY_1: 10.1.1.0/24
+              HASS_HTTP_TRUSTED_PROXY_2: 10.1.10.0/24
+              HASS_HTTP_TRUSTED_PROXY_3: 10.1.40.0/24
+              HASS_HTTP_TRUSTED_PROXY_4: 10.42.0.0/16
             envFrom:
               - secretRef:
                   name: home-assistant-secret
-            probes:
-              liveness:
-                enabled: false
-              readiness:
-                enabled: false
-              startup:
-                enabled: false
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
             resources:
               requests:
-                cpu: 100m
-                memory: 512Mi
+                cpu: 10m
               limits:
                 memory: 1Gi
         pod:
@@ -68,7 +62,6 @@ spec:
             runAsNonRoot: true
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
-
     service:
       app:
         controller: home-assistant
@@ -88,8 +81,7 @@ spec:
                   identifier: app
                   port: http
         tls:
-          - hosts:
-              - *host
+          - hosts: [*host]
     persistence:
       config:
         existingClaim: home-assistant
@@ -97,5 +89,9 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /config/logs
+      tts:
+        type: emptyDir
+        globalMounts:
+          - path: /config/tts
       tmp:
         type: emptyDir
