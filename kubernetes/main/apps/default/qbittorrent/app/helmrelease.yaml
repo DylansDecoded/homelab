@@ -153,16 +153,6 @@ spec:
             port-forward:
               - path: /config
 
-      scripts:
-        type: configMap
-        name: qbittorrent-scripts
-        defaultMode: 0775
-        advancedMounts:
-          qbittorrent:
-            app:
-              - path: /scripts
-                readOnly: true
-
       media:
         type: nfs
         server: 10.1.10.210
