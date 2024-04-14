@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: zwave-js-ui
+  name: zwave
 spec:
   interval: 30m
   chart:
@@ -29,17 +29,17 @@ spec:
       namespace: volsync-system
   values:
     controllers:
-      zwave-js-ui:
+      zwave:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
               repository: ghcr.io/zwave-js/zwave-js-ui
-              tag: 9.9.1
+              tag: 9.10.3@sha256:19da1e8578b733a708c5ce53f69df9513a5ac6c99b30398fba39737d6f1edbde
             env:
               TZ: America/New_York
-
+              PORT: &port 80
             probes:
               liveness: &probes
                 enabled: true
@@ -47,66 +47,51 @@ spec:
                 spec:
                   httpGet:
                     path: /health
-                    port: &port 8091
+                    port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
                   failureThreshold: 3
               readiness: *probes
-              startup:
-                enabled: false
             securityContext:
-              privileged: true
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
             resources:
-              limits: &resources
-                memory: 256Mi
               requests:
-                <<: *resources
                 cpu: 10m
+              limits:
+                memory: 512Mi
         pod:
-          nodeSelector:
-            zooz.feature.node.kubernetes.io/zwave: "true"
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
     service:
       app:
-        controller: zwave-js-ui
+        controller: zwave
         ports:
           http:
             port: *port
           websocket:
             port: 3000
-
-    # requires https://github.com/kvaster/zwavejs-prom
-    serviceMonitor:
-      app:
-        serviceName: zwave-js-ui
-        endpoints:
-          - port: http
-            scheme: http
-            path: /metrics
-            interval: 1m
-            scrapeTimeout: 10s
-
     ingress:
       app:
         className: internal
         hosts:
-          - host: &host "zwave.robsonhome.cloud"
+          - host: &host "{{ .Release.Name }}.robsonhome.cloud"
             paths:
               - path: /
                 service:
                   identifier: app
                   port: http
         tls:
-          - hosts:
-              - *host
+          - hosts: [*host]
     persistence:
       config:
-        existingClaim: zwave-js-ui
+        existingClaim: zwave
         globalMounts:
           - path: /usr/src/app/store
-      usb:
-        type: hostPath
-        hostPath: /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00
-        hostPathType: CharDevice
-        globalMounts:
-          - path: /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00
+      tmp:
+        type: emptyDir

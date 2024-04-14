@@ -23,14 +23,12 @@ spec:
       strategy: rollback
       retries: 3
   dependsOn:
-    - name: lldap
+    - name: glauth
       namespace: default
-    - name: redis
-      namespace: database
   values:
     controllers:
       authelia:
-        replicas: 2
+        replicas: 3
         strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
@@ -46,7 +44,7 @@ spec:
           app:
             image:
               repository: ghcr.io/authelia/authelia
-              tag: 4.38.7@sha256:1bfa7206c144f8cd184743a7ed629f4a02d2dceb50e7260588373fe6de4cd959
+              tag: 4.38.7@sha256:69faa8e0be01f856b2d77b79b07880d5b81b6c1fb8ee2aa0d15c43f60e67f843
             env:
               AUTHELIA_SERVER_ADDRESS: tcp://0.0.0.0:80
               AUTHELIA_SERVER_DISABLE_HEALTHCHECK: "true"
@@ -125,8 +123,7 @@ spec:
                   identifier: app
                   port: http
         tls:
-          - hosts:
-              - *host
+          - hosts: [*host]
     persistence:
       config:
         type: configMap
