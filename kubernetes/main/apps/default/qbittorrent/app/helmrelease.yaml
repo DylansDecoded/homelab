@@ -145,6 +145,14 @@ spec:
           qbittorrent:
             app:
               - path: /config
+
+      empty-config:
+        type: emptyDir
+        advancedMounts:
+          qbittorrent:
+            port-forward:
+              - path: /config
+
       scripts:
         type: configMap
         name: qbittorrent-scripts
