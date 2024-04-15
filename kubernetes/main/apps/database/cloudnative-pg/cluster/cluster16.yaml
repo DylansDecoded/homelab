@@ -25,7 +25,7 @@ spec:
     requests:
       cpu: 250m
     limits:
-      memory: 4Gi
+      memory: 3Gi
   monitoring:
     enablePodMonitor: true
     # Ref: https://github.com/cloudnative-pg/cloudnative-pg/issues/2501
@@ -45,7 +45,7 @@ spec:
         compression: bzip2
         maxParallel: 8
       destinationPath: s3://cloudnative-pg/
-      endpointURL: http://10.1.30.210:9000
+      endpointURL: https://s3.robsonhome.cloud
       # Note: serverName version needs to be inclemented
       # when recovering from an existing cnpg cluster
       serverName: &currentCluster postgres16-v3
@@ -59,7 +59,7 @@ spec:
 
   bootstrap:
     recovery:
-      source: &previousCluster postgres16-v1
+      source: &previousCluster postgres16-v2
   # # Note: externalClusters is needed when recovering from an existing cnpg cluster
   externalClusters:
     - name: *previousCluster

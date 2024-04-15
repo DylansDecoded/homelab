@@ -10,7 +10,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.0.4
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -26,7 +26,7 @@ spec:
   values:
     controllers:
       vector-aggregator:
-        replicas: 2
+        replicas: 3
         strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
@@ -38,7 +38,7 @@ spec:
             env:
               GEOIPUPDATE_EDITION_IDS: GeoLite2-City
               GEOIPUPDATE_FREQUENCY: "0"
-              GEOIPUPDATE_VERBOSE: "true"
+              GEOIPUPDATE_VERBOSE: "1"
             envFrom:
               - secretRef:
                   name: vector-aggregator-secret
@@ -46,28 +46,28 @@ spec:
           app:
             image:
               repository: docker.io/timberio/vector
-              tag: 0.36.1-alpine@sha256:cf20f6f0adb57f561df678a70c4a68361885b861882235bfb0a808610bb1b532
+              tag: 0.37.1-alpine@sha256:ced16088cdcfcadd2f471c5760ea3b08bec82b9be00a8b90173b9ade7d001607
             args: ["--config", "/etc/vector/vector.yaml"]
             probes:
               liveness:
                 enabled: true
               readiness:
                 enabled: true
-        pod:
-          topologySpreadConstraints:
-            - maxSkew: 1
-              topologyKey: kubernetes.io/hostname
-              whenUnsatisfiable: DoNotSchedule
-              labelSelector:
-                matchLabels:
-                  app.kubernetes.io/name: *app
+    defaultPodOptions:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: *app
     service:
       app:
         controller: vector-aggregator
         type: LoadBalancer
         annotations:
           external-dns.alpha.kubernetes.io/hostname: vector.robsonhome.cloud
-          io.cilium/lb-ipam-ips: 10.45.0.100
+          io.cilium/lb-ipam-ips: 10.45.0.127
         ports:
           http:
             primary: true
@@ -76,6 +76,8 @@ spec:
             port: 6000
           kubernetes:
             port: 6010
+          # vyos:
+          #   port: 6020
     persistence:
       config:
         type: configMap
