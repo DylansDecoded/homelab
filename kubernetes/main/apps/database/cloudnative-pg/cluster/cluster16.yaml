@@ -45,7 +45,7 @@ spec:
         compression: bzip2
         maxParallel: 8
       destinationPath: s3://cloudnative-pg/
-      endpointURL: https://s3.robsonhome.cloud
+      endpointURL: http://10.1.30.210:9000
       # Note: serverName version needs to be inclemented
       # when recovering from an existing cnpg cluster
       serverName: &currentCluster postgres16-v3
