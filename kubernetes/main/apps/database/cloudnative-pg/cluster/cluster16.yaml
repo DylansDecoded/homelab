@@ -23,7 +23,7 @@ spec:
     reusePVC: true
   resources:
     requests:
-      cpu: 500m
+      cpu: 256m
     limits:
       memory: 3Gi
   monitoring:
@@ -48,7 +48,7 @@ spec:
       endpointURL: https://s3.robsonhome.cloud
       # Note: serverName version needs to be inclemented
       # when recovering from an existing cnpg cluster
-      serverName: &currentCluster postgres16-v2
+      serverName: &currentCluster postgres16-v1
       s3Credentials:
         accessKeyId:
           name: cloudnative-pg-secret
