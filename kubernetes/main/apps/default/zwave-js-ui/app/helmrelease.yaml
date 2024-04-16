@@ -100,6 +100,6 @@ spec:
         hostPath: /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00
         hostPathType: CharDevice
         globalMounts:
-          - path: /dev/zwave
+          - path: /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00
       tmp:
         type: emptyDir
