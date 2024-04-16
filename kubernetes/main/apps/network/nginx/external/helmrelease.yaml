@@ -20,9 +20,8 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
-  uninstall:
-    keepHistory: false
   valuesFrom:
     - targetPath: controller.maxmindLicenseKey
       kind: Secret
@@ -31,11 +30,11 @@ spec:
   values:
     fullnameOverride: nginx-external
     controller:
-      replicaCount: 2
+      replicaCount: 3
       service:
         annotations:
           external-dns.alpha.kubernetes.io/hostname: external.robsonhome.cloud
-          io.cilium/lb-ipam-ips: 10.45.0.3
+          io.cilium/lb-ipam-ips: 10.45.0.205
       ingressClassResource:
         name: external
         default: false
@@ -65,7 +64,7 @@ spec:
           "request_id": "$req_id", "remote_user": "$remote_user", "bytes_sent": $bytes_sent, "request_time": $request_time,
           "status": $status, "vhost": "$host", "request_proto": "$server_protocol", "path": "$uri", "request_query": "$args",
           "request_length": $request_length, "duration": $request_time, "method": "$request_method", "http_referrer": "$http_referer",
-          "http_user_agent": "$http_user_agent"}
+          "http_user_agent": "$http_user_agent", "country_code": "$geoip2_city_country_code", "country_name": "$geoip2_city_country_name"}
         proxy-body-size: 0
         proxy-buffer-size: 16k
         ssl-protocols: TLSv1.3 TLSv1.2
@@ -79,6 +78,7 @@ spec:
             any: true
       extraArgs:
         default-ssl-certificate: network/robsonhome-cloud-tls
+      terminationGracePeriodSeconds: 120
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
@@ -92,6 +92,6 @@ spec:
         requests:
           cpu: 100m
         limits:
-          memory: 500Mi
+          memory: 300Mi
     defaultBackend:
       enabled: false
