@@ -54,9 +54,7 @@ spec:
                   failureThreshold: 3
               readiness: *probes
             securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
+              privileged: true
             resources:
               requests:
                 cpu: 10m
@@ -65,11 +63,6 @@ spec:
         pod:
           nodeSelector:
             zooz.feature.node.kubernetes.io/zwave: "true"
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            fsGroup: 568
-            fsGroupChangePolicy: OnRootMismatch
     service:
       app:
         controller: zwave
