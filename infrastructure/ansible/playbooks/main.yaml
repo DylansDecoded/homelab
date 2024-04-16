@@ -1,13 +1,13 @@
-- hosts: dns
+- hosts: pi4-nodes
   gather_facts: true
   become: true
   roles:
-    # - base
-    # - role: geerlingguy.docker
-    #   become: true
-    #   vars:
-    #     docker_install_compose_plugin: "{{ ansible_os_family == 'Debian' }}"
-    #     docker_users:
-    #       - "{{ me.user }}"
-    # - role: docker-cleanup
-    - role: bind9
+    - base
+    - role: geerlingguy.docker
+      become: true
+      vars:
+        docker_install_compose_plugin: "{{ ansible_os_family == 'Debian' }}"
+        docker_users:
+          - "{{ me.user }}"
+    - role: docker-cleanup
+

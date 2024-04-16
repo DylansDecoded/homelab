@@ -1,11 +1,11 @@
-# - name: Disable Cloudinit
-#   include_tasks: ubuntu.yaml
+- name: Ubuntu Setup
+  include_tasks: ubuntu.yaml
 
-# - name: User Setup
-#   include_tasks: user.yaml
+- name: User Setup
+  include_tasks: user.yaml
 
-# - name: SSH Setup
-#   include_tasks: ssh.yaml
+- name: SSH Setup
+  include_tasks: ssh.yaml
 
 - name: NFS Setup
   include_tasks: nfs.yaml

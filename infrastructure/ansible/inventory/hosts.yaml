@@ -34,10 +34,12 @@ pi4-nodes:
     ansible_user: dylanrobson
     ansible_python_interpreter: /usr/bin/python3
   hosts:
-    pi4-node-01:
-      ansible_host: 10.1.30.201
-    pi4-node-02:
-      ansible_host: 10.1.30.202
+    docker-pi4-03:
+      ansible_host: 10.1.30.45
+      dmz_network_address: 10.1.100.45
+      storage_network_address: 10.101.101.45
+    # pi4-node-02:
+    #   ansible_host: 10.1.30.202
 
 docker:
   vars:

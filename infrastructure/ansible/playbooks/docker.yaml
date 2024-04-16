@@ -1,5 +1,5 @@
 ---
-- hosts: docker
+- hosts: pi4-nodes
   become: true
   gather_facts: true
   any_errors_fatal: true

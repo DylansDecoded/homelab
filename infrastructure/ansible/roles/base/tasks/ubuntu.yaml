@@ -12,21 +12,12 @@
 - name: enable vlan
   command: modprobe 8021q
 
-- name: Copy over bash script
-  copy:
-    src: files/disable-cloudinit
-    dest: /home/{{ ansible_user }}/disable-cloudinit
-    mode: "0755"
-    owner: "{{ ansible_user }}"
-    group: "{{ ansible_user }}"
+- name: Setup VLANs in Netplan
+  template:
+    src: templates/01-netplan-all.yaml.j2
+    dest: /etc/netplan/01-netplan-all.yaml
+  become: true
 
-- name: make bash script executable
-  command: chmod +x /home/{{ ansible_user }}/disable-cloudinit
-
-- name: run bash script
-  command: /home/{{ ansible_user }}/disable-cloudinit
-  args:
-    chdir: /home/{{ ansible_user }}
-
-- name: Reboot
-  reboot:
+- name: Apply Netplan
+  command: netplan apply
+  become: true

@@ -2,10 +2,10 @@ network:
   version: 2
   renderer: networkd
   ethernets:
-    eth0:
+    mainif:
       match:
         macaddress: {{ ansible_default_ipv4.macaddress }}
-      set-name: eth0
+      set-name: mainif
       dhcp4: no
       dhcp6: no
       addresses:
@@ -18,9 +18,14 @@ network:
           via: {{ ansible_default_ipv4.gateway }}
 
   vlans:
+    vlan100:
+      id: 100
+      link: mainif
+      addresses:
+        - {{ dmz_network_address }}/24
     vlan101:
       id: 101
-      link: eth0
+      link: mainif
       addresses:
         - {{ storage_network_address }}/24
 

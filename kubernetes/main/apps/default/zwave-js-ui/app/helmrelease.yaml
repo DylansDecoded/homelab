@@ -63,6 +63,8 @@ spec:
               limits:
                 memory: 512Mi
         pod:
+          nodeSelector:
+            zooz.feature.node.kubernetes.io/zwave: "true"
           securityContext:
             runAsUser: 568
             runAsGroup: 568
@@ -93,5 +95,11 @@ spec:
         existingClaim: zwave
         globalMounts:
           - path: /usr/src/app/store
+      usb:
+        type: hostPath
+        hostPath: /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00
+        hostPathType: CharDevice
+        globalMounts:
+          - path: /dev/zwave
       tmp:
         type: emptyDir
