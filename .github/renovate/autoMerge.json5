@@ -1,22 +1,39 @@
 {
-  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   packageRules: [
     {
-      description: "Auto merge container digests",
-      matchDatasources: ["docker"],
+      matchDatasources: [
+        "docker",
+        "github-tags"
+      ],
       automerge: true,
       automergeType: "branch",
-      matchUpdateTypes: ["digest"],
-      matchPackagePrefixes: ["ghcr.io/onedr0p", "ghcr.io/bjw-s"],
       ignoreTests: true,
+      platformCommit: true,
+      matchUpdateTypes: [
+        "minor",
+        "patch",
+      ],
+      matchPackageNames: [
+        "renovatebot/github-action",
+        "ghcr.io/onedr0p/readarr-develop",
+        "ghcr.io/onedr0p/sonarr-develop",
+        "ghcr.io/onedr0p/radarr-develop"
+      ]
     },
-    {
-      description: "Auto merge KPS minors and patches",
-      matchDatasources: ["helm"],
-      automerge: true,
-      matchUpdateTypes: ["minor", "patch"],
-      matchPackageNames: ["kube-prometheus-stack"],
-      ignoreTests: false,
-    },
-  ],
+    // {
+    //   matchDatasources: [
+    //     "docker",
+    //     "github-tags"
+    //   ],
+    //   automerge: true,
+    //   automergeType: "pr",
+    //   ignoreTests: true,
+    //   platformCommit: true,
+    //   matchUpdateTypes: [
+    //     "minor",
+    //     "patch"
+    //   ]
+    // }
+  ]
 }

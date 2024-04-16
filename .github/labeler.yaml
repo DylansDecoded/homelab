@@ -3,6 +3,9 @@
 area/ansible:
   - changed-files:
       - any-glob-to-any-file: "ansible/**/*"
+area/infrastructure:
+  - changed-files:
+      - any-glob-to-any-file: "infrastructure/**/*"
 area/docs:
   - changed-files:
       - any-glob-to-any-file:
@@ -14,6 +17,11 @@ area/github:
 area/kubernetes:
   - changed-files:
       - any-glob-to-any-file: "kubernetes/**/*"
+area/taskfile:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".taskfiles/**/*"
+          - "Taskfile.yaml"
 area/terraform:
   - changed-files:
       - any-glob-to-any-file: "terraform/**/*"
