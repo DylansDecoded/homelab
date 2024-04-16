@@ -11,7 +11,7 @@ spec:
     - host: &host flux-webhook.robsonhome.cloud
       http:
         paths:
-          - path: /
+          - path: /hook/
             pathType: Prefix
             backend:
               service:
