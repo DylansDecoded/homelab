@@ -46,9 +46,12 @@ spec:
     maxRunners: 3
     containerMode:
       type: dind
-    # template:
-    #   spec:
-    #     containers:
-    #       - name: runner
-    #         image: ghcr.io/onedr0p/actions-runner:2.315.0@sha256:8960c2a8a04a09fe7ed07a4b913a210f0abddd01feecb0956bb08b8bb043446f
-    #         command: ["/home/runner/run.sh"]
+    template:
+      spec:
+        containers:
+          - name: runner
+            image: ghcr.io/onedr0p/actions-runner:2.315.0@sha256:9e37504faa193a347e0d860a81b3dcbf0dc2570e57f9f1ce51740dba536dc547
+            command: ["/home/runner/run.sh"]
+    controllerServiceAccount:
+      name: gha-runner-scale-set-controller
+      namespace: actions-runner-system
