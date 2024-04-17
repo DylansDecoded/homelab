@@ -65,10 +65,10 @@ spec:
               tag: 1.40.1.8227-c0dd5a73e@sha256:c8d74539a40530fa9770c6d67f37aef8f3a7b3f30ee353c2cb5685b84ed5b04c
             env:
               TZ: "America/New_York"
-              PLEX_ADVERTISE_URL: "http://10.45.0.22:32400,https://plex.robsonhome.cloud:443"
+              # PLEX_ADVERTISE_URL: "http://10.45.0.22:32400,https://plex.robsonhome.cloud:443"
               PLEX_NO_AUTH_NETWORKS: 10.42.0.0/16
-              ALLOWED_NETWORKS: "10.1.0.0/16"
-              HOSTNAME: "plex"
+              # ALLOWED_NETWORKS: "10.1.0.0/16"
+              # HOSTNAME: "plex"
             resources:
               requests:
                 cpu: 100m
