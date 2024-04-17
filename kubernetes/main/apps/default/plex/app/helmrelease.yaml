@@ -67,6 +67,11 @@ spec:
                 gpu.intel.com/i915: 1
                 memory: 3Gi
     defaultPodOptions:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+        fsGroup: 0
+        supplementalGroups: [44, 105, 109]
       # securityContext:
       #   privi: true
       #   runAsNonRoot: true
