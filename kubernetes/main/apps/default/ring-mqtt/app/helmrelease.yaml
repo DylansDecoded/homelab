@@ -50,7 +50,7 @@ spec:
               repository: docker.io/tsightler/ring-mqtt
               tag: 5.6.3
             env:
-              MQTTHOST: "mosquitto.default.svc.cluster.local"
+              MQTTHOST: "emqx-listeners.database.svc.cluster.local"
               ENABLECAMERAS: "true"
               SNAPSHOTMODE: "true"
               ENABLEPANIC: "true"
@@ -73,6 +73,10 @@ spec:
         ports:
           http:
             port: 8554
+          web-ui:
+            port: 55123
+
+    ingress:
 
     persistence:
       config:
