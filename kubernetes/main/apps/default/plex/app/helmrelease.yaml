@@ -65,7 +65,7 @@ spec:
               tag: 1.40.2.8383-15541a816
             env:
               TZ: "America/New_York"
-              ADVERTISE_IP: "https://10.45.0.22:32400,https://plex-media.robsonhome.cloud:443"
+              ADVERTISE_IP: "https://10.45.0.22:32400,https://plex.robsonhome.cloud:443"
               PLEX_NO_AUTH_NETWORKS: 10.42.0.0/16
               # ALLOWED_NETWORKS: "10.1.0.0/16"
               # HOSTNAME: "plex"
@@ -84,7 +84,6 @@ spec:
         type: LoadBalancer
         externalTrafficPolicy: Cluster
         annotations:
-          coredns.io/hostname: plex-media.robsonhome.cloud
           io.cilium/lb-ipam-ips: 10.45.0.22
         ports:
           http:
@@ -97,7 +96,7 @@ spec:
           external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
           nginx.ingress.kubernetes.io/backend-protocol: HTTPS
         hosts:
-          - host: &host "plex-media.robsonhome.cloud"
+          - host: &host "plex.robsonhome.cloud"
             paths:
               - path: /
                 pathType: Prefix
