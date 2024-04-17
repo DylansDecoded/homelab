@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: plex
+  name: &app plex
 spec:
   interval: 30m
   chart:
@@ -64,9 +64,11 @@ spec:
               repository: ghcr.io/onedr0p/plex
               tag: 1.40.1.8227-c0dd5a73e@sha256:c8d74539a40530fa9770c6d67f37aef8f3a7b3f30ee353c2cb5685b84ed5b04c
             env:
-              TZ: America/New_York
-              PLEX_ADVERTISE_URL: https://10.45.0.21:32400,https://plex.robsonhome.cloud:443
+              TZ: "America/New_York"
+              PLEX_ADVERTISE_URL: "http://10.45.0.22:32400,https://plex.robsonhome.cloud:443"
               PLEX_NO_AUTH_NETWORKS: 10.42.0.0/16
+              ALLOWED_NETWORKS: "10.1.0.0/16"
+              HOSTNAME: "plex"
             resources:
               requests:
                 cpu: 100m
@@ -76,24 +78,23 @@ spec:
                 gpu.intel.com/i915: 1
                 memory: 6Gi
 
-    # Disabling load balancer for now
-    # service:
-    #   app:
-    #     controller: plex
-    #     type: LoadBalancer
-    #     externalTrafficPolicy: Cluster
-    #     annotations:
-    #       io.cilium/lb-ipam-ips: "10.45.0.21"
-    #     ports:
-    #       http:
-    #         port: 32400
-
     service:
       app:
         controller: plex
+        type: LoadBalancer
+        annotations:
+          io.cilium/lb-ipam-ips: "10.45.0.22"
         ports:
           http:
             port: 32400
+            protocol: TCP
+
+    # service:
+    #   app:
+    #     controller: plex
+    #     ports:
+    #       http:
+    #         port: 32400
 
     ingress:
       app:
@@ -102,7 +103,7 @@ spec:
           external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
           nginx.ingress.kubernetes.io/backend-protocol: HTTPS
         hosts:
-          - host: &host plex.robsonhome.cloud
+          - host: &host "{{ .Release.Name }}.robsonhome.cloud"
             paths:
               - path: /
                 service:

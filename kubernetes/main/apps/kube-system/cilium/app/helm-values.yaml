@@ -42,6 +42,13 @@ endpointStatus:
 ipam:
   mode: kubernetes
 
+ingressController:
+  enabled: false
+  loadbalancerMode: shared
+
+operator:
+  rollOutPods: true
+
 hubble:
   enabled: true
   serviceMonitor:

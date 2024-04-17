@@ -45,8 +45,8 @@ spec:
           hosts:
             - host: &host hubble.robsonhome.cloud
           tls:
-            - hosts:
-                - *host
+            - hosts: [*host]
+
     prometheus:
       serviceMonitor:
         enabled: true
