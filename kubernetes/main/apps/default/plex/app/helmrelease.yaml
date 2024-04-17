@@ -67,14 +67,15 @@ spec:
                 gpu.intel.com/i915: 1
                 memory: 3Gi
     defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-        fsGroupChangePolicy: OnRootMismatch
-        supplementalGroups: [44, 109, 65542]
-        # seccompProfile: { type: RuntimeDefault }
+      # securityContext:
+      #   privi: true
+      #   runAsNonRoot: true
+      #   runAsUser: 1000
+      #   runAsGroup: 1000
+      #   fsGroup: 1000
+      #   fsGroupChangePolicy: OnRootMismatch
+      #   supplementalGroups: [44, 109, 65542]
+      #   # seccompProfile: { type: RuntimeDefault }
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
