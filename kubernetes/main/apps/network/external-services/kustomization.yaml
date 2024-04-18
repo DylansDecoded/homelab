@@ -5,5 +5,5 @@ resources:
   - ./minio.yaml
   # - ./omada.yaml
   # - ./pihole.yaml
-  - ./pikvm.yaml
-  - ./truenas.yaml
+  # - ./pikvm.yaml
+  # - ./truenas.yaml

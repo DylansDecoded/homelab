@@ -1,44 +1,29 @@
----
-cluster:
-  name: main
-  id: 1
-
-cni:
-  exclusive: false
-
+bgpControlPlane:
+  enabled: true
+autoDirectNodeRoutes: true
+bandwidthManager:
+  enabled: true
+  bbr: true
 bgp:
   enabled: false
   announce:
     loadbalancerIP: true
     podCIDR: false
-
-bgpControlPlane:
-  enabled: true
-
-bandwidthManager:
-  enabled: true
-  bbr: true
-
 bpf:
   masquerade: true
-  tproxy: true
-
 cgroup:
   automount:
     enabled: false
   hostRoot: /sys/fs/cgroup
-
-autoDirectNodeRoutes: true
-ipv4NativeRoutingCIDR: 10.42.0.0/16
-routingMode: native
+cluster:
+  id: 1
+  name: kubernetes
 containerRuntime:
   integration: containerd
-
-enableCnpStatusUpdates: true
-endpointStatus:
+enableRuntimeDeviceDetection: true
+endpointRoutes:
   enabled: true
-  status: "policy"
-
+enableCiliumEndpointSlice: true
 ipam:
   mode: kubernetes
 
@@ -46,52 +31,26 @@ ingressController:
   enabled: false
   loadbalancerMode: shared
 
-operator:
-  rollOutPods: true
-
-hubble:
-  enabled: true
-  serviceMonitor:
-    enabled: false
-
-  metrics:
-    enabled:
-      - dns:query;ignoreAAAA
-      - drop
-      - tcp
-      - flow
-      - port-distribution
-      - icmp
-      - http
-
-  relay:
-    enabled: true
-    rollOutPods: true
-
-  ui:
-    enabled: true
-    ingress:
-      enabled: false
-    rollOutPods: true
-
+ipv4NativeRoutingCIDR: 10.42.0.0/16
 k8sServiceHost: 127.0.0.1
 k8sServicePort: 6444
-
 kubeProxyReplacement: true
 kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
-
 l2announcements:
-  enabled: false
-
+  enabled: true
+gatewayAPI:
+  enabled: true
 loadBalancer:
   algorithm: maglev
   mode: dsr
-
+  l7:
+    backend: envoy
+envoy:
+  enabled: true
 l7Proxy: true
-
 localRedirectPolicy: true
 rollOutCiliumPods: true
-
+routingMode: native
 securityContext:
   capabilities:
     ciliumAgent:

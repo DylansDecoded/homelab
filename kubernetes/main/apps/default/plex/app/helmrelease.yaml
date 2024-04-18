@@ -10,6 +10,7 @@ spec:
     spec:
       chart: app-template
       version: 3.1.0
+      interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -34,75 +35,57 @@ spec:
       plex:
         annotations:
           reloader.stakater.com/auto: "true"
+        pod:
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                      - key: app.kubernetes.io/name
+                        operator: In
+                        values: ["frigate"]
+                  topologyKey: "kubernetes.io/hostname"
+          enableServiceLinks: false
+          nodeSelector:
+            intel.feature.node.kubernetes.io/gpu: "true"
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: "OnRootMismatch"
+            supplementalGroups:
+              - 44
+              - 109
+              - 10000
+
         containers:
           app:
             image:
-              repository: ghcr.io/onedr0p/plex-beta
-              tag: 1.40.2.8383-15541a816
-
+              repository: ghcr.io/onedr0p/plex
+              tag: 1.40.1.8227-c0dd5a73e@sha256:4ca8db0ffa1bee5a2976a0385cc43368112e81a2485b80d0fff3b04c9d5bd1ca
             env:
               TZ: America/New_York
-              PLEX_NO_AUTH_NETWORKS: 10.1.1.0/24
-            probes:
-              liveness: &probes
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /identity
-                    port: 32400
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
+              PLEX_ADVERTISE_URL: http://10.45.0.20:32400,https://plex.robsonhome.cloud:443
+              PLEX_NO_AUTH_NETWORKS: 10.42.0.0/16
             resources:
               requests:
                 cpu: 100m
+                gpu.intel.com/i915: 1
               limits:
                 gpu.intel.com/i915: 1
-                memory: 3Gi
-    pod:
-      securityContext:
-        runAsUser: 568
-        runAsGroup: 568
-        runAsNonRoot: true
-        fsGroup: 568
-        fsGroupChangePolicy: OnRootMismatch
-        supplementalGroups:
-          - 44
-          - 65537
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: app.kubernetes.io/name
-                    operator: In
-                    values: ["frigate"]
-              topologyKey: kubernetes.io/hostname
-      nodeSelector:
-        intel.feature.node.kubernetes.io/gpu: "true"
-    # service:
-    #   app:
-    #     controller: plex
-    #     type: LoadBalancer
-    #     annotations:
-    #       io.cilium/lb-ipam-ips: 10.45.0.22
-    #     ports:
-    #       http:
-    #         port: 32400
+                memory: 8Gi
+
     service:
       app:
         controller: plex
+        type: LoadBalancer
+        externalTrafficPolicy: Cluster
+        annotations:
+          io.cilium/lb-ipam-ips: 10.45.0.20
         ports:
           http:
             port: 32400
-            targetPort: 32400
+
     ingress:
       app:
         className: external
@@ -117,31 +100,43 @@ spec:
                   identifier: app
                   port: http
         tls:
-          - hosts: [*host]
+          - hosts:
+              - *host
 
     persistence:
       config:
         existingClaim: plex
-        globalMounts:
-          - path: /config/Library/Application Support/Plex Media Server
+        advancedMounts:
+          plex:
+            app:
+              - path: /config
 
-      # Separate PVC for cache to avoid backing up cache files
-      cache:
+      plex-cache:
         existingClaim: plex-cache
-        globalMounts:
-          - path: /config/Library/Application Support/Plex Media Server/Cache
+        advancedMounts:
+          plex:
+            app:
+              - path: /config/Library/Application Support/Plex Media Server/Cache
+
       logs:
         type: emptyDir
-        globalMounts:
-          - path: /config/Library/Application Support/Plex Media Server/Logs
-      tmp:
-        type: emptyDir
+        advancedMounts:
+          plex:
+            app:
+              - path: /logs
+
       transcode:
         type: emptyDir
+        advancedMounts:
+          plex:
+            app:
+              - path: /transcode
+
       media:
         type: nfs
         server: 10.1.10.210
-        path: /mnt/tank/nfs/media
-        globalMounts:
-          - path: /media
-            readOnly: true
+        path: /mnt/tank/media
+        advancedMounts:
+          plex:
+            app:
+              - path: /media
