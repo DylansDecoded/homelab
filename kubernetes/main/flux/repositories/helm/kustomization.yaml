@@ -30,6 +30,6 @@ resources:
   - ./prometheus-community.yaml
   - ./rook-ceph.yaml
   - ./stakater.yaml
-  - ./stevehipwell.yaml
+  - ./stevenhipwell.yaml
   - ./weaveworks.yaml
   - ./xenitab.yaml
