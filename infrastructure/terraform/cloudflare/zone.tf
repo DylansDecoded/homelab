@@ -1,38 +1,70 @@
-resource "cloudflare_zone_settings_override" "domain_settings" {
-  zone_id = data.cloudflare_zone.domain.id
+data "cloudflare_zone" "default" {
+  account_id = cloudflare_account.this.id
+  name       = "robsonhome.cloud"
+}
+
+resource "cloudflare_zone_settings_override" "cloudflare_settings" {
+  zone_id = data.cloudflare_zone.default.zone_id
   settings {
-    ssl                      = "strict"
-    always_use_https         = "on"
+    # ssl
+    always_use_https = "on"
+    ssl              = "strict"
+
     min_tls_version          = "1.2"
     opportunistic_encryption = "on"
     tls_1_3                  = "zrt"
     automatic_https_rewrites = "on"
     universal_ssl            = "on"
-    browser_check            = "on"
-    challenge_ttl            = 1800
-    privacy_pass             = "on"
-    security_level           = "medium"
-    brotli                   = "on"
+
+    # site settings
+    security_level = "medium"
+    brotli         = "on"
     minify {
       css  = "on"
       js   = "on"
       html = "on"
     }
-    rocket_loader       = "off"
-    always_online       = "off"
-    development_mode    = "off"
+    rocket_loader = "off"
+
+    # network
     http3               = "on"
-    zero_rtt            = "on"
     ipv6                = "on"
     websockets          = "on"
-    opportunistic_onion = "on"
     pseudo_ipv4         = "off"
+    always_online       = "off"
     ip_geolocation      = "on"
+    zero_rtt            = "on"
+    opportunistic_onion = "on"
+
+    # scrape shield
     email_obfuscation   = "on"
     server_side_exclude = "on"
-    hotlink_protection  = "off"
-    security_header {
-      enabled = false
-    }
+    hotlink_protection  = "on"
   }
+}
+
+
+
+resource "cloudflare_ruleset" "main" {
+  zone_id = data.cloudflare_zone.default.zone_id
+  kind    = "zone"
+  name    = "WAF rules"
+  phase   = "http_request_firewall_custom"
+
+  rules {
+    action      = "block"
+    description = "block countries"
+    expression  = "(ip.geoip.country ne \"US\" and ip.geoip.country ne \"CA\")"
+  }
+
+  rules {
+    action      = "block"
+    description = "block plex notifications"
+    expression  = "(http.host eq \"plex.${data.cloudflare_zone.default.name}\" and http.request.uri.path contains \"/:/eventsource/notifications\")"
+  }
+}
+
+
+resource "cloudflare_zone_dnssec" "ds" {
+  zone_id = data.cloudflare_zone.default.zone_id
 }

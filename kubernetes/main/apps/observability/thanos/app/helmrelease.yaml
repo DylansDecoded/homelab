@@ -3,124 +3,183 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: thanos
+  name: kube-prometheus-stack
 spec:
   interval: 30m
   timeout: 15m
   chart:
     spec:
-      chart: thanos
-      version: 1.16.3
+      chart: kube-prometheus-stack
+      version: 58.1.3
       sourceRef:
         kind: HelmRepository
-        name: stevehipwell
+        name: prometheus-community
         namespace: flux-system
   install:
+    crds: CreateReplace
     remediation:
       retries: 3
   upgrade:
     cleanupOnFail: true
+    crds: CreateReplace
     remediation:
       strategy: rollback
       retries: 3
   dependsOn:
     - name: openebs
       namespace: openebs-system
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
-  valuesFrom:
-    - targetPath: objstoreConfig.value.config.bucket
-      kind: ConfigMap
-      name: thanos-bucket
-      valuesKey: BUCKET_NAME
-    - targetPath: objstoreConfig.value.config.endpoint
-      kind: ConfigMap
-      name: thanos-bucket
-      valuesKey: BUCKET_HOST
-    - targetPath: objstoreConfig.value.config.region
-      kind: ConfigMap
-      name: thanos-bucket
-      valuesKey: BUCKET_REGION
-    - targetPath: objstoreConfig.value.config.access_key
-      kind: Secret
-      name: thanos-bucket
-      valuesKey: AWS_ACCESS_KEY_ID
-    - targetPath: objstoreConfig.value.config.secret_key
-      kind: Secret
-      name: thanos-bucket
-      valuesKey: AWS_SECRET_ACCESS_KEY
+    - name: thanos
+      namespace: observability
   values:
-    objstoreConfig:
-      value:
-        type: s3
-        config:
-          insecure: true
-    additionalEndpoints:
-      - dnssrv+_grpc._tcp.kube-prometheus-stack-thanos-discovery.observability.svc.cluster.local
-    additionalReplicaLabels: ["__replica__"]
-    serviceMonitor:
+    crds:
       enabled: true
-    compact:
-      enabled: true
-      extraArgs:
-        - --compact.concurrency=4
-        - --delete-delay=30m
-        - --retention.resolution-raw=14d
-        - --retention.resolution-5m=30d
-        - --retention.resolution-1h=60d
-      persistence: &persistence
+    cleanPrometheusOperatorObjectNames: true
+    alertmanager:
+      ingress:
         enabled: true
-        storageClass: openebs-hostpath
-        size: 10Gi
-    query:
-      replicas: 3
-      extraArgs: ["--alert.query-url=https://thanos.robsonhome.cloud"]
-      additionalStores: ["thanos.robsonhome.cloud:10901"]
-    queryFrontend:
+        pathType: Prefix
+        ingressClassName: internal
+        hosts: ["alertmanager.robsonhome.cloud"]
+      alertmanagerSpec:
+        replicas: 3
+        useExistingSecret: true
+        configSecret: alertmanager-secret
+        storage:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: openebs-hostpath
+              resources:
+                requests:
+                  storage: 1Gi
+    kubelet:
       enabled: true
-      replicas: 3
-      extraEnv: &extraEnv
-        - name: THANOS_CACHE_CONFIG
-          valueFrom:
-            configMapKeyRef:
-              name: &configMap thanos-cache-configmap
-              key: cache.yaml
-      extraArgs: ["--query-range.response-cache-config=$(THANOS_CACHE_CONFIG)"]
+      serviceMonitor:
+        metricRelabelings:
+          # Drop high cardinality labels
+          - action: labeldrop
+            regex: (uid)
+          - action: labeldrop
+            regex: (id|name)
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: (rest_client_request_duration_seconds_bucket|rest_client_request_duration_seconds_sum|rest_client_request_duration_seconds_count)
+    kubeApiServer:
+      enabled: true
+      serviceMonitor:
+        metricRelabelings:
+          # Drop high cardinality labels
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: (apiserver|etcd|rest_client)_request(|_sli|_slo)_duration_seconds_bucket
+          - action: drop
+            sourceLabels: ["__name__"]
+            regex: (apiserver_response_sizes_bucket|apiserver_watch_events_sizes_bucket)
+    kubeControllerManager:
+      enabled: true
+      endpoints: &cp
+        - 10.1.33.10
+        - 10.1.33.11
+        - 10.1.33.12
+    kubeEtcd:
+      enabled: true
+      endpoints: *cp
+    kubeScheduler:
+      enabled: true
+      endpoints: *cp
+    kubeProxy:
+      enabled: false
+    prometheus:
       ingress:
         enabled: true
         ingressClassName: internal
-        hosts:
-          - &host thanos.robsonhome.cloud
-        tls:
-          - hosts: [*host]
-      podAnnotations: &podAnnotations
-        configmap.reloader.stakater.com/reload: *configMap
-    rule:
+        pathType: Prefix
+        hosts: ["prometheus.robsonhome.cloud"]
+      thanosService:
+        enabled: true
+      thanosServiceMonitor:
+        enabled: true
+      prometheusSpec:
+        podMetadata:
+          annotations:
+            secret.reloader.stakater.com/reload: &secret thanos-objstore-config
+        replicas: 3
+        replicaExternalLabelName: __replica__
+        scrapeInterval: 1m # Must match interval in Grafana Helm chart
+        ruleSelectorNilUsesHelmValues: false
+        serviceMonitorSelectorNilUsesHelmValues: false
+        podMonitorSelectorNilUsesHelmValues: false
+        probeSelectorNilUsesHelmValues: false
+        scrapeConfigSelectorNilUsesHelmValues: false
+        enableAdminAPI: true
+        walCompression: true
+        enableFeatures:
+          - auto-gomemlimit
+          - memory-snapshot-on-shutdown
+          - new-service-discovery-manager
+        image:
+          registry: quay.io
+          repository: prometheus/prometheus
+          tag: v2.51.0-dedupelabels
+        thanos:
+          image: quay.io/thanos/thanos:${THANOS_VERSION}
+          version: "${THANOS_VERSION#v}"
+          objectStorageConfig:
+            existingSecret:
+              name: *secret
+              key: config
+        retention: 2d
+        retentionSize: 15GB
+        externalLabels:
+          cluster: main
+        resources:
+          requests:
+            cpu: 100m
+          limits:
+            memory: 1500Mi
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: openebs-hostpath
+              resources:
+                requests:
+                  storage: 20Gi
+    nodeExporter:
       enabled: true
-      replicas: 3
-      extraArgs: ["--web.prefix-header=X-Forwarded-Prefix"]
-      alertmanagersConfig:
-        value: |-
-          alertmanagers:
-            - api_version: v2
-              static_configs:
-                - dnssrv+_http-web._tcp.alertmanager-operated.observability.svc.cluster.local
-      rules:
-        value: |-
-          groups:
-            - name: PrometheusWatcher
-              rules:
-                - alert: PrometheusDown
-                  annotations:
-                    summary: A Prometheus has disappeared from Prometheus target discovery
-                  expr: absent(up{job="kube-prometheus-stack-prometheus"})
-                  for: 5m
-                  labels:
-                    severity: critical
-      persistence: *persistence
-    storeGateway:
-      replicas: 3
-      extraEnv: *extraEnv
-      extraArgs: ["--index-cache.config=$(THANOS_CACHE_CONFIG)"]
-      persistence: *persistence
-      podAnnotations: *podAnnotations
+    prometheus-node-exporter:
+      fullnameOverride: node-exporter
+      prometheus:
+        monitor:
+          enabled: true
+          relabelings:
+            - action: replace
+              regex: (.*)
+              replacement: $1
+              sourceLabels: ["__meta_kubernetes_pod_node_name"]
+              targetLabel: kubernetes_node
+    kubeStateMetrics:
+      enabled: true
+    kube-state-metrics:
+      fullnameOverride: kube-state-metrics
+      metricLabelsAllowlist:
+        - pods=[*]
+        - deployments=[*]
+        - persistentvolumeclaims=[*]
+      prometheus:
+        monitor:
+          enabled: true
+          relabelings:
+            - action: replace
+              regex: (.*)
+              replacement: $1
+              sourceLabels: ["__meta_kubernetes_pod_node_name"]
+              targetLabel: kubernetes_node
+    grafana:
+      enabled: false
+      forceDeployDashboards: true
+      sidecar:
+        dashboards:
+          annotations:
+            grafana_folder: Kubernetes
+          multicluster:
+            etcd:
+              enabled: true

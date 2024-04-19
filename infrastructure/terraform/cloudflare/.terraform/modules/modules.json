@@ -1,1 +1,1 @@
-{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"onepassword_item","Source":"git::https://github.com/bjw-s/terraform-1password-item.git?ref=main","Dir":".terraform/modules/onepassword_item"}]}
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"onepassword_item","Source":"git::https://github.com/bjw-s/terraform-1password-item.git?ref=main","Dir":".terraform/modules/onepassword_item"},{"Key":"onepassword_item_cloudflare","Source":"git::https://github.com/bjw-s/terraform-1password-item.git?ref=main","Dir":".terraform/modules/onepassword_item_cloudflare"}]}

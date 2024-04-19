@@ -20,16 +20,13 @@ terraform {
   required_version = ">= 1.3.0"
 }
 
-module "onepassword_item" {
-  source = "github.com/bjw-s/terraform-1password-item?ref=main"
-  vault  = "kubernetes"
-  item   = "cloudflare"
-}
-
+# Obtain current home IP address
 data "http" "ipv4_lookup_raw" {
   url = "http://ipv4.icanhazip.com"
 }
 
-data "cloudflare_zone" "domain" {
-  name = "robsonhome.cloud"
+module "onepassword_item_cloudflare" {
+  source = "github.com/bjw-s/terraform-1password-item?ref=main"
+  vault  = "kubernetes"
+  item   = "cloudflare"
 }

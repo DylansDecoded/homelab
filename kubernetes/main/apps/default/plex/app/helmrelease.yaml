@@ -109,15 +109,18 @@ spec:
       app:
         className: external
         annotations:
-          external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
-          nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+          external-dns.alpha.kubernetes.io/target: "external.robsonhome.cloud"
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         hosts:
-          - host: "{{ .Release.Name }}.robsonhome.cloud"
+          - host: &host plex.robsonhome.cloud
             paths:
               - path: /
                 service:
                   identifier: app
                   port: http
+        tls:
+          - hosts: [*host]
+
 
     persistence:
       config:
