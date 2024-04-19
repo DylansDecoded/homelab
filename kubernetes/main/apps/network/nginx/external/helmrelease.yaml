@@ -34,7 +34,8 @@ spec:
       service:
         annotations:
           external-dns.alpha.kubernetes.io/hostname: external.robsonhome.cloud
-          io.cilium/lb-ipam-ips: 10.45.0.205
+          io.cilium/lb-ipam-ips: 10.45.0.26
+        externalTrafficPolicy: Cluster
       ingressClassResource:
         name: external
         default: false
@@ -52,9 +53,7 @@ spec:
         client-body-timeout: 120
         client-header-timeout: 120
         enable-brotli: "true"
-        enable-ocsp: "true"
         enable-real-ip: "true"
-        hide-headers: Server,X-Powered-By
         hsts-max-age: 31449600
         keep-alive-requests: 10000
         keep-alive: 120
@@ -68,8 +67,6 @@ spec:
         proxy-body-size: 0
         proxy-buffer-size: 16k
         ssl-protocols: TLSv1.3 TLSv1.2
-        use-geoip2: true
-        use-forwarded-headers: "true"
       metrics:
         enabled: true
         serviceMonitor:
