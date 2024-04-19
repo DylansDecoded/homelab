@@ -91,7 +91,7 @@ spec:
             runAsNonRoot: true
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups: [44, 10000, 109]
+            supplementalGroups: [44, 10000, 109, 65537]
 
     service:
       app:
