@@ -9,6 +9,24 @@
       pause:
         seconds: 3
   tasks:
+    - name: Networking | Fix DNS
+      block:
+        - name: Networking | remove immutable flag
+          command: chattr -i /etc/resolv.conf
+          become: true
+
+        - name: Networking | Replace /etc/resolv.conf
+          copy:
+            dest: /etc/resolv.conf
+            content: |
+              search .
+              nameserver 10.1.100.53
+
+        - name: Networking | set immutable flag
+          command: chattr +i /etc/resolv.conf
+          become: true
+
+
     # - name: Locale
     #   block:
     #     - name: Locale | Set timezone
@@ -72,9 +90,9 @@
     #           ff02::2 ip6-allrouters
     #         mode: preserve
 
-    - name: System Configuration
-      notify: Reboot
-      block:
+    # - name: System Configuration
+    #   notify: Reboot
+    #   block:
     #     - name: System Configuration | NFS
     #       copy:
     #         src: files/nfsmount.conf
@@ -133,8 +151,8 @@
         #   when: grub_status.changed
         #   command: update-grub
 
-        - name: System Configuration | initramfs (1)
-          command: update-initramfs -u -k all
+        # - name: System Configuration | initramfs (1)
+        #   command: update-initramfs -u -k all
 
   handlers:
     - name: Reboot
