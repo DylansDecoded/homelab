@@ -1,8 +1,0 @@
----
-- hosts: dns-servers
-  gather_facts: true
-  become: true
-  any_errors_fatal: true
-  roles:
-    - role: bind9
-

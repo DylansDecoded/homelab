@@ -1,50 +1,49 @@
-- name: Create ssh directory
-  file:
-    path: "/home/{{ me.user }}/.ssh"
-    owner: "{{ me.user }}"
-    group: "{{ me.user }}"
-    state: directory
+---
+- name: Install OpenSSH for Debian
+  package:
+    name: openssh-server
   become: true
+  when: ansible_os_family == 'Debian'
 
-- name: Create authorized_keys file
-  file:
-    path: "/home/{{ me.user }}/.ssh/authorized_keys"
-    owner: "{{ me.user }}"
-    group: "{{ me.user }}"
-    state: touch
+- name: Define context
+  set_fact:
+    user: dylan
+    enable_root: false
+
+- name: Install OpenSSH for Arch
+  package:
+    name: openssh
   become: true
+  when: ansible_os_family == 'Archlinux'
 
-- name: add mask to directory
-  file:
-    path: "/home/{{ me.user }}/.ssh"
-    mode: 0700
-    state: directory
-  become: true
-
-- name: add mask to authorized_keys
-  file:
-    path: "/home/{{ me.user }}/.ssh/authorized_keys"
-    mode: 0600
-    state: file
-  become: true
-
-- name: User Configuration | SSH keys
-  authorized_key:
-    user: "{{ me.user }}"
-    key: "https://github.com/{{ github_username }}.keys"
-    state: present
-
-- name: Update sshd_config
-  copy:
+- name: SSH config
+  template:
     src: files/sshd_config
     dest: /etc/ssh/sshd_config
-    owner: root
-    group: root
-    mode: 0644
+    validate: /usr/sbin/sshd -t -f %s
+    backup: true
+    mode: "644"
+  become: true
+  register: sshd_config
 
-- name: Restart sshd
+- name: Set up authorized keys
+  ansible.posix.authorized_key:
+    user: "{{ me.user }}"
+    state: present
+    key: "{{ lookup('file', item) }}"
+  loop:
+    - ssh-keys/mbp.pub
+    - ssh-keys/ybk-nano.pub
+
+- name: Enable SSH
   service:
     name: sshd
-    state: restarted
     enabled: true
+  become: true
+
+- name: Restart SSH Daemon
+  service:
+    name: sshd
+    state: reloaded
+  when: sshd_config.changed
   become: true

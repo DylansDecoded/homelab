@@ -1,11 +1,18 @@
-- name: Ubuntu Setup
-  include_tasks: ubuntu.yaml
+- name: Base | Update and Upgrade
+  apt:
+    upgrade: dist
+    update_cache: true
+    cache_valid_time: 3600
+  become: true
 
 - name: User Setup
   include_tasks: user.yaml
 
 - name: SSH Setup
   include_tasks: ssh.yaml
+
+- name: Network Setup
+  include_tasks: network.yaml
 
 - name: NFS Setup
   include_tasks: nfs.yaml

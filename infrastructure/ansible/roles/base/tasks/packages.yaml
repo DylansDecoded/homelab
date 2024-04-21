@@ -1,0 +1,20 @@
+- name: Install Base Packages
+  package:
+    name: "{{ item }}"
+  become: true
+  loop:
+    - htop
+    - neofetch
+    - net-tools
+    - speedtest-cli
+    - sudo
+    - vim
+    - git
+    - curl
+    - wget
+    - python3
+    - python3-pip
+    - rsyslog
+    - nfs-common
+    - open-iscsi
+    - iperf3

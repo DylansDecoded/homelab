@@ -1,6 +1,0 @@
----
-zpools_to_scrub:
-  - ssd_pool
-
-# 5GB, or so
-zfs_arc_size: 5000000000

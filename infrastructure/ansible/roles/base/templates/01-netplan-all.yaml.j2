@@ -11,21 +11,23 @@ network:
       addresses:
         - {{ ansible_default_ipv4.address }}/24
       nameservers:
-        addresses: [{{ ansible_default_ipv4.address }}]
+        addresses: [ {{ dns_servers | join(', ')}}]
         search: [.]
       routes:
         - to: default
           via: {{ ansible_default_ipv4.gateway }}
 
   vlans:
+    vlan33:
+      id: 33
+      link: mainif
+      addresses: [ {{container_network_address }}/24 ]
     vlan100:
       id: 100
       link: mainif
-      addresses:
-        - {{ dmz_network_address }}/24
+      addresses: [ {{ dmz_network_address }}/24 ]
     vlan101:
       id: 101
       link: mainif
-      addresses:
-        - {{ storage_network_address }}/24
+      addresses: [ {{ storage_network_address }}/24 ]
 

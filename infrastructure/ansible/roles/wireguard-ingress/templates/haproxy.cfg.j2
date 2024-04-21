@@ -1,0 +1,24 @@
+# HAProxy Reverse Proxy Configuration
+# This file is managed by Ansible. Do not edit manually.
+
+global
+  stats socket /var/run/api.sock user haproxy group haproxy mode 660 level admin expose-fd listeners
+  log stdout format raw local0 info
+
+defaults
+  log  global
+  mode tcp
+  option  http-server-close
+  timeout client 10s
+  timeout connect 5s
+  timeout server 10s
+
+frontend haproxy
+  bind *:443
+  option tcplog
+
+  default_backend homelab_backend
+
+backend homelab_backend
+    balance roundrobin
+    server server1 "{{ wireguard_client_ip }}":443 check send-proxy

@@ -1,0 +1,31 @@
+- name: Network | Enable vlan mod
+  command: modprobe 8021q
+
+- name: Network | Backup current Netplan
+  command: cp /etc/netplan/50-cloud-init.yaml /etc/netplan/50-cloud-init.yaml.bak
+  ignore_errors: true
+
+- name: Network | Remove current Netplan
+  command: rm /etc/netplan/50-cloud-init.yaml
+  ignore_errors: true
+
+- name: Network | Configure Netplan
+  templates:
+    src: templates/01-netplan-all.yaml.j2
+    dest: /etc/netplan/01-netplan-all.yaml
+  become: true
+
+# - name: Make VLAN interfaces available on boot
+#   templates:
+#     src: templates/network/interfaces.yaml.j2
+#     dest: /etc/network/interfaces
+#   become: true
+
+- name: Setup VLANs in Netplan
+  template:
+    src: templates/01-netplan-all.yaml.j2
+    dest: /etc/netplan/01-netplan-all.yaml
+  become: true
+
+- name: Apply Netplan
+  notify: netplan apply

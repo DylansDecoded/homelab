@@ -1,0 +1,21 @@
+[Interface]
+# Configuration for Server
+# Setting the IP subnet that is used for the WireGuard network
+Address = 10.254.1.1/24
+
+# The port that is being listened on. 51821 since default is 51820
+ListenPort = 51821
+
+# The private key of the server
+PrivateKey = "{{ encrypted_gateway_private_key }}"
+
+[Peer]
+# Configuration for Client
+# The public key of the client
+PublicKey = "{{ encrypted_client_public_key }}"
+
+# Configured IP Allowed to be used
+AllowedIPs = 10.254.1.2/32
+
+# Ensure that the connection is persistent by sending a keep-alive packet every 25 seconds
+PersistentKeepalive = 25

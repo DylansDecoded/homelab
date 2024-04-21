@@ -1,0 +1,26 @@
+---
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    mainif:
+      match:
+        macaddress: d8:3a:dd:0b:9a:2c
+      set-name: mainif
+      dhcp4: no
+      dhcp6: no
+      accept-ra: no
+      addresses: [10.1.30.45/24]
+      routes:
+        - to: default
+          via: 10.1.30.1
+
+  vlans:
+    vlan101: # Storage no-gateway network
+      id: 101
+      link: mainif
+      addresses: [10.101.101.45/24]
+
+
+
+
