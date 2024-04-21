@@ -41,7 +41,7 @@ spec:
           app:
             image:
               repository: ghcr.io/onedr0p/readarr-develop
-              tag: 0.3.22.2499
+              tag: 0.3.23.2506
             env:
               COMPlus_EnableDiagnostics: "0"
               READARR__INSTANCE_NAME: Readarr
