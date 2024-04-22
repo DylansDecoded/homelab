@@ -4,7 +4,6 @@ kind: Kustomization
 resources:
   - ./minio.yaml
   - ./technitium.yaml
-  # - ./omada.yaml
-  # - ./pihole.yaml
-  # - ./pikvm.yaml
+  - ./omada.yaml
+  - ./pikvm.yaml
   # - ./truenas.yaml

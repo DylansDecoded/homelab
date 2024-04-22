@@ -7,7 +7,7 @@ metadata:
 spec:
   ports:
     - protocol: TCP
-      port: 80
+      port: 5380
 ---
 apiVersion: v1
 kind: Endpoints
@@ -18,7 +18,7 @@ subsets:
   - addresses:
       - ip: 10.1.30.45
     ports:
-      - port: 8080
+      - port:
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -39,6 +39,6 @@ spec:
               service:
                 name: technitium
                 port:
-                  number: 8080
+                  number: 5380
   tls:
     - hosts: [*host]

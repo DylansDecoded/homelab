@@ -2,19 +2,23 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: omada
+  name: omada-controller
   namespace: network
-  labels:
-    app.kubernetes.io/name: omada
-    app.kubernetes.io/instance: omada
 spec:
-  type: ExternalName
-  externalName: omada.
   ports:
-    - name: http
-      port: &port 443
-      protocol: TCP
-      targetPort: *port
+    - protocol: TCP
+      port: 9001
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: omada-controller
+  namespace: network
+subsets:
+  - addresses:
+      - ip: 10.1.10.200
+    ports:
+      - port: 8043
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -22,23 +26,21 @@ metadata:
   name: omada
   namespace: network
   annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-  labels:
-    app.kubernetes.io/name: omada
-    app.kubernetes.io/instance: omada
+  # nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  # nginx.ingress.kubernetes.io/proxy-redirect-from: "https://(.+)/login"
+  # nginx.ingress.kubernetes.io/proxy-redirect-to: "https://$1/login"
 spec:
   ingressClassName: internal
   rules:
     - host: &host omada.robsonhome.cloud
       http:
         paths:
-          - path: /
+          - path: /login
             pathType: Prefix
             backend:
               service:
-                name: omada
+                name: omada-controller
                 port:
-                  number: 443
+                  number: 8043
   tls:
-    - hosts:
-        - *host
+    - hosts: [*host]
