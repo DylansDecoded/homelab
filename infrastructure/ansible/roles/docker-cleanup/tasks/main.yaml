@@ -39,3 +39,11 @@
     dest: "{{ me.home }}"
     mode: "755"
     directory_mode: "755"
+
+- name: Set access to docker.sock for {{ me.user }}
+  file:
+    path: /var/run/docker.sock
+    owner: root
+    group: docker
+    mode: 0666
+  become: true

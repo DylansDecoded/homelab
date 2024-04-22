@@ -1,0 +1,9 @@
+docker_hosts:
+  internal_cidr: 10.1.33.0/24
+  wireguard_ingress:
+    ip: 10.1.33.99
+    external_ip: 10.254.0.2
+  technitium_dns_01:
+    ip: 10.1.33.45
+  technitium_dns_02:
+    ip: 10.1.33.46

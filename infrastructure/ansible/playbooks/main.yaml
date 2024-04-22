@@ -3,6 +3,7 @@
   become: true
   roles:
     - base
+    - raspberrypi
     - role: geerlingguy.docker
       become: true
       vars:
