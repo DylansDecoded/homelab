@@ -1,4 +1,0 @@
-- name: Reboot
-  reboot:
-    msg: Rebooting nodes
-    reboot_timeout: 3600

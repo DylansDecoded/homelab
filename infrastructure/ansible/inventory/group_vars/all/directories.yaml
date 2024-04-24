@@ -1,6 +1,0 @@
-docker_volumes_directory: /mnt/docker-volumes
-app_data_directory: /mnt/app-data
-app_logs_directory: /mnt/app-log
-frigate:
-  config_directory: "{{ docker_volumes_directory }}/frigate/config"
-  data_directory: "{{ docker_volumes_directory }}/frigate/storage"

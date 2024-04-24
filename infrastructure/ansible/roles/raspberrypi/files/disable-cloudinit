@@ -1,9 +1,0 @@
-#!/bin/bash
-
-export  DEBIAN_FRONTEND=noninteractive
-
-touch /etc/cloud/cloud-init.disabled
-dpkg-reconfigure cloud-init
-dpkg-reconfigure cloud-init
-apt-get purge  --assume-yes cloud-init
-rm -rf /etc/cloud/ && rm -rf /var/lib/cloud/

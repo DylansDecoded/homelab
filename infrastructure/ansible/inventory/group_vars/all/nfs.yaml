@@ -1,4 +1,0 @@
-docker_nfs_mounts:
-  path: /mnt/docker-volumes
-  opts: "rw,sync,hard"
-  docker_volumes_nfs_mount: "10.101.101.210:/mnt/docker-volumes"

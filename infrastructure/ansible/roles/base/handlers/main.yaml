@@ -1,5 +1,0 @@
----
-- name: reboot
-  service:
-    name: reboot
-    state: restarted
