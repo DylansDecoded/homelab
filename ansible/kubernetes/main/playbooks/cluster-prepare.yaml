@@ -4,10 +4,10 @@
   become: true
   gather_facts: true
   any_errors_fatal: true
-  pre_tasks:
-    - name: Pausing for 5 seconds...
-      pause:
-        seconds: 3
+  # pre_tasks:
+  #   - name: Pausing for 5 seconds...
+  #     pause:
+  #       seconds: 3
   tasks:
     - name: Networking | Fix DNS
       block:
@@ -20,6 +20,8 @@
             dest: /etc/resolv.conf
             content: |
               search .
+              nameserver 10.1.30.43
+              nameserver 10.1.30.44
               nameserver 10.1.30.45
 
         - name: Networking | set immutable flag
@@ -60,14 +62,14 @@
     #         modification_time: preserve
     #         access_time: preserve
 
-    #     - name: User Configuration | Add user to sudoers
-    #       when: ansible_user != 'root'
-    #       copy:
-    #         content: "{{ ansible_user }} ALL=(ALL:ALL) NOPASSWD:ALL"
-    #         dest: "/etc/sudoers.d/{{ ansible_user }}"
-    #         owner: root
-    #         group: root
-    #         mode: "0440"
+        # - name: User Configuration | Add user to sudoers
+        #   when: ansible_user != 'root'
+        #   copy:
+        #     content: "{{ ansible_user }} ALL=(ALL:ALL) NOPASSWD:ALL"
+        #     dest: "/etc/sudoers.d/{{ ansible_user }}"
+        #     owner: root
+        #     group: root
+        #     mode: "0440"
 
 
     # - name: General Network Configuration
