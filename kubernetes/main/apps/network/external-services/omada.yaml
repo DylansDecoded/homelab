@@ -7,7 +7,7 @@ metadata:
 spec:
   ports:
     - protocol: TCP
-      port: 8843
+      port: 443
 ---
 apiVersion: v1
 kind: Endpoints
@@ -18,7 +18,7 @@ subsets:
   - addresses:
       - ip: 10.1.10.200
     ports:
-      - port: 8843
+      - port: 443
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -31,7 +31,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-ssl-verify: "off"
     # nginx.ingress.kubernetes.io/proxy-set-header: "Host $http_host:8843"
     # nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/proxy-redirect-from: "https://omada.robsonhome.cloud:8043"
+    nginx.ingress.kubernetes.io/proxy-redirect-from: "https://omada.robsonhome.cloud:443"
     nginx.ingress.kubernetes.io/proxy-redirect-to: "https://omada.robsonhome.cloud/login"
 spec:
   ingressClassName: internal
@@ -45,6 +45,6 @@ spec:
               service:
                 name: omada-controller
                 port:
-                  number:
+                  number: 443
   tls:
     - hosts: [*host]

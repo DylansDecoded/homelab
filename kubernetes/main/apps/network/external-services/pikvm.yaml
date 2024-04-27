@@ -7,7 +7,7 @@ metadata:
 spec:
   ports:
     - protocol: TCP
-      port: 80
+      port: 443
 ---
 apiVersion: v1
 kind: Endpoints
@@ -18,7 +18,7 @@ subsets:
   - addresses:
       - ip: 10.1.10.207
     ports:
-      - port: 80
+      - port: 443
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -39,6 +39,6 @@ spec:
               service:
                 name: pikvm
                 port:
-                  number: 80
+                  number: 443
   tls:
     - hosts: [*host]
