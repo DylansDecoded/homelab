@@ -7,7 +7,78 @@ metadata:
 spec:
   ports:
     - protocol: TCP
-      port: 53443
+      port: 5380
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: technitium
+  namespace: network
+subsets:
+  - addresses:
+      - ip: 10.1.30.43
+    ports:
+      - port: 5380
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: technitium
+  namespace: network
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+
+spec:
+  ingressClassName: internal
+  rules:
+    - host: &host dns-01.robsonhome.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: technitium
+                port:
+                  number: 5380
+  tls:
+    - hosts: [*host]
+
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: technitium
+  namespace: network
+subsets:
+  - addresses:
+      - ip: 10.1.30.44
+    ports:
+      - port: 5380
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: technitium
+  namespace: network
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+
+spec:
+  ingressClassName: internal
+  rules:
+    - host: &host dns-02.robsonhome.cloud
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: technitium
+                port:
+                  number: 5380
+  tls:
+    - hosts: [*host]
 ---
 apiVersion: v1
 kind: Endpoints
@@ -18,7 +89,7 @@ subsets:
   - addresses:
       - ip: 10.1.30.45
     ports:
-      - port: 53443
+      - port: 5380
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -26,12 +97,12 @@ metadata:
   name: technitium
   namespace: network
   annotations:
-    # nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
 
 spec:
   ingressClassName: internal
   rules:
-    - host: &host ns01.robsonhome.cloud
+    - host: &host dns-03.robsonhome.cloud
       http:
         paths:
           - path: /
@@ -40,6 +111,6 @@ spec:
               service:
                 name: technitium
                 port:
-                  number: 53443
+                  number: 5380
   tls:
     - hosts: [*host]
