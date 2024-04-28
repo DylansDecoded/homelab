@@ -39,7 +39,7 @@ spec:
           app:
             image:
               repository: ghcr.io/autobrr/autobrr
-              tag: v1.39.1@sha256:7149943f3f6a528ea653662272e8a2c78156cdbf51fd3313911eb57a03378a50
+              tag: v1.41.0@sha256:71d5e7e3b1742f848ddbe5de154aaecbc1110cc4c44caf447ea32beb59c345ec
             env:
               AUTOBRR__CHECK_FOR_UPDATES: "false"
               AUTOBRR__HOST: 0.0.0.0
@@ -68,11 +68,11 @@ spec:
                 cpu: 10m
               limits:
                 memory: 256Mi
-        pod:
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            runAsNonRoot: true
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 568
+        runAsGroup: 568
+        runAsNonRoot: true
     service:
       app:
         controller: autobrr
@@ -90,5 +90,4 @@ spec:
                   identifier: app
                   port: http
         tls:
-          - hosts:
-              - *host
+          - hosts: [*host]
