@@ -33,9 +33,9 @@ spec:
       - name: EXTERNAL_DNS_RFC2136_ZONE
         value: &domain robsonhome.cloud
       - name: EXTERNAL_DNS_RFC2136_TSIG_AXFR
-        value: "true"
+        value: "false"
       - name: EXTERNAL_DNS_RFC2136_TSIG_KEYNAME
-        value: main-key
+        value: externaldns-key
       - name: EXTERNAL_DNS_RFC2136_TSIG_SECRET_ALG
         value: hmac-sha256
       - name: EXTERNAL_DNS_RFC2136_TSIG_SECRET
