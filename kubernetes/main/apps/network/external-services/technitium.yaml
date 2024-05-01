@@ -12,7 +12,7 @@ spec:
 apiVersion: v1
 kind: Endpoints
 metadata:
-  name: technitium
+  name: technitium-dns-01
   namespace: network
 subsets:
   - addresses:
@@ -23,7 +23,7 @@ subsets:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: technitium
+  name: technitium-dns-01
   namespace: network
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
@@ -32,7 +32,7 @@ metadata:
 spec:
   ingressClassName: internal
   rules:
-    - host: &host dns-01.robsonhome.cloud
+    - host: &host ns1.robsonhome.cloud
       http:
         paths:
           - path: /
@@ -45,75 +45,39 @@ spec:
   tls:
     - hosts: [*host]
 
----
-apiVersion: v1
-kind: Endpoints
-metadata:
-  name: technitium
-  namespace: network
-subsets:
-  - addresses:
-      - ip: 10.1.30.44
-    ports:
-      - port: 5380
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: technitium
-  namespace: network
-  annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-    nginx.ingress.kubernetes.io/proxy-set-header: "X-Real-IP $remote_addr;"
+# ---
+# apiVersion: v1
+# kind: Endpoints
+# metadata:
+#   name: technitium-dns-02
+#   namespace: network
+# subsets:
+#   - addresses:
+#       - ip: 10.1.30.44
+#     ports:
+#       - port: 5380
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: technitium
+#   namespace: network
+#   annotations:
+#     nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+#     nginx.ingress.kubernetes.io/proxy-set-header: "X-Real-IP $remote_addr;"
 
-spec:
-  ingressClassName: internal
-  rules:
-    - host: &host dns-02.robsonhome.cloud
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: technitium
-                port:
-                  number: 5380
-  tls:
-    - hosts: [*host]
----
-apiVersion: v1
-kind: Endpoints
-metadata:
-  name: technitium
-  namespace: network
-subsets:
-  - addresses:
-      - ip: 10.1.30.45
-    ports:
-      - port: 5380
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: technitium
-  namespace: network
-  annotations:
-    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-    nginx.ingress.kubernetes.io/proxy-set-header: "X-Real-IP $remote_addr;"
-
-spec:
-  ingressClassName: internal
-  rules:
-    - host: &host dns-03.robsonhome.cloud
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: technitium
-                port:
-                  number: 5380
-  tls:
-    - hosts: [*host]
+# spec:
+#   ingressClassName: internal
+#   rules:
+#     - host: &host ns2.robsonhome.cloud
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: technitium
+#                 port:
+#                   number: 5380
+#   tls:
+#     - hosts: [*host]
