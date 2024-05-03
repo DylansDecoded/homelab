@@ -131,7 +131,7 @@ radarr:
               - WEBDL-1080p
               - WEBRip-1080p
 
-      - name: WEB-DL (2160p)
+      - name: Remux + WEB 2160p
         reset_unmatched_scores:
           enabled: true
         upgrade:
