@@ -11,6 +11,7 @@ module.exports = {
     `http://prowlarr.default.svc.cluster.local:9696/15/api?apikey=$${process.env.PROWLARR_API_KEY}`, //phd
     `http://prowlarr.default.svc.cluster.local:9696/17/api?apikey=$${process.env.PROWLARR_API_KEY}`, //milk
     `http://prowlarr.default.svc.cluster.local:9696/20/api?apikey=$${process.env.PROWLARR_API_KEY}`, //tgx
+    `http://prowlarr.default.svc.cluster.local:9696/53/api?apikey=$${process.env.PROWLARR_API_KEY}`, //fnp
   ],
   port: process.env.CROSSSEED_PORT || 80,
   apiAuth: false,
