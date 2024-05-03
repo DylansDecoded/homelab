@@ -48,7 +48,7 @@ spec:
           app:
             image:
               repository: lscr.io/linuxserver/jellyfin
-              tag: 12.02.24
+              tag: 2021.12.16
             env:
               DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
               JELLYFIN_FFmpeg__probesize: 50000000
