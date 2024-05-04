@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: zwave
+  name: zwave-js-ui
 spec:
   interval: 30m
   chart:
@@ -84,11 +84,14 @@ spec:
                   port: http
         tls:
           - hosts: [*host]
+
     persistence:
       config:
-        existingClaim: zwave
-        globalMounts:
-          - path: /usr/src/app/store
+        existingClaim: zwave-js-ui
+        advancedMounts:
+          zwave-js-ui:
+            app:
+              - path: /usr/src/app/store
 
       tmp:
         type: emptyDir

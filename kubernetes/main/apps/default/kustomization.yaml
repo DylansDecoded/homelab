@@ -29,4 +29,4 @@ resources:
   - ./tautulli/ks.yaml
   - ./thelounge/ks.yaml
   - ./zigbee2mqtt/ks.yaml
-  - ./zwave/ks.yaml
+  - ./zwave-js-ui/ks.yaml
