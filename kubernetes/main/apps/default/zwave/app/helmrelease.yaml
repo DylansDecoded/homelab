@@ -93,8 +93,8 @@ spec:
     persistence:
       config:
         existingClaim: zwave
-        globalMounts:
-          - path: /usr/src/app/store
+        # globalMounts:
+        #   - path: /usr/src/app/store
 
       tmp:
         type: emptyDir
