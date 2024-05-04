@@ -34,9 +34,12 @@ spec:
           reloader.stakater.com/auto: "true"
         pod:
           securityContext:
+            runAsNonRoot: true
+            runAsUser: 568
+            runAsGroup: 568
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups: [10000, 65542]
+            supplementalGroups: [10000]
         containers:
           app:
             image:
@@ -100,6 +103,7 @@ spec:
                   port: http
         tls:
           - hosts: [*host]
+
     persistence:
       config:
         existingClaim: sabnzbd
