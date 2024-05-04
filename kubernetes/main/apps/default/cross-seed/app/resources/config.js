@@ -5,13 +5,13 @@ module.exports = {
   torznab: [
     `http://prowlarr.default.svc.cluster.local:9696/3/api?apikey=$${process.env.PROWLARR_API_KEY}`, //mam
     `http://prowlarr.default.svc.cluster.local:9696/5/api?apikey=$${process.env.PROWLARR_API_KEY}`, //hds
-    `http://prowlarr.default.svc.cluster.local:9696/7/api?apikey=$${process.env.PROWLARR_API_KEY}`, //dgc
+    `http://prowlarr.default.svc.cluster.local:9696/11/api?apikey=$${process.env.PROWLARR_API_KEY}`, //dgc
     `http://prowlarr.default.svc.cluster.local:9696/9/api?apikey=$${process.env.PROWLARR_API_KEY}`, //ipt
     `http://prowlarr.default.svc.cluster.local:9696/14/api?apikey=$${process.env.PROWLARR_API_KEY}`, //te
-    `http://prowlarr.default.svc.cluster.local:9696/15/api?apikey=$${process.env.PROWLARR_API_KEY}`, //phd
     `http://prowlarr.default.svc.cluster.local:9696/17/api?apikey=$${process.env.PROWLARR_API_KEY}`, //milk
-    `http://prowlarr.default.svc.cluster.local:9696/20/api?apikey=$${process.env.PROWLARR_API_KEY}`, //tgx
+    `http://prowlarr.default.svc.cluster.local:9696/19/api?apikey=$${process.env.PROWLARR_API_KEY}`, //3x
     `http://prowlarr.default.svc.cluster.local:9696/53/api?apikey=$${process.env.PROWLARR_API_KEY}`, //fnp
+    `http://prowlarr.default.svc.cluster.local:9696/86/api?apikey=$${process.env.PROWLARR_API_KEY}`, //ucx
   ],
   port: process.env.CROSSSEED_PORT || 80,
   apiAuth: false,
