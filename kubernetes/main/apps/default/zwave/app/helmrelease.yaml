@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: zwave-js-ui
+  name: &app zwave
 spec:
   interval: 30m
   chart:
@@ -36,11 +36,10 @@ spec:
           app:
             image:
               repository: ghcr.io/zwave-js/zwave-js-ui
-              tag: 9.12.0
+              tag: 9.12.0@sha256:b3e81d29666116cdc8a5e80e9b57af73f04af627f84bf23cb2d6a6b050de61dc
             env:
               TZ: America/New_York
               PORT: &port 80
-
             probes:
               liveness: &probes
                 enabled: true
@@ -55,18 +54,24 @@ spec:
                   failureThreshold: 3
               readiness: *probes
             securityContext:
-              privileged: true
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 10m
               limits:
                 memory: 512Mi
-        pod:
-          nodeSelector:
-            zooz.feature.node.kubernetes.io/zwave: "true"
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
     service:
       app:
-        controller: zwave
+        controller: *app
         ports:
           http:
             port: *port
@@ -87,19 +92,10 @@ spec:
 
     persistence:
       config:
-        existingClaim: zwave-js-ui
-        advancedMounts:
-          zwave-js-ui:
-            app:
-              - path: /usr/src/app/store
+        existingClaim: zwave
+        globalMounts:
+          - path: /usr/src/app/store
 
       tmp:
         type: emptyDir
-
-      usb:
-        type: hostPath
-        hostPath: /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00
-        hostPathType: CharDevice
-        globalMounts:
-          - path: /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00
 
