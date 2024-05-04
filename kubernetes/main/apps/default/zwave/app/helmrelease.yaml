@@ -89,6 +89,7 @@ spec:
         existingClaim: zwave
         globalMounts:
           - path: /usr/src/app/store
+
       tmp:
         type: emptyDir
 

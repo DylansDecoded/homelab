@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: sabnzbd
+  name: &app sabnzbd
 spec:
   interval: 30m
   chart:
@@ -83,7 +83,7 @@ spec:
 
     service:
       app:
-        controller: sabnzbd
+        controller: *app
         ports:
           http:
             port: *port
@@ -103,10 +103,12 @@ spec:
     persistence:
       config:
         existingClaim: sabnzbd
-        advancedMounts:
-          sabnzbd:
-            app:
-              - path: /config
+
+      logs:
+        type: emptyDir
+        globalMounts:
+          - path: /config/logs
+
       tmp:
         type: emptyDir
 
@@ -114,8 +116,6 @@ spec:
         type: nfs
         server: 10.1.10.210
         path: /mnt/tank/nfs/media
-        advancedMounts:
-          sabnzbd:
-            app:
-              - path: /media/downloads/sabnzbd
-                subPath: downloads/sabnzbd
+        globalMounts:
+          - path: /media/downloads/sabnzbd
+            subPath: downloads/sabnzbd
