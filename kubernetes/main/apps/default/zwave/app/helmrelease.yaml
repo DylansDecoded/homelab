@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: &app zwave-js-ui
+  name: &app zwave
 spec:
   interval: 30m
   chart:
@@ -29,7 +29,7 @@ spec:
       namespace: volsync-system
   values:
     controllers:
-      zwave-js-ui:
+      zwave:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
@@ -92,7 +92,7 @@ spec:
 
     persistence:
       config:
-        existingClaim: zwave-js-ui
+        existingClaim: zwave
         globalMounts:
           - path: /usr/src/app/store
 
