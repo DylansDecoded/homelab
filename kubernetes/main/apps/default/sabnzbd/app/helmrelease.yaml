@@ -34,12 +34,9 @@ spec:
           reloader.stakater.com/auto: "true"
         pod:
           securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            runAsNonRoot: true
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups: [10000]
+            supplementalGroups: [10000, 65542]
         containers:
           app:
             image:
@@ -83,6 +80,7 @@ spec:
                 cpu: 100m
               limits:
                 memory: 4Gi
+
     service:
       app:
         controller: sabnzbd
@@ -105,12 +103,19 @@ spec:
     persistence:
       config:
         existingClaim: sabnzbd
+        advancedMounts:
+          sabnzbd:
+            app:
+              - path: /config
       tmp:
         type: emptyDir
+
       media:
         type: nfs
         server: 10.1.10.210
         path: /mnt/tank/nfs/media
         advancedMounts:
-          - path: /media/downloads/sabnzbd
-            subPath: downloads/sabnzbd
+          sabnzbd:
+            app:
+              - path: /media/downloads/sabnzbd
+                subPath: downloads/sabnzbd
