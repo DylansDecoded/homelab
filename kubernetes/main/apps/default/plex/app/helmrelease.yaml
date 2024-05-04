@@ -143,7 +143,7 @@ spec:
 
       media:
         type: nfs
-        server: truenas.robsonhome.cloud
+        server: 10.1.10.210
         path: /mnt/tank/nfs/media
         advancedMounts:
           plex:
