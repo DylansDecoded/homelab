@@ -75,14 +75,14 @@ spec:
                 cpu: 100m
               limits:
                 memory: 6Gi
-        pod:
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            runAsNonRoot: true
-            fsGroup: 568
-            fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups: [10000]
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 568
+        runAsGroup: 568
+        runAsNonRoot: true
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [10000]
     service:
       app:
         controller: sabnzbd
@@ -110,7 +110,8 @@ spec:
         type: emptyDir
       media:
         type: nfs
-        server: 10.1.10.210
+        server: truenas.robsonhome.cloud
         path: /mnt/tank/nfs/media
         globalMounts:
-          - path: /media
+          - path: /media/downloads/sabnzbd
+            subPath: downloads/sabnzbd

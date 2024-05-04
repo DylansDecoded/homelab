@@ -31,19 +31,42 @@ spec:
     - name: volsync
       namespace: volsync-system
   values:
-    defaultPodOptions:
-      enableServiceLinks: false
-      nodeSelector:
-        intel.feature.node.kubernetes.io/gpu: "true"
-      securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-        fsGroupChangePolicy: OnRootMismatch
     controllers:
       jellyfin:
         annotations:
           reloader.stakater.com/auto: "true"
+        pod:
+          affinity:
+            podAntiAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                      - key: app.kubernetes.io/name
+                        operator: In
+                        values: ["frigate"]
+                  topologyKey: "kubernetes.io/hostname"
+          nodeSelector:
+            intel.feature.node.kubernetes.io/gpu: "true"
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            runAsNonRoot: true
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
+            supplementalGroups: [44, 10000, 109, 65537]
+        # initContainers:
+        #   init-permission:
+        #     image:
+        #       repository: ghcr.io/cbc02009/busybox
+        #       tag: 1.36.1
+        #       pullPolicy: IfNotPresent
+        #     command:
+        #       - sh
+        #       - -c
+        #       - chown -R 568:568 /media
+        #       - chown -R 568:568 /config/transcodes
+        #     securityContext:
+        #       runAsUser: 0
         containers:
           app:
             image:
@@ -72,17 +95,17 @@ spec:
             resources:
               requests:
                 gpu.intel.com/i915: 1
-                cpu: 100m
-                memory: 512Mi
+                cpu: 200m
+                memory: 1Gi
               limits:
                 gpu.intel.com/i915: 1
-                memory: 4Gi
+                memory: 3Gi
     service:
       app:
         controller: jellyfin
         type: LoadBalancer
         annotations:
-          io.cilium/lb-ipam-ips: 10.45.0.57
+          io.cilium/lb-ipam-ips: *loadBalancerIP
         ports:
           http:
             port: 8096
@@ -105,18 +128,25 @@ spec:
     persistence:
       config:
         existingClaim: *app
-        globalMounts:
-          - path: /config
+        advancedMounts:
+          jellyfin:
+            app:
+              - path: /config
 
-      jellyfin-cache:
-        existingClaim: jellyfin-cache
-        globalMounts:
-          - path: /cache
+      # jellyfin-cache:
+      #   existingClaim: jellyfin-cache
+      #   globalMounts:
+      #     - path: /cache
 
       media:
         type: nfs
-        server: 10.1.10.210
+        server: truenas.robsonhome.cloud
         path: /mnt/tank/nfs/media
+        advancedMounts:
+          jellyfin:
+            app:
+              - path: /media
+
 
       tmp:
         type: emptyDir
@@ -124,4 +154,4 @@ spec:
       transcode:
         type: emptyDir
         globalMounts:
-          - path: /transcode
+          - path: /config/transcode

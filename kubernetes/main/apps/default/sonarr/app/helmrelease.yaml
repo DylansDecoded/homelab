@@ -78,14 +78,14 @@ spec:
                 cpu: 10m
               limits:
                 memory: 1Gi
-        pod:
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            runAsNonRoot: true
-            fsGroup: 568
-            fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups: [10000]
+    defaultPodOptions:
+      securityContext:
+        runAsUser: 568
+        runAsGroup: 568
+        runAsNonRoot: true
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [10000]
     service:
       app:
         controller: sonarr
@@ -122,7 +122,7 @@ spec:
 
       media:
         type: nfs
-        server: 10.1.10.210
+        server: truenas.robsonhome.cloud
         path: /mnt/tank/nfs/media
         globalMounts:
           - path: /media

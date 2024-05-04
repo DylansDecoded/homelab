@@ -156,9 +156,10 @@ spec:
 
       media:
         type: nfs
-        server: 10.1.10.210
+        server: truenas.robsonhome.cloud
         path: /mnt/tank/nfs/media
         advancedMounts:
           qbittorrent:
             app:
-              - path: /media
+              - path: /media/downloads/qbittorrent
+                subPath: downloads/qbittorrent
