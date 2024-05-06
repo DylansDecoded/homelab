@@ -55,13 +55,13 @@ spec:
           app:
             image:
               repository: ghcr.io/onedr0p/jellyfin
-              tag: 10.8.11@sha256:926e2a9f6677a0c7b12feba29f36c954154869318d6a52df72f72ff9c74cf494
+              tag: 10.8.11
             env:
               DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
               JELLYFIN_FFmpeg__probesize: 50000000
               JELLYFIN_FFmpeg__analyzeduration: 50000000
               JELLYFIN_PublishedServerUrl: &loadBalancerIP 10.45.0.99
-              TZ: ${TIMEZONE}
+              TZ: America/New_York
             probes:
               liveness: &probes
                 enabled: true
@@ -93,15 +93,13 @@ spec:
         externalTrafficPolicy: Local
         ports:
           http:
-            port: 8096
+            port: *port
     ingress:
       app:
-        enabled: true
         className: external
         annotations:
-          external-dns.alpha.kubernetes.io/enabled: "true"
-          external-dns.alpha.kubernetes.io/target: services.${SECRET_DOMAIN}.
-          hajimari.io/icon: simple-icons:jellyfin
+          external-dns.alpha.kubernetes.io/target: "external.robsonhome.cloud"
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         hosts:
           - host: &host "{{ .Release.Name }}.robsonhome.cloud"
             paths:
