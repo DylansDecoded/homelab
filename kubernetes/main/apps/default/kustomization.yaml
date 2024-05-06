@@ -14,7 +14,7 @@ resources:
   - ./frigate/ks.yaml
   - ./glauth/ks.yaml
   - ./home-assistant/ks.yaml
-  - ./jellyfin/ks.yaml
+  # - ./jellyfin/ks.yaml
   - ./miniflux/ks.yaml
   - ./overseerr/ks.yaml
   - ./plex/ks.yaml
@@ -29,4 +29,4 @@ resources:
   - ./tautulli/ks.yaml
   - ./thelounge/ks.yaml
   - ./zigbee2mqtt/ks.yaml
-  - ./zwave-js-ui/ks.yaml
+  - ./zwave/ks.yaml
