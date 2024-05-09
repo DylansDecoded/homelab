@@ -157,7 +157,7 @@ spec:
       media:
         type: nfs
         server: 10.1.10.210
-        path: /mnt/tank/nfs/media
+        path: /mnt/tank/media
         advancedMounts:
           qbittorrent:
             app:

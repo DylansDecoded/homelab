@@ -131,6 +131,6 @@ spec:
       media:
         type: nfs
         server: 10.1.10.210
-        path: /mnt/tank/nfs/frigate
+        path: /mnt/tank/apps/frigate
         globalMounts:
           - path: /media
