@@ -54,10 +54,6 @@ spec:
               QBT_Preferences__WebUI__LocalHostAuth: false
               QBT_Preferences__WebUI__AuthSubnetWhitelist: |-
                 10.42.0.0/16, 10.1.1.0/24, 10.1.10.0/24, 10.1.40.0/24
-              QBT_BitTorrent__Session__InterfaceAddress:
-                valueFrom:
-                  fieldRef:
-                    fieldPath: status.podIP
             securityContext:
               runAsUser: 568
               runAsGroup: 568
@@ -93,7 +89,7 @@ spec:
               capabilities:
                 add:
                   - NET_ADMIN
-              allowPrivilegeEscalation: false
+              allowPrivilegeEscalation: true
 
           port-forward:
             image:
