@@ -35,13 +35,13 @@ spec:
           secret.reloader.stakater.com/reload: qbittorrent-secret
         pod:
           securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            fsGroup: 568
+            fsGroup: 2000
             fsGroupChangePolicy: "OnRootMismatch"
-            supplementalGroups: [10000]
+            supplementalGroups:
+            - 65542
         containers:
           app:
+            nameOverride: qbittorrent
             image:
               repository: ghcr.io/onedr0p/qbittorrent
               tag: 4.6.4@sha256:cb8a7df4e63bf410834af7846b6d5eee4f10748d03819ee7218015c5b0332a29
@@ -54,20 +54,31 @@ spec:
               QBT_Preferences__WebUI__LocalHostAuth: false
               QBT_Preferences__WebUI__AuthSubnetWhitelist: |-
                 10.42.0.0/16, 10.1.1.0/24, 10.1.10.0/24, 10.1.40.0/24
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
+            resources:
+              requests:
+                cpu: 49m
+                memory: 1024Mi
+              limits:
+                memory: 8192Mi
             securityContext:
-              runAsUser: 568
-              runAsGroup: 568
+              runAsUser: 2000
+              runAsGroup: 2000
               runAsNonRoot: true
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities:
                 drop:
                   - ALL
-            resources:
-              requests:
-                cpu: 200m
-              limits:
-                memory: 3Gi
 
           gluetun:
             image:
@@ -132,8 +143,7 @@ spec:
                   identifier: app
                   port: http
         tls:
-          - hosts:
-              - *host
+          - hosts: [*host]
 
     persistence:
       config:
@@ -158,4 +168,3 @@ spec:
           qbittorrent:
             app:
               - path: /media/downloads/qbittorrent
-                subPath: downloads/qbittorrent
