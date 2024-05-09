@@ -34,13 +34,9 @@ spec:
           app:
             image:
               repository: ghcr.io/cross-seed/cross-seed
-              tag: 5.9.2@sha256:6abdca45f0ecfd8d23a3035beefa716a14b66f23c14854631fe369d1ad346f1e
+              tag: 6.0.0-0@sha256:ae6da5e53ef2b279520d9b98ecdcea209475b703f7e15d972ec193053c000c45
             env:
               TZ: America/New_York
-              CROSSSEED_PORT: &port 80
-            envFrom:
-              - secretRef:
-                  name: cross-seed-secret
             args: ["daemon"]
             probes:
               liveness:
@@ -56,29 +52,41 @@ spec:
                 cpu: 10m
               limits:
                 memory: 512Mi
-        pod:
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            runAsNonRoot: true
-            fsGroup: 568
-            fsGroupChangePolicy: OnRootMismatch
-            supplementalGroups: [10000]
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [10000]
+        seccompProfile: { type: RuntimeDefault }
     service:
       app:
         controller: cross-seed
         ports:
           http:
-            port: *port
+            port: 80
     persistence:
       config:
         type: emptyDir
-      config-file:
-        type: configMap
-        name: cross-seed-configmap
+      secret-file:
+        type: secret
+        name: cross-seed-secret
         globalMounts:
           - path: /config/config.js
             subPath: config.js
             readOnly: true
       qbittorrent:
         existingClaim: qbittorrent
+        globalMounts:
+          - path: /qbittorrent/qBittorrent/BT_backup
+            subPath: qBittorrent/BT_backup
+            readOnly: true
+      media:
+        type: nfs
+        server: 10.1.10.210
+        path: /mnt/tank/media
+        globalMounts:
+          - path: /media/downloads/qbittorrent
+            subPath: downloads/qbittorrent
