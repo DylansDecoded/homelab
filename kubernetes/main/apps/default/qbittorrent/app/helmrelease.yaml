@@ -33,27 +33,28 @@ spec:
         annotations:
           configmap.reloader.stakater.com/reload: qbittorrent-scripts,qbittorrent-dnsdist
           secret.reloader.stakater.com/reload: qbittorrent-secret
-        pod:
-          securityContext:
-            fsGroup: 2000
-            fsGroupChangePolicy: "OnRootMismatch"
-            supplementalGroups:
-            - 65542
+
         containers:
           app:
             nameOverride: qbittorrent
             image:
-              repository: ghcr.io/onedr0p/qbittorrent
-              tag: 4.6.4@sha256:cb8a7df4e63bf410834af7846b6d5eee4f10748d03819ee7218015c5b0332a29
+              repository: ghcr.io/onedr0p/qbittorrent-beta
+              tag: 4.6.4@sha256:d7620ef51467015e1cffab143d053a7dfbc2d7a6f50b3491427df7cd40cf16a9
             env:
               TZ: America/New_York
-              UMASK: "022"
+              # UMASK: "022"
               QBITTORRENT__PORT: &port 8080
               QBITTORRENT__WebUI__AlternativeUIEnabled: false
               QBT_Preferences__WebUI__AuthSubnetWhitelistEnabled: true
               QBT_Preferences__WebUI__LocalHostAuth: false
               QBT_Preferences__WebUI__AuthSubnetWhitelist: |-
                 10.42.0.0/16, 10.1.1.0/24, 10.1.10.0/24, 10.1.40.0/24
+              # QBT_BitTorrent__Session__Interface: wg0
+              # QBT_BitTorrent__Session__InterfaceAddress:
+              #   valueFrom:
+              #     fieldRef:
+              #       fieldPath: status.podIP
+              # QBT_BitTorrent__Session__InterfaceName: wg0
             probes:
               liveness:
                 enabled: true
@@ -71,9 +72,6 @@ spec:
               limits:
                 memory: 8192Mi
             securityContext:
-              runAsUser: 2000
-              runAsGroup: 2000
-              runAsNonRoot: true
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities:
@@ -115,14 +113,20 @@ spec:
               CRON_SCHEDULE: "*/5 * * * *"
               LOG_TIMESTAMP: false
             securityContext:
-              runAsUser: 2000
-              runAsGroup: 2000
-              runAsNonRoot: true
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities:
                 drop:
                   - ALL
+
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [10000]
 
     service:
       app:
@@ -153,6 +157,7 @@ spec:
             app:
               - path: /config
 
+
       empty-config:
         type: emptyDir
         advancedMounts:
@@ -168,3 +173,4 @@ spec:
           qbittorrent:
             app:
               - path: /media/downloads/qbittorrent
+                subPath: downloads/qbittorrent
