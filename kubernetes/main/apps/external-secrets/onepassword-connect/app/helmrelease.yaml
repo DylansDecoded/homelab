@@ -35,7 +35,9 @@ spec:
               tag: 1.7.2@sha256:6aa94cf713f99c0fa58c12ffdd1b160404b4c13a7f501a73a791aa84b608c5a1
             env:
               XDG_DATA_HOME: &configDir /config
-              OP_HTTP_PORT: &apiPort 8080
+              OP_HTTP_PORT: &apiPort 80
+              OP_BUS_PORT: 11220
+              OP_BUS_PEERS: 127.0.0.1:11221
               OP_SESSION:
                 valueFrom:
                   secretKeyRef:
@@ -76,6 +78,8 @@ spec:
             env:
               XDG_DATA_HOME: *configDir
               OP_HTTP_PORT: &syncPort 8081
+              OP_BUS_PORT: 11221
+              OP_BUS_PEERS: 127.0.0.1:11220
               OP_SESSION:
                 valueFrom:
                   secretKeyRef:
