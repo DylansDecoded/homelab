@@ -15,31 +15,31 @@ spec:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  dependsOn:
+    - name: intel-device-plugin-gpu
+      namespace: kube-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: volsync-system
   values:
     controllers:
       scrypted:
         annotations:
           reloader.stakater.com/auto: "true"
-
-        pod:
-          affinity:
-            podAntiAffinity:
-              requiredDuringSchedulingIgnoredDuringExecution:
-                - labelSelector:
-                    matchExpressions:
-                      - key: app.kubernetes.io/name
-                        operator: In
-                        values: ["plex"]
-                  topologyKey: kubernetes.io/hostname
-          nodeSelector:
-            google.feature.node.kubernetes.io/coral: "true"
-            intel.feature.node.kubernetes.io/gpu: "true"
         containers:
           app:
             image:
               repository: ghcr.io/koush/scrypted
-              tag: 20-jammy-full-v0.98.0
+              tag: 20-jammy-full-v0.100.1
             probes:
               liveness:
                 enabled: true
@@ -57,7 +57,8 @@ spec:
                 memory: 1024Mi
               limits:
                 gpu.intel.com/i915: 1
-                memory: 4096Mi
+                cpu: 250m
+                memory: 3Gi
             securityContext:
               privileged: true
     service:
@@ -81,6 +82,7 @@ spec:
                   port: http
         tls:
           - hosts: [*host]
+
     persistence:
       config:
         existingClaim: scrypted
@@ -96,6 +98,7 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /.npm
+
       dev-bus-usb:
         type: hostPath
         hostPath: /dev/bus/usb
@@ -104,6 +107,7 @@ spec:
         type: hostPath
         hostPath: /sys/bus/usb
         hostPathType: Directory
+
       recordings:
         type: nfs
         server: 10.1.10.210
