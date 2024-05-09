@@ -107,6 +107,6 @@ spec:
       recordings:
         type: nfs
         server: 10.1.10.210
-        path: /mnt/tank/nfs/scrypted
+        path: /mnt/tank/apps/scrypted
         globalMounts:
           - path: /recordings
