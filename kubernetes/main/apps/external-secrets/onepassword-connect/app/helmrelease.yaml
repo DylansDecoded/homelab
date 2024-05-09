@@ -35,9 +35,7 @@ spec:
               tag: 1.7.2@sha256:6aa94cf713f99c0fa58c12ffdd1b160404b4c13a7f501a73a791aa84b608c5a1
             env:
               XDG_DATA_HOME: &configDir /config
-              OP_HTTP_PORT: &apiPort 80
-              OP_BUS_PORT: 11220
-              OP_BUS_PEERS: localhost:11221
+              OP_HTTP_PORT: &apiPort 8080
               OP_SESSION:
                 valueFrom:
                   secretKeyRef:
@@ -78,8 +76,6 @@ spec:
             env:
               XDG_DATA_HOME: *configDir
               OP_HTTP_PORT: &syncPort 8081
-              OP_BUS_PORT: 11221
-              OP_BUS_PEERS: localhost:11220
               OP_SESSION:
                 valueFrom:
                   secretKeyRef:
@@ -106,6 +102,7 @@ spec:
                   initialDelaySeconds: 15
             securityContext: *securityContext
             resources: *resources
+
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -113,13 +110,14 @@ spec:
         runAsGroup: 999
         fsGroup: 999
         fsGroupChangePolicy: OnRootMismatch
-        seccompProfile: { type: RuntimeDefault }
+
     service:
       app:
         controller: onepassword-connect
         ports:
           http:
             port: *apiPort
+
     ingress:
       app:
         className: internal
@@ -130,8 +128,9 @@ spec:
                 service:
                   identifier: app
                   port: http
+
     persistence:
       config:
         type: emptyDir
         globalMounts:
-          - path: *configDir
+          - path: /config
