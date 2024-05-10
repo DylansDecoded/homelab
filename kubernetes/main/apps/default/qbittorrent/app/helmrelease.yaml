@@ -81,7 +81,7 @@ spec:
           gluetun:
             image:
               repository: ghcr.io/qdm12/gluetun
-              tag: v3
+              tag: v3.37.0
             env:
               VPN_SERVICE_PROVIDER: custom
               VPN_TYPE: wireguard
@@ -98,7 +98,7 @@ spec:
               capabilities:
                 add:
                   - NET_ADMIN
-              allowPrivilegeEscalation: false
+              allowPrivilegeEscalation: true
 
           port-forward:
             image:
