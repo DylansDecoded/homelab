@@ -33,7 +33,13 @@ spec:
         annotations:
           configmap.reloader.stakater.com/reload: qbittorrent-scripts,qbittorrent-dnsdist
           secret.reloader.stakater.com/reload: qbittorrent-secret
-
+        pod:
+          securityContext:
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
+            supplementalGroups:
+              - 65542
+              - 10000
         containers:
           app:
             nameOverride: qbittorrent
@@ -81,7 +87,7 @@ spec:
           gluetun:
             image:
               repository: ghcr.io/qdm12/gluetun
-              tag: v3.37.0
+              tag: v3.3.38
             env:
               VPN_SERVICE_PROVIDER: custom
               VPN_TYPE: wireguard
@@ -118,15 +124,6 @@ spec:
               capabilities:
                 drop:
                   - ALL
-
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 568
-        runAsGroup: 568
-        fsGroup: 568
-        fsGroupChangePolicy: OnRootMismatch
-        supplementalGroups: [10000]
 
     service:
       app:
