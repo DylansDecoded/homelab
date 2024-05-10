@@ -87,7 +87,7 @@ spec:
           gluetun:
             image:
               repository: ghcr.io/qdm12/gluetun
-              tag: v3.3.38
+              tag: v3.38.0
             env:
               VPN_SERVICE_PROVIDER: custom
               VPN_TYPE: wireguard
