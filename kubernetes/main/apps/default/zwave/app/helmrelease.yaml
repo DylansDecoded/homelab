@@ -57,7 +57,8 @@ spec:
                   failureThreshold: 3
               readiness: *probes
             securityContext:
-              priviledged: true
+              allowPrivilegeEscalation: true
+              privileged: true
             #   readOnlyRootFilesystem: true
             #   capabilities: { drop: ["ALL"] }
             resources:
@@ -111,5 +112,3 @@ spec:
         hostPathType: CharDevice
         globalMounts:
           - path: /dev/serial/by-id/usb-Zooz_800_Z-Wave_Stick_533D004242-if00
-
-
