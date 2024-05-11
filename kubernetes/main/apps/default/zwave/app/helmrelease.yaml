@@ -32,6 +32,9 @@ spec:
       zwave:
         annotations:
           reloader.stakater.com/auto: "true"
+        pod:
+          nodeSelector:
+            zooz.feature.node.kubernetes.io/zwave: "true"
         containers:
           app:
             image:
@@ -54,23 +57,24 @@ spec:
                   failureThreshold: 3
               readiness: *probes
             securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
-            resources:
-              requests:
-                cpu: 10m
-              limits:
-                memory: 512Mi
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 568
-        runAsGroup: 568
-        fsGroup: 568
-        fsGroupChangePolicy: OnRootMismatch
-      nodeSelector:
-        zooz.feature.node.kubernetes.io/zwave: "true"
+              priviledged: true
+            #   allowPrivilegeEscalation: false
+            #   readOnlyRootFilesystem: true
+            #   capabilities: { drop: ["ALL"] }
+            # resources:
+            #   requests:
+            #     cpu: 10m
+            #   limits:
+            #     memory: 512Mi
+    # defaultPodOptions:
+    #   securityContext:
+    #     runAsNonRoot: true
+    #     runAsUser: 568
+    #     runAsGroup: 568
+    #     fsGroup: 568
+    #     fsGroupChangePolicy: OnRootMismatch
+    #   nodeSelector:
+    #     zooz.feature.node.kubernetes.io/zwave: "true"
     service:
       app:
         controller: *app
