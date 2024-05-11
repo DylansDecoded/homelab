@@ -61,11 +61,12 @@ spec:
             #   allowPrivilegeEscalation: false
             #   readOnlyRootFilesystem: true
             #   capabilities: { drop: ["ALL"] }
-            # resources:
-            #   requests:
-            #     cpu: 10m
-            #   limits:
-            #     memory: 512Mi
+            resources:
+              limits: &resources
+                memory: 256Mi
+              requests:
+                <<: *resources
+                cpu: 10m
     # defaultPodOptions:
     #   securityContext:
     #     runAsNonRoot: true
@@ -102,8 +103,8 @@ spec:
         globalMounts:
           - path: /usr/src/app/store
 
-      tmp:
-        type: emptyDir
+      # tmp:
+      #   type: emptyDir
 
       usb:
         type: hostPath
