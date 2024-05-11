@@ -42,7 +42,7 @@ spec:
               tag: 9.12.0@sha256:b3e81d29666116cdc8a5e80e9b57af73f04af627f84bf23cb2d6a6b050de61dc
             env:
               TZ: America/New_York
-              PORT: &port 80
+              # PORT: &port 80
             probes:
               liveness: &probes
                 enabled: true
@@ -50,7 +50,7 @@ spec:
                 spec:
                   httpGet:
                     path: /health
-                    port: *port
+                    port: &port 8091 # *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
@@ -58,7 +58,6 @@ spec:
               readiness: *probes
             securityContext:
               priviledged: true
-              allowPrivilegeEscalation: true
             #   readOnlyRootFilesystem: true
             #   capabilities: { drop: ["ALL"] }
             resources:
