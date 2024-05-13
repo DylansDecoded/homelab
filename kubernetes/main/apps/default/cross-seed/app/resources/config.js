@@ -1,16 +1,17 @@
+// Note: Cross-Seed vars should be escaped with $${VAR_NAME} to avoid any interpolation by Flux
 module.exports = {
   delay: 20,
   qbittorrentUrl: "http://qbittorrent.default.svc.cluster.local:8080",
   torznab: [
-    `https://prowlarr.robsonhome.cloud/3/api?apikey=$${process.env.PROWLARR_API_KEY}`, // mam
-    `https://prowlarr.robsonhome.cloud/5/api?apikey=$${process.env.PROWLARR_API_KEY}`, // hds
-    `https://prowlarr.robsonhome.cloud/9/api?apikey=$${process.env.PROWLARR_API_KEY}`, // ipt
-    `https://prowlarr.robsonhome.cloud/11/api?apikey=$${process.env.PROWLARR_API_KEY}`, // dc
-    `https://prowlarr.robsonhome.cloud/14/api?apikey=$${process.env.PROWLARR_API_KEY}`, // thhq
-    `https://prowlarr.robsonhome.cloud/16/api?apikey=$${process.env.PROWLARR_API_KEY}`, // tos
-    `https://prowlarr.robsonhome.cloud/17/api?apikey=$${process.env.PROWLARR_API_KEY}`, // mlk
-    `https://prowlarr.robsonhome.cloud/53/api?apikey=$${process.env.PROWLARR_API_KEY}`, // fnp
-    `https://prowlarr.robsonhome.cloud/86/api?apikey=$${process.env.PROWLARR_API_KEY}`, // uplcx
+    `http://prowlarr.default.svc.cluster.local/3/api?apikey=$${process.env.PROWLARR_API_KEY}`, // mam
+    `http://prowlarr.default.svc.cluster.local/5/api?apikey=$${process.env.PROWLARR_API_KEY}`, // hds
+    `http://prowlarr.default.svc.cluster.local/9/api?apikey=$${process.env.PROWLARR_API_KEY}`, // ipt
+    `http://prowlarr.default.svc.cluster.local/11/api?apikey=$${process.env.PROWLARR_API_KEY}`, // dc
+    `http://prowlarr.default.svc.cluster.local/14/api?apikey=$${process.env.PROWLARR_API_KEY}`, // thhq
+    `http://prowlarr.default.svc.cluster.local/16/api?apikey=$${process.env.PROWLARR_API_KEY}`, // tos
+    `http://prowlarr.default.svc.cluster.local/17/api?apikey=$${process.env.PROWLARR_API_KEY}`, // mlk
+    `http://prowlarr.default.svc.cluster.local/53/api?apikey=$${process.env.PROWLARR_API_KEY}`, // fnp
+    `http://prowlarr.default.svc.cluster.local/86/api?apikey=$${process.env.PROWLARR_API_KEY}`, // uplcx
   ],
   port: process.env.CROSSSEED_PORT || 80,
   apiAuth: false,
@@ -23,4 +24,4 @@ module.exports = {
   skipRecheck: true,
   outputDir: "/config",
   torrentDir: "/qbittorrent/qBittorrent/BT_backup",
-}
+};

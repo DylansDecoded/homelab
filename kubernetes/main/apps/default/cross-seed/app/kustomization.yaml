@@ -8,6 +8,6 @@ resources:
 configMapGenerator:
   - name: cross-seed-configmap
     files:
-      - ./resources/config.js
+      - config.js=./resources/config.js
 generatorOptions:
   disableNameSuffixHash: true
