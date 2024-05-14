@@ -1,39 +1,23 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
   packageRules: [
     {
-      matchDatasources: [
-        "docker",
-        "github-tags"
+      description: [
+        "Auto-merge container digests updates for trusted containers",
       ],
+      matchDatasources: ["docker"],
       automerge: true,
       automergeType: "branch",
-      ignoreTests: true,
-      platformCommit: true,
-      matchUpdateTypes: [
-        "minor",
-        "patch",
-      ],
-      matchPackageNames: [
-        "renovatebot/github-action",
-        "ghcr.io/onedr0p/readarr-develop",
-        "ghcr.io/onedr0p/sonarr-develop",
-        "ghcr.io/onedr0p/radarr-develop"
-      ]
+      matchUpdateTypes: ["digest"],
+      matchPackagePatterns: ["ghcr.io/bjw-s", "ghcr.io/onedr0p"],
     },
-    // {
-    //   matchDatasources: [
-    //     "docker",
-    //     "github-tags"
-    //   ],
-    //   automerge: true,
-    //   automergeType: "pr",
-    //   ignoreTests: true,
-    //   platformCommit: true,
-    //   matchUpdateTypes: [
-    //     "minor",
-    //     "patch"
-    //   ]
-    // }
-  ]
+    {
+      description: ["Auto-merge GitHub Actions for minor and patch"],
+      matchManagers: ["github-actions"],
+      matchDatasources: ["github-tags"],
+      automerge: true,
+      automergeType: "branch",
+      matchUpdateTypes: ["minor", "patch"],
+    },
+  ],
 }
