@@ -6,10 +6,9 @@ resources:
   # Pre Flux-Kustomizations
   - ./namespace.yaml
   # Flux-Kustomizations
-  # - ./atuin/ks.yaml
+  - ./atuin/ks.yaml
   - ./authelia/ks.yaml
   - ./autobrr/ks.yaml
-  - ./cross-seed/ks.yaml
   - ./flaresolverr/ks.yaml
   - ./frigate/ks.yaml
   - ./glauth/ks.yaml
@@ -25,7 +24,6 @@ resources:
   - ./recyclarr/ks.yaml
   - ./ring-mqtt/ks.yaml
   - ./sabnzbd/ks.yaml
-  # - ./scrypted/ks.yaml
   - ./sonarr/ks.yaml
   - ./tautulli/ks.yaml
   - ./thelounge/ks.yaml

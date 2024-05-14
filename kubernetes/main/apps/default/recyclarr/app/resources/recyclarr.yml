@@ -122,7 +122,7 @@ radarr:
           allowed: true
           until_quality: Remux-1080p
           until_score: 0
-        min_format_score: 0
+        min_format_score: 10000
         quality_sort: top
         qualities:
           - name: Remux-1080p
@@ -135,10 +135,10 @@ radarr:
         reset_unmatched_scores:
           enabled: true
         upgrade:
-          allowed: false
+          allowed: true
           until_quality: Remux-2160p
           until_score: 0
-        min_format_score: 4500
+        min_format_score: 10000
         quality_sort: top
         qualities:
           - name: Remux-2160p
