@@ -9,5 +9,11 @@
     "sops-edit.onlyUseButtons": true,
     "python.analysis.addImport.exactMatchOnly": true,
     "autoDocstring.docstringFormat": "pep257",
-    "autoDocstring.startOnNewLine": true
+    "autoDocstring.startOnNewLine": true,
+    "files.associations": {
+      "*.yaml": "home-assistant"
+    },
+    // "files.associations": {
+    //   "*.yaml": "home-assistant"
+    // }
 }
