@@ -5,7 +5,7 @@ metadata:
   name: postgres16
 spec:
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.2-13
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.2-16
   primaryUpdateStrategy: unsupervised
   storage:
     size: 20Gi
@@ -22,9 +22,9 @@ spec:
     reusePVC: true
   resources:
     requests:
-      cpu: 256m
+      cpu: 500m
     limits:
-      memory: 3Gi
+      memory: 4Gi
   monitoring:
     enablePodMonitor: true
     # Ref: https://github.com/cloudnative-pg/cloudnative-pg/issues/2501
@@ -51,37 +51,14 @@ spec:
         secretAccessKey:
           name: cloudnative-pg-secret
           key: aws-secret-access-key
-  # bootstrap:
-  #   initdb:
-  #     database: postgres
-  #     owner: postgres
-  #     secret:
-  #       name: cloudnative-pg-secret
   # Note: previousCluster needs to be set to the name of the previous
   # cluster when recovering from an existing cnpg cluster
   bootstrap:
     recovery:
-      source: &previousCluster postgres16-v1
+      source: &previousCluster postgres16-v2
   # Note: externalClusters is needed when recovering from an existing cnpg cluster
   externalClusters:
   - name: *previousCluster
     barmanObjectStore:
-      barmanObjectStore:
-        data:
-          compression: bzip2
-        wal:
-          compression: bzip2
-          maxParallel: 8
-        destinationPath: s3://cloudnative-pg/
-        endpointURL: https://s3.robsonhome.cloud
-        # Note: serverName version needs to be inclemented
-        # when recovering from an existing cnpg cluster
-        serverName: &currentCluster postgres16-v3
-        s3Credentials:
-          accessKeyId:
-            name: cloudnative-pg-secret
-            key: aws-access-key-id
-          secretAccessKey:
-            name: cloudnative-pg-secret
-            key: aws-secret-access-key
+      <<: *barmanObjectStore
       serverName: *previousCluster
