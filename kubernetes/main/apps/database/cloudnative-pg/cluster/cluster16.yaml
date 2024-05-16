@@ -66,5 +66,22 @@ spec:
   externalClusters:
   - name: *previousCluster
     barmanObjectStore:
-      !!merge <<: *barmanObjectStore
+      barmanObjectStore:
+        data:
+          compression: bzip2
+        wal:
+          compression: bzip2
+          maxParallel: 8
+        destinationPath: s3://cloudnative-pg/
+        endpointURL: https://s3.robsonhome.cloud
+        # Note: serverName version needs to be inclemented
+        # when recovering from an existing cnpg cluster
+        serverName: &currentCluster postgres16-v3
+        s3Credentials:
+          accessKeyId:
+            name: cloudnative-pg-secret
+            key: aws-access-key-id
+          secretAccessKey:
+            name: cloudnative-pg-secret
+            key: aws-secret-access-key
       serverName: *previousCluster
