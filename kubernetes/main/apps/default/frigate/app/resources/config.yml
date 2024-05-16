@@ -10,9 +10,12 @@ mqtt:
 database:
   path: /data/frigate.db
 
-## TODO: Get Frigate+ Model integrated once it's available
-# model:
-#   path: plus://
+
+model:
+  path:
+  - plus://05fafebf939bb56823f402e6cf2f3d0f #EdgeTPU Model
+  - plus://31ae02b80aea47a2d9ae077f973c1648 #CPU Model
+
 
 detectors:
   coral:
