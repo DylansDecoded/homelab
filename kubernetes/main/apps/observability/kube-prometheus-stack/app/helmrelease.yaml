@@ -68,6 +68,7 @@ spec:
           - action: drop
             sourceLabels: ["__name__"]
             regex: (rest_client_request_duration_seconds_bucket|rest_client_request_duration_seconds_sum|rest_client_request_duration_seconds_count)
+
     kubeApiServer:
       enabled: true
       serviceMonitor:
@@ -124,7 +125,7 @@ spec:
           - new-service-discovery-manager
         thanos:
           image: quay.io/thanos/thanos:${THANOS_VERSION}
-          version: "${THANOS_VERSION#v}"
+          version: "${THANOS_VERSION}"
           objectStorageConfig:
             existingSecret:
               name: thanos-objstore-config
@@ -180,6 +181,7 @@ spec:
           multicluster:
             etcd:
               enabled: true
+
   postRenderers:
     - kustomize:
         patches:
