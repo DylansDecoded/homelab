@@ -1,11 +1,10 @@
----
-k3s_release_version: v1.29.4+k3s1
+k3s_release_version: v1.30.0+k3s1
 k3s_install_hard_links: true
 k3s_become: true
 k3s_etcd_datastore: true
 k3s_registration_address: 10.1.33.254
 k3s_server_manifests_templates:
-  - custom-cilium-helmchart.yaml.j2
-  - custom-coredns-helmchart.yaml.j2
-  - kube-vip-ds.yaml.j2
-  - kube-vip-rbac.yaml.j2
+- custom-cilium-helmchart.yaml.j2
+- custom-coredns-helmchart.yaml.j2
+- kube-vip-ds.yaml.j2
+- kube-vip-rbac.yaml.j2
