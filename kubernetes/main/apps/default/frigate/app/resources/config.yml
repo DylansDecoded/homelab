@@ -80,8 +80,7 @@ cameras:
       - path: rtsp://127.0.0.1:8554/reolink_backporch_turret_cam_sub?video=copy
         roles: ["detect"]
     motion:
-      mask:
-        coordinates: 418,176,141,181,106,89,71,0,169,0,332,0,640,0,640,248
+      mask: 418,176,141,181,106,89,71,0,169,0,332,0,640,0,640,248
     zones:
       back_porch:
         coordinates: 640,256,568,172,407,199,255,200,241,235,131,235,94,271,40,480,640,480
@@ -96,8 +95,7 @@ cameras:
       - path: rtsp://127.0.0.1:8554/reolink_driveway_floodlight_cam_sub?video=copy
         roles: ["detect"]
     motion:
-      mask:
-        coordinates: 1133,204,1349,266,1451,311,1536,576,1094,576,931,163
+      mask: 1133,204,1349,266,1451,311,1536,576,1094,576,931,163
     zones:
       driveway:
         coordinates: 798,413,830,180,582,172,339,358,193,440,279,576,773,576
