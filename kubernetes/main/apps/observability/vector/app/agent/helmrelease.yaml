@@ -1,5 +1,5 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -32,12 +32,12 @@ spec:
         type: daemonset
         strategy: RollingUpdate
         annotations:
-          reloader.stakater.com/auto: "true"
+          reloader.stakater.com/auto: 'true'
         containers:
           app:
             image:
               repository: docker.io/timberio/vector
-              tag: 0.38.0-alpine@sha256:0f40a5bc6df18de0f4855ee6a801449f1b78fa60b3c5001c530896abc64b18b2
+              tag: 0.38.0-alpine@sha256:3b95d814fe6eeb32e2864cbcdc541fde4c0368df0e096d201cdadec797550341
             env:
               PROCFS_ROOT: /host/proc
               SYSFS_ROOT: /host/sys
@@ -56,7 +56,7 @@ spec:
                   fieldRef:
                     apiVersion: v1
                     fieldPath: metadata.namespace
-            args: ["--config", "/etc/vector/vector.yaml"]
+            args: ['--config', '/etc/vector/vector.yaml']
             securityContext:
               privileged: true
     serviceAccount:
