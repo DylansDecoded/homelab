@@ -129,9 +129,9 @@ spec:
           cluster: main
         resources:
           requests:
-            cpu: 100m
+            cpu: 50m
           limits:
-            memory: 1500Mi
+            memory: 200Mi
         storageSpec:
           volumeClaimTemplate:
             spec:
