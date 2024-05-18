@@ -1,5 +1,4 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -38,6 +37,7 @@ spec:
               tag: 2024.4.0@sha256:f7914e46a7b639cf6cecf564eedf7ea7292e9027d2f9aa8372943115b26427ca
             env:
               SCRIPT_NAME: fstrim.sh
+              KUBELET_BIN: /var/lib/kubelet
             resources:
               requests:
                 cpu: 25m
