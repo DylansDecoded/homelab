@@ -124,14 +124,14 @@ spec:
               name: *secret
               key: config
         retention: 2d
-        retentionSize: 15GB
         externalLabels:
           cluster: main
         resources:
           requests:
-            cpu: 50m
+            cpu: 200m
+            memory: 2000Mi
           limits:
-            memory: 200Mi
+            memory: 4000Mi
         storageSpec:
           volumeClaimTemplate:
             spec:
