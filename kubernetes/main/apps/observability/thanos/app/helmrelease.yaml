@@ -75,7 +75,7 @@ spec:
     query:
       replicas: 2
       extraArgs: ['--alert.query-url=https://thanos.robsonhome.cloud']
-      additionalStores: ['thanos.turbo.ac:10901']
+      additionalStores: ['thanos.robsonhome.cloud:10901']
     queryFrontend:
       enabled: true
       replicas: 2
