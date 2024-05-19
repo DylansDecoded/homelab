@@ -1,50 +1,29 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app fstrim
+  name: fstrim
 spec:
-  interval: 30m
   chart:
     spec:
       chart: app-template
       version: 3.1.0
+      interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      strategy: rollback
-      retries: 3
+  interval: 30m
   values:
     controllers:
       fstrim:
         type: cronjob
+
         cronjob:
-          schedule: '@weekly'
-          parallelism: 6 # Set to my total number of nodes
-          successfulJobsHistory: 1
-          failedJobsHistory: 1
-        containers:
-          app:
-            image:
-              repository: ghcr.io/onedr0p/kubanetics
-              tag: 2024.4.0@sha256:f7914e46a7b639cf6cecf564eedf7ea7292e9027d2f9aa8372943115b26427ca
-            args: ['export KUBELET_BIN=/var/lib/kubelet']
-            env:
-              SCRIPT_NAME: fstrim.sh
-            resources:
-              requests:
-                cpu: 25m
-              limits:
-                memory: 128Mi
-            securityContext:
-              privileged: true
+          schedule: '0 0 * * 1'
+          parallelism: 3 # Set this to your number of nodes
+
         pod:
           hostNetwork: true
           hostPID: true
@@ -54,7 +33,36 @@ spec:
               whenUnsatisfiable: DoNotSchedule
               labelSelector:
                 matchLabels:
-                  app.kubernetes.io/name: *app
+                  app.kubernetes.io/name: fstrim
+
+        containers:
+          app:
+            image:
+              repository: docker.io/library/alpine
+              tag: 3.19
+            command:
+              - '/bin/sh'
+              - '-c'
+            args:
+              - |
+                nsenter --mount=/host/proc/$(pidof /var/lib/kubelet/kubelet)/ns/mnt --net=/host/proc/$(pidof /var/lib/kubelet)/ns/net -- sh -c "cat /proc/self/mountinfo | grep -v kubelet | grep -v tmpfs | grep -v overlay > /tmp/fs.txt"
+                nsenter --mount=/host/proc/$(pidof /var/lib/kubelet/kubelet)/ns/mnt --net=/host/proc/$(pidof /var/lib/kubelet)/ns/net -- sh -c "fstrim -v --quiet-unsupported -I /tmp/fs.txt"
+            probes:
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 25m
+                memory: 128Mi
+              limits:
+                memory: 128Mi
+            securityContext:
+              privileged: true
+
     persistence:
       procfs:
         type: hostPath
