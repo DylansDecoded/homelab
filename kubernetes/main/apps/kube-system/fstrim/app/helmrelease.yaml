@@ -45,10 +45,29 @@ spec:
               - '-c'
             args:
               - |
-                KUBELET_BIN="/var/lib/kubelet"
+                set -e
+                #!/usr/bin/env bash
 
-                nsenter --mount=/host/proc/$(pgrep /var/lib/kubelet)/ns/mnt --net=/host/proc/$(pgrep /var/lib/kubelet)/ns/net -- sh -c "cat /proc/self/mountinfo | grep -v kubelet | grep -v tmpfs | grep -v overlay > /tmp/fs.txt"
-                nsenter --mount=/host/proc/$(pgrep /var/lib/kubelet)/ns/mnt --net=/host/proc/$(pgrep /var/lib/kubelet)/ns/net -- sh -c "fstrim -v --quiet-unsupported -I /tmp/fs.txt"
+                KUBELET_BIN="/var/lib/kubelet"
+                KUBELET_PID="$(pgrep -f $KUBELET_BIN)"
+
+                echo "KUBELET_PID: ${KUBELET_PID}"
+
+                if [ -z "${KUBELET_PID}" ]; then
+                    echo "kubelet not found"
+                    exit 1
+                fi
+
+                # Enter namespaces and run commands
+                nsrun() {
+                    nsenter \
+                        --mount="/host/proc/${KUBELET_PID}/ns/mnt" \
+                        --net="/host/proc/${KUBELET_PID}/ns/net" \
+                        -- bash -c "$1"
+                }
+
+                # Trim filesystems
+                nsrun "fstrim --verbose --quiet-unsupported --all"
             probes:
               liveness:
                 enabled: false
