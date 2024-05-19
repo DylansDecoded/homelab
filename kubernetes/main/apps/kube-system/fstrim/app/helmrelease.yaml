@@ -35,10 +35,7 @@ spec:
             image:
               repository: ghcr.io/onedr0p/kubanetics
               tag: 2024.4.0@sha256:f7914e46a7b639cf6cecf564eedf7ea7292e9027d2f9aa8372943115b26427ca
-            args:
-              - /entrypoint.sh
-              - --KUBELET_BIN
-              - '/var/lib/kubelet'
+            args: ['export KUBELET_BIN=/var/lib/kubelet']
             env:
               SCRIPT_NAME: fstrim.sh
             resources:
