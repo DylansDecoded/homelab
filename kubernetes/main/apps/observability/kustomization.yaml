@@ -6,12 +6,12 @@ resources:
   - ./namespace.yaml
   # Flux-Kustomizations
   # - ./alertmanager-silencer/ks.yaml
-  # - ./gatus/ks.yaml
-  # - ./grafana/ks.yaml
-  # - ./kromgo/ks.yaml
-  # - ./kube-prometheus-stack/ks.yaml
+  - ./gatus/ks.yaml
+  - ./grafana/ks.yaml
+  - ./kromgo/ks.yaml
+  - ./kube-prometheus-stack/ks.yaml
   - ./loki/ks.yaml
-  # - ./omada-exporter/ks.yaml
-  # - ./smartctl-exporter/ks.yaml
-  # - ./thanos/ks.yaml
+  - ./omada-exporter/ks.yaml
+  - ./smartctl-exporter/ks.yaml
+  - ./thanos/ks.yaml
   - ./vector/ks.yaml
