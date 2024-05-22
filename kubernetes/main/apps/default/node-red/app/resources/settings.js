@@ -18,7 +18,7 @@ module.exports = {
         userInfoURL: "https://auth.robsonhome.cloud/api/oidc/userinfo",
         clientID: process.env.NODE_RED_OAUTH_CLIENT_ID,
         clientSecret: process.env.NODE_RED_OAUTH_CLIENT_SECRET,
-        callbackURL: "https://nodered.robsonhome.cloud/auth/strategy/callback",
+        callbackURL: "https://nr.robsonhome.cloud/auth/strategy/callback",
         scope: ["email", "profile", "openid"],
         proxy: true,
         verify: function (issuer, profile, done) {
