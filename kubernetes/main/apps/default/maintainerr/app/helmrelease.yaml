@@ -3,9 +3,8 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app node-red
+  name: maintainerr
 spec:
-  interval: 30m
   chart:
     spec:
       chart: app-template
@@ -15,58 +14,57 @@ spec:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-
+  interval: 30m
   values:
     controllers:
-      node-red:
+      maintainerr:
         annotations:
           reloader.stakater.com/auto: 'true'
 
         pod:
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            fsGroup: 1000
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
             fsGroupChangePolicy: 'OnRootMismatch'
 
         containers:
           app:
             image:
-              repository: docker.io/nodered/node-red
-              tag: 3.1.9
-            envFrom:
-              - secretRef:
-                  name: node-red-secret
+              repository: ghcr.io/jorenn92/maintainerr
+              tag: 2.0.3
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
             resources:
               requests:
                 cpu: 5m
-                memory: 512Mi
+                memory: 128Mi
               limits:
                 memory: 512Mi
 
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities:
-                drop:
-                  - ALL
-
     service:
       app:
-        controller: node-red
+        controller: maintainerr
         ports:
           http:
-            port: 1880
+            port: 6246
 
     ingress:
       app:
-        className: external
-        annotations:
-          external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
+        className: internal
         hosts:
-          - host: &host nr.robsonhome.cloud
+          - host: &host maintainerr.robsonhome.cloud
             paths:
               - path: /
+                pathType: Prefix
                 service:
                   identifier: app
                   port: http
@@ -75,14 +73,6 @@ spec:
 
     persistence:
       data:
-        existingClaim: *app
-
-      settings:
-        type: configMap
-        name: node-red-configmap
+        existingClaim: maintainerr
         globalMounts:
-          - path: /data/settings.js
-            subPath: settings.js
-            readOnly: true
-      tmp:
-        type: emptyDir
+          - path: /opt/data
