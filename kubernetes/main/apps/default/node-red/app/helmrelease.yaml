@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: node-red
+  name: &app node-red
 spec:
   interval: 30m
   chart:
@@ -44,6 +44,21 @@ spec:
               limits:
                 memory: 512Mi
 
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
     service:
       app:
         controller: node-red
@@ -68,15 +83,14 @@ spec:
 
     persistence:
       data:
-        existingClaim: node-red
-        advancedMounts:
-          node-red:
-            app:
-              - path: /data
-      config-file:
+        existingClaim: *app
+
+      settings:
         type: configMap
         name: node-red-configmap
         globalMounts:
           - path: /data/settings.js
             subPath: settings.js
             readOnly: true
+      tmp:
+        type: emptyDir
