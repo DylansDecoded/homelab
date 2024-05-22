@@ -24,9 +24,9 @@ spec:
 
         pod:
           securityContext:
-            runAsUser: 1000
-            runAsGroup: 1000
-            fsGroup: 1000
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
             fsGroupChangePolicy: 'OnRootMismatch'
 
         containers:
@@ -80,11 +80,10 @@ spec:
       settings:
         type: configMap
         name: node-red-configmap
-        advancedMounts:
-          node-red:
-            app:
-              - path: /data/settings.js
-                subPath: settings.js
-                readOnly: true
+        globalMounts:
+          - path: /data/settings.js
+            subPath: settings.js
+            readOnly: true
+
       tmp:
         type: emptyDir
