@@ -8,8 +8,8 @@ resources:
   - ../../../../templates/volsync
   - ../../../../templates/gatus/guarded
 configMapGenerator:
-  - name: nodered-configmap
+  - name: node-red-configmap
     files:
-      - settings.js=./resources/settings.js
+      - settings.js=resources/settings.js
 generatorOptions:
   disableNameSuffixHash: true
