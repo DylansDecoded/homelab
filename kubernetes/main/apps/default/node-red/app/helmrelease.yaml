@@ -80,9 +80,11 @@ spec:
       settings:
         type: configMap
         name: node-red-configmap
-        globalMounts:
-          - path: /data/settings.js
-            subPath: settings.js
-            readOnly: true
+        advancedMounts:
+          node-red:
+            app:
+              - path: /data/settings.js
+                subPath: settings.js
+                readOnly: true
       tmp:
         type: emptyDir
