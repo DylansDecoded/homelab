@@ -118,7 +118,7 @@ spec:
         enabled: true
         className: internal
         hosts:
-          - host: &host hass-code.devbu.io
+          - host: &host hass-code.robsonhome.cloud
             paths:
               - path: /
                 service:
