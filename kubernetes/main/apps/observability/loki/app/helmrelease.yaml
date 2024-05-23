@@ -112,19 +112,6 @@ spec:
           rule_path: /rules/fake
         analytics:
           reporting_enabled: false
-    # chunksCache:
-    #   # -- Amount of memory allocated to chunks-cache for object storage (in MB).
-    #   allocatedMemory: 8192
-    #   # -- Maximum item memory for chunks-cache (in MB).
-    #   maxItemMemory: 5
-    #   # -- Maximum number of connections allowed
-    #   connectionLimit: 16384
-    #   # -- Max memory to use for cache write back
-    #   writebackSizeLimit: 500MB
-    #   # -- Max number of objects to use for cache write back
-    #   writebackBuffer: 500000
-    #   # -- Number of parallel threads for cache write back
-    #   writebackParallelism: 1
 
     backend:
       replicas: 2
