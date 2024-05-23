@@ -1,6 +1,6 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
-apiVersion: helm.toolkit.fluxcd.io/v2
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: home-assistant
@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 3.2.1
+      version: 3.1.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -36,21 +36,14 @@ spec:
           app:
             image:
               repository: ghcr.io/onedr0p/home-assistant
-              tag: 2024.5.4@sha256:94308e2a32059da54a74e132a166fec31aa046637b0f1dbc897d21c2a25c5658
+              tag: 2024.4.4@sha256:f2cb8e343ff32450b881a0c579e0805ef0bf4135b367bb3032bd9d0ec1618fd4
             env:
               TZ: America/New_York
-              HASS_HTTP_TRUSTED_PROXY_1: 10.1.1.0/24
+              HASS_HTTP_TRUSTED_PROXY_1: 192.168.42.0/24
               HASS_HTTP_TRUSTED_PROXY_2: 10.42.0.0/16
             envFrom:
               - secretRef:
                   name: home-assistant-secret
-            probes: &probes
-              liveness:
-                enabled: false
-              readiness:
-                enabled: false
-              startup:
-                enabled: false
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -60,77 +53,34 @@ spec:
                 cpu: 10m
               limits:
                 memory: 1Gi
-          code:
-            image:
-              repository: ghcr.io/coder/code-server
-              tag: 4.89.1
-            env:
-              TZ: America/New_York
-            args:
-              [
-                '--auth',
-                'none',
-                '--user-data-dir',
-                '/config/.vscode',
-                '--extensions-dir',
-                '/config/.vscode',
-                '--port',
-                '80',
-                '/config',
-              ]
-            probes: *probes
-            resources:
-              requests:
-                cpu: 10m
-              limits:
-                memory: 512Mi
-        pod:
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            runAsNonRoot: true
-            fsGroup: 568
-            fsGroupChangePolicy: OnRootMismatch
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
     service:
       app:
         controller: home-assistant
         ports:
           http:
             port: 8123
-          code:
-            port: 80
     ingress:
       app:
         className: external
         annotations:
           external-dns.alpha.kubernetes.io/target: external.robsonhome.cloud
         hosts:
-          - host: &host hass.robsonhome.cloud
+          - host: hass.robsonhome.cloud
             paths:
               - path: /
                 service:
                   identifier: app
                   port: http
-        tls:
-          - hosts: [*host]
-
-      code:
-        enabled: true
-        className: internal
-        hosts:
-          - host: &host hass-code.robsonhome.cloud
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: code
-        tls:
-          - hosts: [*host]
-
     persistence:
       config:
         existingClaim: home-assistant
-
       logs:
         type: emptyDir
         globalMounts:
