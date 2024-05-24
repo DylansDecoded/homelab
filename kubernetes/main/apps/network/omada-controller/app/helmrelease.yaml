@@ -1,0 +1,145 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2beta2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app omada-controller
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.2.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+  values:
+    controllers:
+      omada-controller:
+        containers:
+          app:
+            image:
+              repository: mbentley/omada-controller
+              tag: 5.13@sha256:f130a1c9c2c695de716b42d3c5fc5288faadf63af59b899069e826da22a16408
+            env:
+              TZ: ${TIMEZONE:=Etc/UTC}
+              MANAGE_HTTP_PORT: '8088'
+              MANAGE_HTTPS_PORT: '8043'
+              PORTAL_HTTP_PORT: '8888'
+              PORTAL_HTTPS_PORT: '8843'
+              SHOW_SERVER_LOGS: 'true'
+              SHOW_MONGODB_LOGS: 'true'
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+            resources:
+              requests:
+                cpu: 500m
+                memory: 1200Mi
+              limits:
+                memory: 2000Mi
+    service:
+      app:
+        controller: omada-controller
+        primary: true
+        ports:
+          http:
+            port: 8043
+
+      controller:
+        controller: omada-controller
+        type: LoadBalancer
+        externalIPs: ['${OMADA_IPV4:=fnord}', '${OMADA_IPV6:=fnord}']
+        externalTrafficPolicy: Local
+        ipFamilies: [IPv4, IPv6]
+        ipFamilyPolicy: PreferDualStack
+        ports:
+          # # Docs: https://www.tp-link.com/us/support/faq/3281/
+          # Management Ports
+          mgmt-8088-tcp:
+            port: 8088
+          mgmt-8043-tcp:
+            port: 8043
+          portal-8843-tcp:
+            port: 8843
+
+          # Device Discovery, Adoption, Management, and Upgrade
+          eap-v5-discovery:
+            port: 29810
+          eap-v4-discovery1:
+            port: 29811
+          eap-v4-discovery2:
+            port: 29812
+          eap-v4-upgrade:
+            port: 29813
+          eap-v5-manage:
+            port: 29814
+          eap-v5-device-info:
+            port: 29815
+          eap-v5-remote-control:
+            port: 29816
+          init-check:
+            port: 27001
+          old-init-info:
+            port: 27002
+          old-db-access:
+            port: 27017
+          db-access:
+            port: 27217
+    ingress:
+      app:
+        className: internal
+        annotations:
+          hajimari.io/icon: 'router-wireless-settings'
+          nginx.ingress.kubernetes.io/backend-protocol: 'HTTPS'
+          nginx.ingress.kubernetes.io/proxy-ssl-verify: 'off'
+          nginx.ingress.kubernetes.io/use-regex: 'true'
+          nginx.ingress.kubernetes.io/upstream-vhost: 'omada.robsonhome.cloud:8043'
+          nginx.ingress.kubernetes.io/proxy-redirect-from: '~https://(.+):8043/(.+)/login$'
+          nginx.ingress.kubernetes.io/proxy-redirect-to: 'https://$1/$2/login'
+        hosts:
+          - host: &host omada.robsonhome.cloud
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts: [*host]
+
+    persistence:
+      data:
+        existingClaim: *app
+        globalMounts:
+          - path: /opt/tplink/EAPController/data
+
+      work:
+        type: emptyDir
+        globalMounts:
+          - path: /opt/tplink/EAPController/work
+
+      logs:
+        type: emptyDir
+        globalMounts:
+          - path: /opt/tplink/EAPController/logs
+
+      backup:
+        type: nfs
+        server: 10.1.10.210
+        path: /mnt/tank/backups/kubernetes/omada-controller
+        globalMounts:
+          - path: /opt/tplink/EAPController/data/autobackup
