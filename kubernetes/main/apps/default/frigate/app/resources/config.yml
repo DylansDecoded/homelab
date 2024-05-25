@@ -52,18 +52,18 @@ record:
 go2rtc:
   streams:
     reolink_backporch_turret_cam:
-      - rtsp://admin:{FRIGATE_CAMERA_PASSWORD}@10.1.90.3:554/h264Preview_01_main
+      - rtsp://admin:{FRIGATE_CAMERA_PASSWORD}@10.1.90.3:554/h265Preview_01_main
       - 'ffmpeg:reolink_backporch_turret_cam#video=copy#audio=copy#audio=opus'
 
     reolink_backporch_turret_cam_sub:
-      - rtsp://admin:{FRIGATE_CAMERA_PASSWORD}@10.1.90.3:554/h264Preview_01_sub
+      - rtsp://admin:{FRIGATE_CAMERA_PASSWORD}@10.1.90.3:554/h265Preview_01_sub
 
     reolink_driveway_floodlight_cam:
       - rtsp://admin:{FRIGATE_CAMERA_PASSWORD}@10.1.90.4:554/h265Preview_01_main
       - 'ffmpeg:reolink_driveway_floodlight_cam#video=copy#audio=copy#audio=opus'
 
     reolink_driveway_floodlight_cam_sub:
-      - rtsp://admin:{FRIGATE_CAMERA_PASSWORD}@10.1.90.4:554/h264Preview_01_sub
+      - rtsp://admin:{FRIGATE_CAMERA_PASSWORD}@10.1.90.4:554/h265Preview_01_sub
 
 cameras:
   reolink_backporch_turret_cam:
