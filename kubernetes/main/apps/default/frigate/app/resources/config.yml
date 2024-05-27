@@ -33,7 +33,7 @@ birdseye:
 
 ffmpeg:
   global_args: ['-hide_banner', '-loglevel', 'warning']
-  hwaccel_args: preset-intel-qsv-h264
+  hwaccel_args: preset-intel-qsv-264
   output_args:
     record: preset-record-generic-audio-copy
 
@@ -42,30 +42,30 @@ snapshots:
   timestamp: true
   bounding_box: true
   retain:
-    default: 2
+    default: 1
 
 record:
   enabled: true
   retain:
-    days: 2
+    days: 1
     mode: motion
   events:
     retain:
-      default: 7
+      default: 1
       mode: active_objects
 
 go2rtc:
   streams:
     reolink_backporch_turret_cam:
       - rtsp://admin:{FRIGATE_CAMERA_PASSWORD}@10.1.90.3:554/h264Preview_01_main
-      - ffmpeg:reolink_backporch_turret_cam#video=copy#audio=aac#audio=opus#hardware
+      # - ffmpeg:reolink_backporch_turret_cam#video=copy#audio=aac#audio=opus#hardware
 
     reolink_backporch_turret_cam_sub:
       - rtsp://admin:{FRIGATE_CAMERA_PASSWORD}@10.1.90.3:554/h264Preview_01_sub
 
     reolink_driveway_floodlight_cam:
       - ffmpeg:rtsp://admin:{FRIGATE_CAMERA_PASSWORD}@10.1.90.4:554/h264Preview_01_main
-      - ffmpeg:reolink_driveway_floodlight_cam#video=copy#audio=aac#audio=opus#hardware
+      # - ffmpeg:reolink_driveway_floodlight_cam#video=copy#audio=aac#audio=opus#hardware
 
     reolink_driveway_floodlight_cam_sub:
       - rtsp://admin:{FRIGATE_CAMERA_PASSWORD}@10.1.90.4:554/h264Preview_01_sub
@@ -74,18 +74,13 @@ cameras:
   reolink_backporch_turret_cam:
     ffmpeg:
       inputs:
-        - path: rtsp://127.0.0.1:8554/reolink_backporch_turret_cam_sub?video=copy&audio=aac
+        - path: rtsp://127.0.0.1:8554/reolink_backporch_turret_cam_sub
           input_args: preset-rtsp-restream
           roles: ['detect']
 
-        - path: rtsp://127.0.0.1:8554/reolink_backporch_turret_cam?video=copy&audio=aac
+        - path: rtsp://127.0.0.1:8554/reolink_backporch_turret_cam
           input_args: preset-rtsp-restream
-          roles: ['record', 'rtmp']
-
-    # detect:
-    #   width: 640
-    #   height: 480
-    #   fps: 10
+          roles: ['detect', 'record']
 
     motion:
       mask: 418,176,141,181,106,89,71,0,169,0,332,0,640,0,640,248
@@ -95,12 +90,13 @@ cameras:
 
   reolink_driveway_floodlight_cam:
     ffmpeg:
+      hwaccel_args: preset-intel-qsv-265
       inputs:
-        - path: rtsp://127.0.0.1:8554/reolink_driveway_floodlight_cam_sub?video=copy
+        - path: rtsp://127.0.0.1:8554/reolink_driveway_floodlight_cam_sub
           input_args: preset-rtsp-restream
           roles: ['detect']
 
-        - path: rtsp://127.0.0.1:8554/reolink_driveway_floodlight_cam?video=copy&audio=aac
+        - path: rtsp://127.0.0.1:8554/reolink_driveway_floodlight_cam
           input_args: preset-rtsp-restream
           roles: ['record']
 
