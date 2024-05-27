@@ -80,7 +80,7 @@ cameras:
 
         - path: rtsp://127.0.0.1:8554/reolink_backporch_turret_cam
           input_args: preset-rtsp-restream
-          roles: ['detect', 'record']
+          roles: ['record']
 
     motion:
       mask: 418,176,141,181,106,89,71,0,169,0,332,0,640,0,640,248
