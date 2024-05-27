@@ -90,7 +90,6 @@ cameras:
 
   reolink_driveway_floodlight_cam:
     ffmpeg:
-      hwaccel_args: preset-intel-qsv-265
       inputs:
         - path: rtsp://127.0.0.1:8554/reolink_driveway_floodlight_cam_sub
           input_args: preset-rtsp-restream
