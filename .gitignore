@@ -25,3 +25,7 @@ Brewfile.lock.json
 wiki
 # Bootstrap
 /config.yaml
+
+# Ignore VSCode settings
+.vscode
+
