@@ -28,22 +28,36 @@ spec:
       namespace: rook-ceph
     - name: volsync
       namespace: volsync-system
-  values:
+   values:
     controllers:
       xteve:
+        annotations:
+          reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
-              repository: ghcr.io/xm3u/xm3u
-              tag: master@sha256:e2e57bf2d687a8e714a82950cafc33eb95063177443618d9cb4f96bc8e70bb95
+              repository: ghcr.io/k8s-at-home/xteve
+              tag: v2.2.0.200@sha256:292b3614670f6bf4017cc65643c513cccb18323bd5269178bd3e36c8c68f5107
+              pullPolicy: IfNotPresent
             env:
               TZ: America/New_York
-    defaultPodOptions:
-      securityContext:
-        runAsUser: 568
-        runAsGroup: 568
-        fsGroup: 568
-        fsGroupChangePolicy: 'OnRootMismatch'
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+              limits:
+                memory: 100Mi
+        pod:
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            runAsNonRoot: true
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
+            supplementalGroups: [10000]
     service:
       app:
         controller: xteve
