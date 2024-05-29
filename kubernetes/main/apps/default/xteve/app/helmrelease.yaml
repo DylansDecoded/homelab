@@ -28,11 +28,11 @@ spec:
       namespace: rook-ceph
     - name: volsync
       namespace: volsync-system
-   values:
+  values:
     controllers:
       xteve:
         annotations:
-          reloader.stakater.com/auto: "true"
+          reloader.stakater.com/auto: 'true'
         containers:
           app:
             image:
@@ -44,7 +44,7 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
+              capabilities: {drop: ['ALL']}
             resources:
               requests:
                 cpu: 10m
@@ -73,7 +73,7 @@ spec:
       app:
         className: internal
         hosts:
-          - host: &host 'xteve.robsonhome.cloud'
+          - host: &host xteve.robsonhome.cloud
             paths:
               - path: /
                 pathType: Prefix
