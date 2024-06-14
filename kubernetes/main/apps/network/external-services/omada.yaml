@@ -16,7 +16,7 @@ metadata:
   namespace: network
 subsets:
   - addresses:
-      - ip: 10.1.10.200
+      - ip: 10.1.10.253
     ports:
       - port: 443
 ---
