@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: filebrowser
+  name: minio
 spec:
   interval: 30m
   chart:
@@ -24,32 +24,40 @@ spec:
       retries: 3
   values:
     controllers:
-      filebrowser:
+      minio:
         annotations:
           reloader.stakater.com/auto: 'true'
         containers:
           app:
             image:
-              repository: docker.io/filebrowser/filebrowser
-              tag: v2.30.0@sha256:1252d3e3d7c27598765a4cd08d68a8b4dda57753649870dcfd2fdcc2e3622709
+              repository: quay.io/minio/minio
+              tag: RELEASE.2024-06-22T05-26-45Z@sha256:dda5e13d3df07fae2c1877701998742bcbe3bbb2b9c24c18ed5b9469cc777761
             env:
-              TZ: America/New_York
-              FB_DATABASE: /config/filebrowser.db
-              FB_ROOT: /tank
-              FB_LOG: stdout
-              FB_NOAUTH: true
+              MINIO_API_CORS_ALLOW_ORIGIN: https://minio.robsonhome.cloud,https://s3.robsonhome.cloud
+              MINIO_BROWSER_REDIRECT_URL: https://minio.robsonhome.cloud
+              MINIO_PROMETHEUS_JOB_ID: minio
+              MINIO_PROMETHEUS_URL: https://prometheus.robsonhome.cloud
+              MINIO_PROMETHEUS_AUTH_TYPE: public
+              MINIO_SERVER_URL: https://s3.robsonhome.cloud
+              MINIO_STORAGE_CLASS_RRS: EC:0
+              MINIO_STORAGE_CLASS_STANDARD: EC:0
+              MINIO_UPDATE: 'off'
+            envFrom:
+              - secretRef:
+                  name: minio-secret
+            args: ['server', '/data', '--console-address', ':9001']
             probes:
               liveness: &probes
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
-                    path: /health
-                    port: &port 80
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
+                    path: /minio/health/live
+                    port: 9000
+                  initialDelaySeconds: 30
+                  periodSeconds: 30
+                  timeoutSeconds: 10
+                  failureThreshold: 6
               readiness: *probes
             securityContext:
               allowPrivilegeEscalation: false
@@ -70,10 +78,21 @@ spec:
         supplementalGroups: [10000]
     service:
       app:
-        controller: filebrowser
+        controller: minio
         ports:
           http:
-            port: *port
+            port: 9001
+          s3:
+            port: 9000
+    serviceMonitor:
+      app:
+        serviceName: minio
+        endpoints:
+          - port: s3
+            scheme: http
+            path: /minio/v2/metrics/cluster
+            interval: 1m
+            scrapeTimeout: 10s
     ingress:
       app:
         annotations:
@@ -86,12 +105,16 @@ spec:
                 service:
                   identifier: app
                   port: http
+          - host: s3.robsonhome.cloud
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: s3
     persistence:
       config:
-        existingClaim: filebrowser
-      eros:
         type: nfs
-        server: 10.10.1.210
-        path: /mnt/tank
+        server: 10.1.10.210
+        path: /mnt/tank/s3
         globalMounts:
-          - path: /tank
+          - path: /data
