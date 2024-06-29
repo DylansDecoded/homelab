@@ -91,7 +91,7 @@ spec:
         existingClaim: filebrowser
       eros:
         type: nfs
-        server: 10.10.1.210
+        server: 10.1.10.210
         path: /mnt/tank
         globalMounts:
           - path: /tank
