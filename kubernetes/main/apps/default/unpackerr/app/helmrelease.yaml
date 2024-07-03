@@ -43,6 +43,7 @@ spec:
               UN_RADARR_0_PATHS_0: /media/downloads/qbittorrent/complete/radarr
               UN_READARR_0_URL: http://readarr.default.svc.cluster.local
               UN_READARR_0_PATHS_0: /media/downloads/qbittorrent/complete/readarr
+              UN_FOLDER_0_PATHS_0: /media/downloads/qbittorrent/complete/
             envFrom:
               - secretRef:
                   name: unpackerr-secret
