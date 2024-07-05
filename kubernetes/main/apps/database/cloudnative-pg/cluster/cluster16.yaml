@@ -15,7 +15,7 @@ spec:
   enableSuperuserAccess: true
   postgresql:
     parameters:
-      max_connections: "400"
+      max_connections: '400'
       shared_buffers: 256MB
   nodeMaintenanceWindow:
     inProgress: false
@@ -29,8 +29,8 @@ spec:
     enablePodMonitor: true
     # Ref: https://github.com/cloudnative-pg/cloudnative-pg/issues/2501
     podMonitorMetricRelabelings:
-    - {sourceLabels: ["cluster"], targetLabel: cnpg_cluster, action: replace}
-    - {regex: cluster, action: labeldrop}
+      - {sourceLabels: ['cluster'], targetLabel: cnpg_cluster, action: replace}
+      - {regex: cluster, action: labeldrop}
   backup:
     retentionPolicy: 30d
     barmanObjectStore: &barmanObjectStore
@@ -43,7 +43,7 @@ spec:
       endpointURL: https://s3.robsonhome.cloud
       # Note: serverName version needs to be inclemented
       # when recovering from an existing cnpg cluster
-      serverName: &currentCluster postgres16-v3
+      serverName: &currentCluster postgres16-v1
       s3Credentials:
         accessKeyId:
           name: cloudnative-pg-secret
@@ -54,11 +54,17 @@ spec:
   # Note: previousCluster needs to be set to the name of the previous
   # cluster when recovering from an existing cnpg cluster
   bootstrap:
-    recovery:
-      source: &previousCluster postgres16-v2
+    initdb:
+      database: postgres
+      owner: postgres
+      secret:
+        name: cloudnative-pg-secret
+
+    # recovery:
+    # source: &previousCluster postgres16-v2
   # Note: externalClusters is needed when recovering from an existing cnpg cluster
-  externalClusters:
-  - name: *previousCluster
-    barmanObjectStore:
-      <<: *barmanObjectStore
-      serverName: *previousCluster
+  # externalClusters:
+  # - name: *previousCluster
+  # barmanObjectStore:
+  # <<: *barmanObjectStore
+  # serverName: *previousCluster
