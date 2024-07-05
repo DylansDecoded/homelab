@@ -115,6 +115,6 @@ spec:
       config:
         type: nfs
         server: 10.1.10.210
-        path: /mnt/tank/apps/minio
+        path: /mnt/tank/s3
         globalMounts:
           - path: /data
