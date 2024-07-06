@@ -1,3 +1,4 @@
+---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/postgresql.cnpg.io/cluster_v1.json
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
@@ -5,7 +6,7 @@ metadata:
   name: postgres16
 spec:
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:16.2-16
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.3-7
   primaryUpdateStrategy: unsupervised
   storage:
     size: 20Gi
@@ -15,7 +16,7 @@ spec:
   enableSuperuserAccess: true
   postgresql:
     parameters:
-      max_connections: '400'
+      max_connections: "400"
       shared_buffers: 256MB
   nodeMaintenanceWindow:
     inProgress: false
@@ -24,13 +25,9 @@ spec:
     requests:
       cpu: 500m
     limits:
-      memory: 3Gi
+      memory: 4Gi
   monitoring:
     enablePodMonitor: true
-    # Ref: https://github.com/cloudnative-pg/cloudnative-pg/issues/2501
-    podMonitorMetricRelabelings:
-      - {sourceLabels: ['cluster'], targetLabel: cnpg_cluster, action: replace}
-      - {regex: cluster, action: labeldrop}
   backup:
     retentionPolicy: 30d
     barmanObjectStore: &barmanObjectStore
@@ -40,10 +37,10 @@ spec:
         compression: bzip2
         maxParallel: 8
       destinationPath: s3://cloudnative-pg/
-      endpointURL: https://s3.robsonhome.cloud
+      endpointURL: http://minio.default.svc.cluster.local:9000
       # Note: serverName version needs to be inclemented
       # when recovering from an existing cnpg cluster
-      serverName: &currentCluster postgres16-v1
+      serverName: &currentCluster postgres16-v2
       s3Credentials:
         accessKeyId:
           name: cloudnative-pg-secret
@@ -54,17 +51,11 @@ spec:
   # Note: previousCluster needs to be set to the name of the previous
   # cluster when recovering from an existing cnpg cluster
   bootstrap:
-    initdb:
-      database: postgres
-      owner: postgres
-      secret:
-        name: cloudnative-pg-secret
-
-    # recovery:
-    # source: &previousCluster postgres16-v2
+    recovery:
+      source: &previousCluster postgres16-v1
   # Note: externalClusters is needed when recovering from an existing cnpg cluster
-  # externalClusters:
-  # - name: *previousCluster
-  # barmanObjectStore:
-  # <<: *barmanObjectStore
-  # serverName: *previousCluster
+  externalClusters:
+    - name: *previousCluster
+      barmanObjectStore:
+        <<: *barmanObjectStore
+        serverName: *previousCluster
