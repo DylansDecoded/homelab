@@ -44,7 +44,7 @@ spec:
           app:
             image:
               repository: ghcr.io/miniflux/miniflux
-              tag: 2.0.50-distroless
+              tag: 2.1.4-distroless
             env:
               BASE_URL: https://miniflux.robsonhome.cloud
               CREATE_ADMIN: "1"
