@@ -13,14 +13,16 @@ spec:
       nodeName: ${node}
       containers:
         - name: main
-          image: ghcr.io/onedr0p/alpine:rolling
+          image: docker.io/library/alpine:latest
           command: ["/bin/sh", "-c"]
-          args:
-            - apk add --no-cache sgdisk util-linux util-linux-misc parted device-mapper;
-              sgdisk --zap-all ${disk};
-              dd if=/dev/zero of=${disk} bs=1M count=100 oflag=direct,dsync;
-              blkdiscard ${disk};
-              partprobe ${disk};
+          args: ["rm -rf /mnt/host_var/lib/rook"]
+          volumeMounts:
+            - mountPath: /mnt/host_var
+              name: host-var
           securityContext:
             privileged: true
           resources: {}
+      volumes:
+        - name: host-var
+          hostPath:
+            path: /var
