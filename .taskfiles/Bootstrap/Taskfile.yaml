@@ -19,10 +19,10 @@ tasks:
       nodes: '{{.nodes}}'
       disk: '{{.disk}}'
     cmds:
-      - { task: etcd, vars: *vars }
-      - { task: kubeconfig, vars: *vars }
-      - { task: apps, vars: *vars }
-      - { task: rook, vars: *vars }
+      # # - { task: etcd, vars: *vars }
+      # - { task: kubeconfig, vars: *vars }
+      # - { task: apps, vars: *vars }
+      # - { task: rook, vars: *vars }
       - { task: flux, vars: *vars }
     requires:
       vars: ["nodes", "disk"]
@@ -32,7 +32,7 @@ tasks:
 
   etcd:
     internal: true
-    cmd: until talosctl --context {{.cluster}} --nodes {{.CONTROLLER}} bootstrap; do sleep 10; done
+    cmd: until talosctl --context {{.cluster}} --nodes 10.1.33.253 bootstrap; do sleep 10; done
     preconditions:
       - test -f {{.KUBERNETES_DIR}}/{{.cluster}}/talosconfig
       - talosctl --context {{.cluster}} config info >/dev/null 2>&1
@@ -40,7 +40,7 @@ tasks:
   apps:
     internal: true
     cmds:
-      - until kubectl --context {{.cluster}} wait --for=condition=Ready=False nodes --all --timeout=10m; do sleep 10; done
+      # - until kubectl --context {{.cluster}} wait --for=condition=Ready=False nodes --all --timeout=10m; do sleep 10; done
       - helmfile --quiet --kube-context {{.cluster}} --file {{.KUBERNETES_DIR}}/{{.cluster}}/bootstrap/helmfile.yaml apply --skip-diff-on-install --suppress-diff
       - until kubectl --context {{.cluster}} wait --for=condition=Ready nodes --all --timeout=10m; do sleep 10; done
     preconditions:
@@ -51,7 +51,7 @@ tasks:
   kubeconfig:
     internal: true
     cmd: |
-      talosctl --context {{.cluster}} kubeconfig --nodes {{.CONTROLLER}} \
+      talosctl --context {{.cluster}} kubeconfig --nodes 10.1.33.253 \
           --force --force-context-name {{.cluster}} {{.KUBERNETES_DIR}}/{{.cluster}}
     preconditions:
       - test -f {{.KUBERNETES_DIR}}/{{.cluster}}/talosconfig

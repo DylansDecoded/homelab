@@ -1,0 +1,120 @@
+version: v1alpha1
+debug: false
+persist: true
+machine:
+    type: worker
+    token: 62cgwi.exr9pcbgmeeyrmyk
+    ca:
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJQakNCOGFBREFnRUNBaEFRMUhJNWxjcGRsQytDRUJxbkxFaWpNQVVHQXl0bGNEQVFNUTR3REFZRFZRUUsKRXdWMFlXeHZjekFlRncweU5EQTNNall4TlRVM05UTmFGdzB6TkRBM01qUXhOVFUzTlROYU1CQXhEakFNQmdOVgpCQW9UQlhSaGJHOXpNQ293QlFZREsyVndBeUVBc3d4SE12MkU0UDJEYVR1cVpwVUpHQkQ5a2puRXU3aHRmZ0FUClQzcFN0aTJqWVRCZk1BNEdBMVVkRHdFQi93UUVBd0lDaERBZEJnTlZIU1VFRmpBVUJnZ3JCZ0VGQlFjREFRWUkKS3dZQkJRVUhBd0l3RHdZRFZSMFRBUUgvQkFVd0F3RUIvekFkQmdOVkhRNEVGZ1FVYnl2Z2k1R255cGEzWHpjUwpGZ2tmOXdMVzBMOHdCUVlESzJWd0EwRUE5aVlicUtwMXIxaWVDeC83VzFKdEk5eGJsekh0OThTeE1DQmxqeHV2CmUwRm1PcUVqWmtXVlhqUFZUNHVGZmVHVDN4ZHRSeThnZ01CWE9Na0FkVFhxREE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+        key: ""
+    certSANs:
+    - 127.0.0.1
+    - 10.1.33.253
+  kubelet:
+    image: ghcr.io/siderolabs/kubelet:v1.30.3
+    extraArgs:
+      rotate-server-certificates: "true"
+    extraMounts:
+      - destination: /var/openebs/local
+        type: bind
+        source: /var/openebs/local
+        options:
+          - bind
+          - rshared
+          - rw
+    defaultRuntimeSeccompProfileEnabled: true
+    nodeIP:
+      validSubnets:
+        - 10.1.33.0/24
+    disableManifestsDirectory: true
+  network:
+      hostname: kube-04
+      interfaces:
+        - deviceSelector:
+            hardwareAddr: 'ac:e2:d3:10:d8:25'
+          mtu: 1500
+          dhcp: true
+      disableSearchDomain: true
+      
+  install:
+    disk: /dev/nvme0n1
+    wipe: false
+    extraKernelArgs:
+        - mitigations=off
+    image: factory.talos.dev/installer/0909ea34ac5c2d13e2bfb6c06b9fa2c4e344f83b21c749787958fab4c5e3a8dd:v1.7.5
+  files:
+    - content: |-
+        [plugins."io.containerd.grpc.v1.cri"]
+          enable_unprivileged_ports = true
+          enable_unprivileged_icmp = true
+        [plugins."io.containerd.grpc.v1.cri".containerd]
+          discard_unpacked_layers = false
+        [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+          discard_unpacked_layers = false
+      permissions: 0
+      path: /etc/cri/conf.d/20-customization.part
+      op: create
+    - content: |-
+        [ NFSMount_Global_Options ]
+        nfsvers=4.2
+        hard=True
+        noatime=True
+        nodiratime=True
+        rsize=131072
+        wsize=131072
+        nconnect=8
+      permissions: 420
+      path: /etc/nfsmount.conf
+      op: overwrite
+  sysctls:
+    fs.inotify.max_queued_events: "65536"
+    fs.inotify.max_user_instances: "8192"
+    fs.inotify.max_user_watches: "524288"
+    net.core.rmem_max: "2500000"
+    net.core.wmem_max: "2500000"
+  features:
+    rbac: true
+    stableHostname: true
+    apidCheckExtKeyUsage: true
+    diskQuotaSupport: true
+    kubePrism:
+      enabled: true
+      port: 7445
+    hostDNS:
+      enabled: true
+      resolveMemberNames: true
+      forwardKubeDNSToHost: false
+  udev:
+    rules:
+      - ACTION=="add", SUBSYSTEM=="thunderbolt", ATTR{authorized}=="0", ATTR{authorized}="1"
+      - SUBSYSTEM=="drm", KERNEL=="renderD*", GROUP="44", MODE="0660"
+      - SUBSYSTEMS=="usb", ATTRS{idVendor}=="1a6e", ATTRS{idProduct}=="089a", GROUP="20", MODE="0660"
+      - SUBSYSTEMS=="usb", ATTRS{idVendor}=="18d1", ATTRS{idProduct}=="9302", GROUP="20", MODE="0660"
+  nodeLabels:
+    topology.kubernetes.io/region: main
+    topology.kubernetes.io/zone: m
+cluster:
+    id: ihiMxHdJqQQ3MieEemy6Sq5vzdtkfu9Xx_8WoWyMn4w= # Globally unique identifier for this cluster (base64 encoded random 32 bytes).
+    secret: RwXk5ke1ztQqobUWobZWiJiseU7Cym1sZYbWPLr6KyM= # Shared secret of cluster (base64 encoded random 32 bytes).
+    # Provides control plane specific configuration options.
+    controlPlane:
+        endpoint: https://10.1.33.253:6443
+    network:
+        cni:
+          name: none
+        dnsDomain: robsonhome.cloud
+        podSubnets:
+          - 10.42.0.0/16
+        serviceSubnets:
+          - 10.43.0.0/16
+    token: 594w2j.cgh52qn0jgfmnk8x
+    ca:
+        crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpakNDQVRDZ0F3SUJBZ0lSQU9LUVpWeUdxZ1VQUExvU21VS1lCZmN3Q2dZSUtvWkl6ajBFQXdJd0ZURVQKTUJFR0ExVUVDaE1LYTNWaVpYSnVaWFJsY3pBZUZ3MHlOREEzTWpZeE5UVTNOVE5hRncwek5EQTNNalF4TlRVMwpOVE5hTUJVeEV6QVJCZ05WQkFvVENtdDFZbVZ5Ym1WMFpYTXdXVEFUQmdjcWhrak9QUUlCQmdncWhrak9QUU1CCkJ3TkNBQVRpLzcvMllNcTNnL1A0RGVob1FPZ2lISG1wais0MGFIaExqTDZzQm5tU3JNK1lCbWJKT0ZhSEg4NmoKMmJnS3E1RWdPa3dZVHJCeHZiNzg4T0Y5aU43TW8yRXdYekFPQmdOVkhROEJBZjhFQkFNQ0FvUXdIUVlEVlIwbApCQll3RkFZSUt3WUJCUVVIQXdFR0NDc0dBUVVGQndNQ01BOEdBMVVkRXdFQi93UUZNQU1CQWY4d0hRWURWUjBPCkJCWUVGSHNVZUVPNlBWaFhiNXpRKzRxWnlKeFNEZkp6TUFvR0NDcUdTTTQ5QkFNQ0EwZ0FNRVVDSVFDZFNLZWwKUndCd2V6MVFoRkFsSHZLOWtHMVMrblhEblh2REh2bURNNVp5WGdJZ2JJUmhobUo0UjkvM01Ud0plajFmUkl5NQo4TkMrSGRjUmVoTm5tS2ZDUUtRPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+        key: ""
+    discovery:
+      enabled: true
+      registries:
+        kubernetes:
+          disabled: false
+        service:
+          disabled: false

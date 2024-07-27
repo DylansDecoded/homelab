@@ -17,7 +17,7 @@ cgroup:
   hostRoot: /sys/fs/cgroup
 cluster:
   id: 1
-  name: kubernetes
+  name: main
 containerRuntime:
   integration: containerd
 enableRuntimeDeviceDetection: true
@@ -30,10 +30,9 @@ ipam:
 ingressController:
   enabled: false
   loadbalancerMode: shared
-
 ipv4NativeRoutingCIDR: 10.42.0.0/16
 k8sServiceHost: 127.0.0.1
-k8sServicePort: 6444
+k8sServicePort: 7445
 kubeProxyReplacement: true
 kubeProxyReplacementHealthzBindAddr: 0.0.0.0:10256
 l2announcements:

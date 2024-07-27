@@ -15,7 +15,7 @@
       "console=ttyS0",
       "printk.devkmsg=on",
       "talos.platform=metal",
-      "talos.config=http://10.1.30.44/assets/kube-01.yaml"
+      "talos.config=http://10.1.33.133/kube-01.yaml"
     ]
   }
 }

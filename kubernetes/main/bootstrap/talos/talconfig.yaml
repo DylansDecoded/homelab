@@ -1,0 +1,116 @@
+
+---
+clusterName: home-kubernetes
+# renovate: datasource=docker depName=ghcr.io/siderolabs/installer
+talosVersion: v1.7.5
+# renovate: datasource=docker depName=ghcr.io/siderolabs/kubelet
+kubernetesVersion: v1.30.3
+
+endpoint: https://10.1.33.252:6443
+clusterPodNets:
+  - 10.69.0.0/16
+clusterSvcNets:
+  - 10.96.0.0/16
+additionalApiServerCertSans: &sans
+  - 10.1.33.252
+  - 127.0.0.1
+  - kube-cluster.local
+additionalMachineCertSans: *sans
+domain: robsonhome.cloud
+allowSchedulingOnMasters: true
+
+# Disable built-in Flannel to use Cilium
+cniConfig:
+  name: none
+  
+nodes:
+  - hostname: kube-01
+    ipAddress: 10.1.33.11
+    controlPlane: true
+    installDisk: /dev/nvme0n1
+    talosImageURL: factory.talos.dev/installer/0909ea34ac5c2d13e2bfb6c06b9fa2c4e344f83b21c749787958fab4c5e3a8dd
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: 10:62:e5:00:4c:12
+        mtu: 1500
+        dhcp: true
+        vip:
+          ip: 10.1.33.252
+
+  - hostname: kube-02
+    ipAddress: 10.1.33.12
+    installDisk: /dev/nvme0n1
+    talosImageURL: factory.talos.dev/installer/0909ea34ac5c2d13e2bfb6c06b9fa2c4e344f83b21c749787958fab4c5e3a8dd
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: 18:60:24:27:27:a7
+        mtu: 1500
+        dhcp: true
+        vip:
+          ip: 10.1.33.252
+
+  - hostname: kube-03
+    ipAddress: 10.1.33.13
+    installDisk: /dev/nvme0n1
+    talosImageURL: factory.talos.dev/installer/0909ea34ac5c2d13e2bfb6c06b9fa2c4e344f83b21c749787958fab4c5e3a8dd
+    controlPlane: true
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: ac:e2:d3:0d:60:f0
+        mtu: 1500
+        dhcp: true
+        vip:
+          ip: 10.1.33.252
+
+  - hostname: kube-04
+    ipAddress: 10.1.33.14
+    installDisk: /dev/nvme0n1
+    talosImageURL: factory.talos.dev/installer/0909ea34ac5c2d13e2bfb6c06b9fa2c4e344f83b21c749787958fab4c5e3a8dd
+    controlPlane: false
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: ac:e2:d3:10:d8:25
+        mtu: 1500
+        dhcp: true
+
+  - hostname: kube-05
+    ipAddress: 10.1.33.15
+    installDisk: /dev/nvme0n1
+    talosImageURL: factory.talos.dev/installer/0909ea34ac5c2d13e2bfb6c06b9fa2c4e344f83b21c749787958fab4c5e3a8dd
+    controlPlane: false
+    networkInterfaces:
+      - deviceSelector:
+          hardwareAddr: ac:e2:d3:15:fd:f9
+        mtu: 1500
+        dhcp: true
+
+patches:
+  - "@./kubernetes/main/bootstrap/talos/patches/global/cluster-discovery.yaml"
+  - "@./kubernetes/main/bootstrap/talos/patches/global/containerd.yaml"
+  - "@./kubernetes/main/bootstrap/talos/patches/global/disable-search-domain.yaml"
+  - "@./kubernetes/main/bootstrap/talos/patches/global/hostdns.yaml"
+  - "@./kubernetes/main/bootstrap/talos/patches/global/kubelet.yaml"
+  - "@./kubernetes/main/bootstrap/talos/patches/global/nfs.yaml"
+  - "@./kubernetes/main/bootstrap/talos/patches/global/openebs-local.yaml"
+  - "@./kubernetes/main/bootstrap/talos/patches/global/sysctl.yaml"
+  - "@./kubernetes/main/bootstrap/talos/patches/global/udev.yaml"
+
+# Controller patches
+controlPlane:
+  patches:
+    - "@./kubernetes/main/bootstrap/talos/patches/controller/api-access.yaml"
+    - "@./kubernetes/main/bootstrap/talos/patches/controller/cluster.yaml"
+    - "@./kubernetes/main/bootstrap/talos/patches/controller/disable-admission-controller.yaml"
+    - "@./kubernetes/main/bootstrap/talos/patches/controller/etcd.yaml"
+
+schematic:
+  customization:
+    systemExtensions:
+        officialExtensions:
+            - siderolabs/gasket-driver
+            - siderolabs/i915-ucode
+            - siderolabs/intel-ucode
+            - siderolabs/thunderbolt
+            - siderolabs/usb-modem-drivers
+            - siderolabs/util-linux-tools
