@@ -27,10 +27,10 @@ servers:
       - name: prometheus
         parameters: 0.0.0.0:9153
       - name: kubernetes
-        parameters: cluster.local in-addr.arpa
+        parameters: cluster.local in-addr.arpa ip6.arpa
         configBlock: |-
           pods insecure
-          fallthrough in-addr.arpa
+          fallthrough in-addr.arpa ip6.arpa
       - name: forward
         parameters: . /etc/resolv.conf
       - name: cache
