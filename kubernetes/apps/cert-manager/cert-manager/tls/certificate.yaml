@@ -1,13 +1,13 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/cert-manager.io/certificate_v1.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/cert-manager.io/certificate_v1.json
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: "${SECRET_DOMAIN/./-}-production"
+  name: robsonhome-cloud
 spec:
-  secretName: "${SECRET_DOMAIN/./-}-production-tls"
+  secretName: robsonhome-cloud-tls
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: "${SECRET_DOMAIN}"
-  dnsNames: ["${SECRET_DOMAIN}", "*.${SECRET_DOMAIN}"]
+  commonName: robsonhome.cloud
+  dnsNames: ["robsonhome.cloud", "*.robsonhome.cloud", "*.lan.robsonhome.cloud"]
