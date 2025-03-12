@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: internal-ingress-nginx
+  name: &app internal-ingress-nginx
 spec:
   interval: 1h
   chart:
@@ -22,7 +22,7 @@ spec:
     remediation:
       retries: 3
   values:
-    fullnameOverride: internal-ingress-nginx
+    fullnameOverride: *app
     controller:
       service:
         annotations:
@@ -71,7 +71,7 @@ spec:
           namespaceSelector:
             any: true
       extraArgs:
-        default-ssl-certificate: cert-manager/${SECRET_DOMAIN/./-}-production-tls
+        default-ssl-certificate: cert-manager/robsonhome-cloud-tls
       resources:
         requests:
           cpu: 100m
