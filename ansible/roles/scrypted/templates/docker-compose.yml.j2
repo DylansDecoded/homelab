@@ -1,0 +1,17 @@
+---
+version: '3.8'
+
+services:
+  scrypted:
+    image: {{ scrypted_docker_image }}
+    container_name: {{ scrypted_container_name }}
+    restart: {{ scrypted_restart_policy }}
+    network_mode: {{ scrypted_docker_network }}
+    privileged: {{ scrypted_privileged | lower }}
+    volumes:
+      - {{ scrypted_data_dir }}:/server/volume
+    environment:
+      - SCRYPTED_WEBHOOK_UPDATE_AUTHORIZATION=Bearer SET_THIS_TO_SOME_RANDOM_TEXT
+      - SCRYPTED_WEBHOOK_UPDATE=http://localhost:{{ scrypted_port }}/v1/update
+    labels:
+      - "com.scrypted.service=scrypted"

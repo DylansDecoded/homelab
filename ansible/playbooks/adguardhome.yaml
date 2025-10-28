@@ -1,0 +1,41 @@
+---
+- name: Deploy AdGuard Home High Availability DNS Servers
+  hosts: adguardhome_servers
+  become: no
+  
+  pre_tasks:
+    - name: Display deployment information
+      debug:
+        msg:
+          - "Deploying AdGuard Home to {{ inventory_hostname }}"
+          - "Role: {{ adguardhome_role }}"
+          - "Priority: {{ adguardhome_priority }}"
+          - "Virtual IP: {{ adguardhome_vip }}"
+  
+  roles:
+    - adguardhome
+  
+  post_tasks:
+    - name: Display next steps
+      debug:
+        msg:
+          - "==================================================="
+          - "AdGuard Home deployment completed!"
+          - "==================================================="
+          - ""
+          - "Next Steps:"
+          - "1. Access web interface at http://{{ adguardhome_vip }}:3000"
+          - "2. Complete initial setup wizard"
+          - "3. Set admin username and password"
+          - "4. Configure DNS filters and blocklists"
+          - "5. Test DNS resolution: dig @{{ adguardhome_vip }} google.com"
+          - "6. Configure clients to use {{ adguardhome_vip }} as DNS"
+          - "7. Test failover by stopping master server"
+          - ""
+          - "Monitoring Commands:"
+          - "  - Check Keepalived: sudo systemctl status keepalived"
+          - "  - Check which server has VIP: ip addr | grep {{ adguardhome_vip }}"
+          - "  - View logs: journalctl -u keepalived -f"
+          - "  - Check AdGuard Home: docker logs adguardhome"
+          - "  - Check sync (backup): docker logs adguardhome-sync"
+      run_once: true

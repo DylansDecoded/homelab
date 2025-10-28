@@ -1,0 +1,28 @@
+---
+all:
+  children:
+    raspberries:
+      hosts:
+        pi-homeauto:
+          ansible_host: 10.1.20.90
+        pi-net01:
+          ansible_host: 10.1.20.91
+        pi-net02:
+          ansible_host: 10.1.20.92
+        pi-net03:
+          ansible_host: 10.1.20.93
+    
+    adguardhome_servers:
+      hosts:
+        pi-net01: 
+          ansible_host: 10.1.20.91
+          ansible_user: dylan
+        pi-net02:
+          ansible_host: 10.1.20.92
+          ansible_user: dylan
+        
+    # sffs:
+    #   hosts:
+    #     nuc:
+    #       ansible_host: 10.1.20.80
+          

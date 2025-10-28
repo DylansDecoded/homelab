@@ -1,0 +1,13 @@
+---
+
+- name: Install Base Packages
+  package:
+    name: "{{ item }}"
+  loop:
+    - htop
+    - net-tools
+    - speedtest-cli
+    - git
+    - make
+    - build-essential
+    - curl

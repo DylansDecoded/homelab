@@ -1,0 +1,12 @@
+---
+hostname: pi-net01.internal
+
+# AdGuard Home Master Server Configuration
+adguardhome_role: master
+adguardhome_priority: 200
+
+
+# Optionally override defaults
+# adguardhome_upstream_dns:
+#   - "https://dns.cloudflare.com/dns-query"
+#   - "1.1.1.1"

@@ -1,0 +1,15 @@
+galaxy_info:
+  author: Jake Howard
+  description: Install reflector to automatically update pacman mirrors
+  min_ansible_version: 2.4
+  role_name: reflector
+  license: MIT
+
+  platforms:
+    - name: Archlinux
+      versions:
+        - all
+
+  galaxy_tags:
+    - reflector
+    - pacman

@@ -1,0 +1,17 @@
+---
+
+- name: Install logrotate
+  package:
+    name: logrotate
+
+- name: Enable logrotate timer
+  service:
+    name: logrotate.timer
+    enabled: true
+  when: ansible_os_family == 'Debian'
+
+- name: logrotate fail2ban config
+  template:
+    src: files/fail2ban-logrotate
+    dest: /etc/logrotate.d/fail2ban
+    mode: "0600"

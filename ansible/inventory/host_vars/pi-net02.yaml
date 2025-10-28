@@ -1,0 +1,10 @@
+---
+hostname: pi-net02.internal
+
+# AdGuard Home Backup Server Configuration
+adguardhome_role: backup
+adguardhome_priority: 100
+adguardhome_master_host: 10.1.20.91
+
+# Sync settings (optional overrides)
+# adguardhome_sync_cron: "*/5 * * * *"  # Sync every 5 minutes

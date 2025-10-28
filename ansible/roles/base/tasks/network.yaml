@@ -1,0 +1,27 @@
+---
+
+- name: Set timezone
+  lineinfile:
+    path: /etc/timezone
+    regexp: "^"
+    line: "{{ timezone }}"
+
+- name: Set localtime
+  file:
+    src: /usr/share/zoneinfo/{{ timezone }}
+    dest: /etc/localtime
+    state: link
+
+- name: Set hostname
+  lineinfile:
+    path: /etc/hostname
+    regexp: "^"
+    line: "{{ hostname | default(inventory_hostname) }}"
+
+- name: Set hosts
+  lineinfile:
+    path: /etc/hosts
+    regexp: "^127.0.1.1"
+    line: 127.0.1.1       {{ hostname | default(inventory_hostname) }}
+  notify: Reboot Server
+    

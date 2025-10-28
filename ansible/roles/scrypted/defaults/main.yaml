@@ -1,0 +1,12 @@
+---
+# Scrypted configuration defaults
+scrypted_docker_image: "ghcr.io/koush/scrypted:latest"
+scrypted_container_name: "scrypted"
+scrypted_data_dir: "/home/{{ ansible_user }}/scrypted/volume"
+scrypted_port: "11080"
+scrypted_https_port: "10443"
+scrypted_restart_policy: "unless-stopped"
+
+# Additional Docker options
+scrypted_docker_network: "host"
+scrypted_privileged: true

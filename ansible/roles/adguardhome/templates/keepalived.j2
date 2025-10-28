@@ -1,0 +1,47 @@
+global_defs {
+    script_user {{ ansible_user }} docker
+    enable_script_security
+    max_auto_priority
+    vrrp_no_swap
+    checker_no_swap
+}
+
+vrrp_script check_adguardhome {
+    script "/etc/keepalived/check_adguardhome.sh"
+    interval {{ keepalived_check_interval }}
+    timeout 4
+    fall 2
+    rise 2
+}
+
+vrrp_sync_group ADGUARDHOME {
+    group {
+        ADGUARDHOME_IPv4
+    }
+
+    track_script {
+        check_adguardhome
+    }
+}
+
+vrrp_instance ADGUARDHOME_IPv4 {
+    state {{ 'MASTER' if adguardhome_role == 'master' else 'BACKUP' }}
+    interface {{ ansible_default_ipv4.interface }}
+    virtual_router_id {{ keepalived_virtual_router_id }}
+    priority {{ adguardhome_priority }}
+    advert_int 1
+    preempt_delay {{ keepalived_preempt_delay }}
+
+    authentication {
+        auth_type PASS
+        auth_pass {{ keepalived_auth_pass }}
+    }
+
+    virtual_ipaddress {
+        {{ adguardhome_vip }}/{{ ansible_default_ipv4.netmask }}
+    }
+
+    notify_master "/etc/keepalived/notify.sh MASTER"
+    notify_backup "/etc/keepalived/notify.sh BACKUP"
+    notify_fault "/etc/keepalived/notify.sh FAULT"
+}

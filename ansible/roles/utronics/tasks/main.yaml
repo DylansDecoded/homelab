@@ -1,0 +1,7 @@
+---
+
+- name: Pull utronics SKU_RM0004
+  git:
+    repo: "https://github.com/utronics/SKU_RM0004.git"
+    dest: "/opt/SKU_RM0004"
+    

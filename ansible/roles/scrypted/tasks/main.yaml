@@ -1,0 +1,4 @@
+---
+
+- name: Setup Scrypted container
+  include_tasks: scrypted.yaml

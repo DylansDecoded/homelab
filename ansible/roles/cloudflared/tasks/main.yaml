@@ -1,0 +1,6 @@
+---
+- name: Install cloudflared
+  apt:
+    name: cloudflared
+    state: present
+    

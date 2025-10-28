@@ -1,0 +1,45 @@
+---
+
+- name: Disable systemd-resolved
+  shell: |
+    sudo sh -c 'mkdir -p /etc/systemd/resolved.conf.d && printf "[Resolve]\nDNSStubListener=no\n" | tee /etc/systemd/resolved.conf.d/no-stub.conf'
+  register: disable_systemd_resolved
+  changed_when: disable_systemd_resolved.rc == 0
+
+- name: Restart systemd-resolved
+  service:
+    name: systemd-resolved
+    state: restarted
+
+- name: Update symlink to use netplan
+  command: |
+    sudo sh -c 'rm -f /etc/resolv.conf && ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf'
+  register: update_symlink
+  changed_when: update_symlink.rc == 0
+
+- name: Update netplan config to use pihole
+  template:
+    src: 99-netplan.yaml.j2
+    dest: /etc/netplan/99-netplan.yaml
+    owner: root
+    group: root
+    mode: '0644'
+  register: update_netplan
+  changed_when: update_netplan.rc == 0
+
+- name: Apply netplan config
+  netplan:
+    config: /etc/netplan/99-netplan.yaml
+    state: present
+  register: apply_netplan
+  changed_when: apply_netplan.rc == 0
+
+- name: Restart networking
+  service:
+    name: networking
+    state: restarted
+  register: restart_networking
+  changed_when: restart_networking.rc == 0
+  
+
+    

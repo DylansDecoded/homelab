@@ -1,0 +1,36 @@
+---
+# Shared AdGuard Home Configuration for all servers
+# Override these in host_vars as needed
+
+# Virtual IP shared by master and backup
+adguardhome_vip: "10.1.20.53"
+
+# AdGuard Home version
+adguardhome_version: "latest"
+
+# High availability enabled
+adguardhome_ha_enabled: true
+
+# Keepalived settings
+keepalived_virtual_router_id: 53
+keepalived_check_interval: 5
+keepalived_preempt_delay: 900  # 15 minutes
+
+# Sync settings
+adguardhome_sync_enabled: true
+adguardhome_sync_cron: "*/10 * * * *"
+adguardhome_sync_run_on_start: true
+
+# Upstream DNS servers
+adguardhome_upstream_dns:
+  - "https://dns.cloudflare.com/dns-query"
+  - "https://dns.google/dns-query"
+  - "1.1.1.1"
+  - "8.8.8.8"
+
+# Network configuration
+disable_systemd_resolved: true
+configure_netplan: true
+
+# Timezone
+timezone: "America/New_York"

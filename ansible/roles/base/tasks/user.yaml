@@ -1,0 +1,23 @@
+
+---
+
+- name: Make me
+  user:
+    name: "{{ me.user }}"
+    home: "{{ me.home }}"
+    comment: "{{ me.name }}"
+    shell: /bin/bash
+    system: true
+
+- name: Give user sudo access
+  user:
+    name: "{{ me.user }}"
+    groups: "{{ 'sudo' if ansible_os_family == 'Debian' else 'wheel' }}"
+    append: true
+
+- name: Grant user ownership of home directory
+  file:
+    path: "{{ me.home }}"
+    owner: "{{ me.user }}"
+    group: "{{ me.user }}"
+    state: directory

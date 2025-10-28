@@ -1,0 +1,45 @@
+---
+
+- name: Install OpenSSH for Debian
+  package:
+    name: openssh-server
+  when: ansible_os_family == 'Debian'
+
+- name: Install OpenSSH for Arch
+  package:
+    name: openssh
+  when: ansible_os_family == 'Archlinux'
+
+- name: Define context
+  set_fact:
+    user: "{{ me.user }}"
+    enable_root: false
+    ssh_service_name: "{{ 'ssh' if ansible_os_family == 'Debian' else 'sshd' }}"
+
+- name: SSH config
+  template:
+    src: files/sshd_conf
+    dest: /etc/ssh/sshd_config
+    validate: /usr/sbin/sshd -t -f %s
+    backup: true
+    mode: "644"
+  register: sshd_config
+
+- name: Set up authorized keys
+  authorized_key:
+    user: "{{ me.user }}"
+    state: present
+    key: "{{ lookup('file', item) }}"
+  loop:
+    - files/ssh-keys/id_ed25519.pub
+
+- name: Enable SSH
+  service:
+    name: "{{ ssh_service_name }}"
+    enabled: true
+
+- name: Restart SSH Daemon
+  service:
+    name: "{{ ssh_service_name }}"
+    state: reloaded
+  when: sshd_config.changed

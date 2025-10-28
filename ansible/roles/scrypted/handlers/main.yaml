@@ -1,0 +1,15 @@
+---
+- name: Restart Scrypted
+  docker_container:
+    name: "{{ scrypted_container_name }}"
+    state: restarted
+
+- name: Stop Scrypted
+  docker_container:
+    name: "{{ scrypted_container_name }}"
+    state: stopped
+
+- name: Start Scrypted
+  docker_container:
+    name: "{{ scrypted_container_name }}"
+    state: started
