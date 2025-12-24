@@ -1,0 +1,82 @@
+---
+services:
+  traefik:
+    image: {{ traefik_docker_image }}
+    container_name: {{ traefik_container_name }}
+    restart: {{ ingress_restart_policy }}
+    network_mode: host
+    command:
+      # API and Dashboard
+      - "--api.dashboard={{ traefik_dashboard_enabled | lower }}"
+      - "--api.insecure={{ traefik_api_insecure | lower }}"
+      # Entrypoints
+      - "--entrypoints.web.address=:{{ traefik_http_port }}"
+      - "--entrypoints.websecure.address=:{{ traefik_https_port }}"
+{% if traefik_metrics_enabled %}
+      - "--metrics.prometheus=true"
+      - "--metrics.prometheus.entryPoint=metrics"
+      - "--entrypoints.metrics.address=:{{ traefik_metrics_port }}"
+{% endif %}
+      # Providers
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.file.directory=/etc/traefik/dynamic"
+      - "--providers.file.watch=true"
+      # Logging
+      - "--log.level={{ traefik_log_level }}"
+      - "--accesslog={{ traefik_access_log | lower }}"
+      # Certificate Resolvers
+{% if traefik_acme_enabled %}
+      - "--certificatesresolvers.{{ traefik_cert_resolver }}.acme.email={{ traefik_acme_email }}"
+      - "--certificatesresolvers.{{ traefik_cert_resolver }}.acme.storage=/letsencrypt/acme.json"
+{% if traefik_acme_staging %}
+      - "--certificatesresolvers.{{ traefik_cert_resolver }}.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+{% endif %}
+{% if traefik_acme_dns_challenge %}
+      - "--certificatesresolvers.{{ traefik_cert_resolver }}.acme.dnschallenge=true"
+      - "--certificatesresolvers.{{ traefik_cert_resolver }}.acme.dnschallenge.provider={{ traefik_acme_dns_provider }}"
+{% else %}
+      - "--certificatesresolvers.{{ traefik_cert_resolver }}.acme.httpchallenge=true"
+      - "--certificatesresolvers.{{ traefik_cert_resolver }}.acme.httpchallenge.entrypoint=web"
+{% endif %}
+{% endif %}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - {{ traefik_config_dir }}:/etc/traefik/dynamic:ro
+      - {{ traefik_certs_dir }}:/letsencrypt
+    environment:
+{% if traefik_acme_dns_challenge and traefik_acme_dns_token is defined %}
+      - "{{ traefik_acme_dns_token_var }}={{ traefik_acme_dns_token }}"
+{% endif %}
+{% for key, value in traefik_environment.items() %}
+      - "{{ key }}={{ value }}"
+{% endfor %}
+    labels:
+      - "traefik.enable=true"
+{% if traefik_dashboard_enabled %}
+      # Dashboard
+      - "traefik.http.routers.dashboard.rule=Host(`{{ traefik_dashboard_host }}`)"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.entrypoints=websecure"
+{% if traefik_acme_enabled %}
+      - "traefik.http.routers.dashboard.tls.certresolver={{ traefik_cert_resolver }}"
+{% endif %}
+{% if traefik_dashboard_auth is defined %}
+      - "traefik.http.routers.dashboard.middlewares=dashboard-auth"
+      - "traefik.http.middlewares.dashboard-auth.basicauth.users={{ vault_traefik_dashboard_auth }}"
+{% endif %}
+{% endif %}
+
+  cloudflared:
+    image: {{ cloudflared_docker_image }}
+    container_name: {{ cloudflared_container_name }}
+    restart: {{ ingress_restart_policy }}
+    network_mode: host
+    command: tunnel --no-autoupdate run --token {{ vault_cloudflare_tunnel_token }}
+    environment:
+      - TUNNEL_METRICS={{ cloudflared_metrics_address }}
+{% for key, value in cloudflared_environment.items() %}
+      - "{{ key }}={{ value }}"
+{% endfor %}
+    labels:
+      - "com.cloudflare.service=cloudflared"

@@ -1,0 +1,23 @@
+---
+
+- name: Update system
+  apt:
+    update_cache: yes
+    upgrade: yes
+  
+- name: Install Base Packages
+  package:
+    name: "{{ item }}"
+  loop:
+    - htop
+    - git
+    - python3-pip
+    - python3-venv
+    - python3-dev
+    - speedtest-cli
+    - git
+    - make
+    - build-essential
+    - curl
+    
+  

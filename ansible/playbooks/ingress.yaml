@@ -1,0 +1,5 @@
+---
+- name: Deploy ingress services
+  hosts: pi-net02
+  roles:
+    - ingress

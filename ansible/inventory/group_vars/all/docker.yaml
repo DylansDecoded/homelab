@@ -3,6 +3,8 @@ docker_user:
   id: 3000
   name: dockeruser
 
+docker_dir: /opt/docker/
+
 docker_users:
   - "{{ me.user }}"
 

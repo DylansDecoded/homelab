@@ -1,0 +1,9 @@
+---
+
+- name: Ensure Docker Directory Exists
+  directory:
+   path: "{{ docker_dir }}/aiostreams"
+   state: directory
+   mode: "775"
+   owner: "{{ docker_user.name }}"
+   group: "{{ docker_user.name }}"

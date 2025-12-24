@@ -1,0 +1,26 @@
+---
+- name: reboot system
+  reboot:
+    msg: "Rebooting system to apply camera configuration"
+    connect_timeout: 5
+    reboot_timeout: 300
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+    test_command: uptime
+  when: not ansible_check_mode
+
+- name: reload systemd
+  systemd:
+    daemon_reload: yes
+
+- name: restart picam
+  systemd:
+    name: "{{ picam_service_name }}"
+    state: restarted
+  when: picam_service_enabled
+
+- name: enable and start picam
+  systemd:
+    name: "{{ picam_service_name }}"
+    enabled: "{{ picam_service_enabled }}"
+    state: "{{ picam_service_state }}"

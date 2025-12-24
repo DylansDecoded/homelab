@@ -1,0 +1,82 @@
+---
+- name: Ensure ingress base directory exists
+  file:
+    path: "{{ ingress_base_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+
+- name: Create Traefik configuration directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0755'
+  loop:
+    - "{{ traefik_config_dir }}"
+    - "{{ traefik_certs_dir }}"
+
+- name: Set proper permissions for acme.json
+  file:
+    path: "{{ traefik_certs_dir }}/acme.json"
+    state: touch
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0600'
+    modification_time: preserve
+    access_time: preserve
+
+- name: Deploy Traefik routes configuration
+  template:
+    src: traefik-routes.yaml.j2
+    dest: "{{ traefik_config_dir }}/routes.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0644'
+  notify: Restart ingress services
+
+- name: Deploy docker-compose.yaml for ingress services
+  copy:
+    src: docker-compose.yaml
+    dest: "{{ ingress_base_dir }}/docker-compose.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0644'
+  notify: Restart ingress services
+
+- name: Create .env file from vault variables
+  copy:
+    content: |
+      # Cloudflare API Token for Let's Encrypt DNS challenge
+      CF_API_TOKEN={{ vault_cloudflare_api_token }}
+      
+      # Cloudflare Tunnel Token
+      CLOUDFLARE_TUNNEL_TOKEN={{ vault_cloudflare_tunnel_token }}
+    dest: "{{ ingress_base_dir }}/.env"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0600'
+  notify: Restart ingress services
+  no_log: true
+
+- name: Deploy Traefik providers configuration
+  copy:
+    src: providers.yaml
+    dest: "{{ traefik_config_dir }}/providers.yaml"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+    mode: '0644'
+  notify: Restart ingress services
+
+- name: Start ingress services with docker-compose
+  community.docker.docker_compose_v2:
+    project_src: "{{ ingress_base_dir }}"
+    state: present
+    pull: always
+  register: ingress_output
+
+- name: Display ingress services status
+  debug:
+    msg: "Ingress services are running: Traefik on ports {{ traefik_http_port }}/{{ traefik_https_port }}, Cloudflared tunnel active"

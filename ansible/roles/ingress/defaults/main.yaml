@@ -1,0 +1,54 @@
+---
+# Ingress role configuration defaults
+
+# General settings
+ingress_restart_policy: "unless-stopped"
+ingress_base_dir: "/home/{{ ansible_user }}/ingress"
+
+# Traefik configuration
+traefik_docker_image: "traefik:v3.0"
+traefik_container_name: "traefik"
+traefik_config_dir: "{{ ingress_base_dir }}/traefik/config"
+traefik_certs_dir: "{{ ingress_base_dir }}/traefik/letsencrypt"
+
+# Traefik ports
+traefik_http_port: "80"
+traefik_https_port: "443"
+traefik_metrics_port: "8082"
+
+# Traefik dashboard
+traefik_dashboard_enabled: true
+traefik_api_insecure: false
+traefik_dashboard_host: "traefik.{{ domain_name | default('robsonhome.cloud') }}"
+# traefik_dashboard_auth: "admin:$apr1$..."  # Generate with: htpasswd -nb admin password
+
+# Traefik logging
+traefik_log_level: "INFO"  # DEBUG, INFO, WARN, ERROR
+traefik_access_log: true
+
+# Traefik metrics
+traefik_metrics_enabled: true
+
+# ACME / Let's Encrypt configuration
+traefik_acme_enabled: true
+traefik_cert_resolver: "letsencrypt"
+traefik_acme_email: "admin@{{ domain_name | default('robsonhome.cloud') }}"
+traefik_acme_staging: false  # Set to true for testing
+traefik_acme_dns_challenge: true
+traefik_acme_dns_provider: "cloudflare"  # cloudflare, route53, etc.
+traefik_acme_dns_token: "{{ vault_cloudflare_api_token }}"  # Reference to vault variable
+traefik_acme_dns_token_var: "CF_API_TOKEN"  # Environment variable name for Cloudflare
+
+# Traefik additional environment variables
+traefik_environment: {
+  
+}
+
+# Cloudflared configuration 
+cloudflared_docker_image: "cloudflare/cloudflared:latest"
+cloudflared_container_name: "cloudflared"
+cloudflared_tunnel_token: "{{ vault_cloudflare_tunnel_token }}"  # Reference to vault variable
+cloudflared_metrics_address: "0.0.0.0:{{ cloudflared_metrics_port | default('9090') }}"
+
+# Cloudflared additional environment variables
+cloudflared_environment: {}

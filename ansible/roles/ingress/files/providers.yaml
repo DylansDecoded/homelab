@@ -1,0 +1,103 @@
+http:
+  routers:
+    # External routes (robsonhome.cloud) - accessible from internet
+    hass-external:
+      rule: "Host(`hass.robsonhome.cloud`)"
+      service: hass-internal
+      entryPoints:
+        - websecure
+      middlewares:
+        - hass-headers
+      tls:
+        certResolver: letsencrypt
+
+    aiostreams-external:
+      rule: "Host(`aiostreams.robsonhome.cloud`)"
+      service: aiostreams-internal
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: letsencrypt
+
+    # Internal routes (.internal) - accessible only from local network
+    hass-internal:
+      rule: "Host(`hass.internal`)"
+      service: hass-internal
+      entryPoints:
+        - web
+      middlewares:
+        - hass-headers
+
+    adguard-internal:
+      rule: "Host(`adguard.internal`)"
+      service: adguard-internal
+      entryPoints:
+        - web
+
+    zigbee-internal:
+      rule: "Host(`z2m.internal`)"
+      service: zigbee-internal
+      entryPoints:
+        - web
+    
+    router-internal:
+      rule: "Host(`router.internal`)"
+      service: router-internal
+      entryPoints:
+        - web
+    
+    zwave-internal:
+      rule: "Host(`zwave.internal`)"
+      service: zwave-internal
+      entryPoints:
+        - web
+
+  services:
+    # AdGuard Home
+    adguard-internal:
+      loadBalancer:
+        servers:
+          - url: "http://10.1.20.91:80"
+    
+    hass-internal:
+      loadBalancer:
+        servers:
+          - url: "http://10.1.20.90:8123"
+        passHostHeader: true  # Important for Home Assistant
+    
+    aiostreams-internal:
+      loadBalancer:
+        servers:
+          - url: "http://10.1.20.90:8096"  # Update with correct AIO Streams port
+    
+    zigbee-internal:
+      loadBalancer:
+        servers:
+          - url: "http://10.1.20.90:8080"
+    
+    router-internal:
+      loadBalancer:
+        servers:
+          - url: "https://10.1.1.1"
+        serversTransport: insecureTransport
+    
+    zwave-internal:
+      loadBalancer:
+        servers:
+          - url: "http://10.1.20.90:8091"
+
+  middlewares:
+    # Home Assistant specific headers
+    hass-headers:
+      headers:
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+          X-Forwarded-Host: ""  # Let Traefik set this automatically
+        customResponseHeaders:
+          X-Frame-Options: "SAMEORIGIN"
+        sslRedirect: false  # Since you're handling SSL at cloudflare/traefik level
+
+  # Transport for HTTPS backends with self-signed certs
+  serversTransports:
+    insecureTransport:
+      insecureSkipVerify: true

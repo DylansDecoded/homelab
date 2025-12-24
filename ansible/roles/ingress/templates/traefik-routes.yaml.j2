@@ -1,0 +1,101 @@
+---
+# Traefik dynamic configuration for static routes
+# This file defines routers and services for reverse proxying
+
+http:
+  routers:
+    # Example: Proxmox Web UI
+    # proxmox:
+    #   rule: "Host(`proxmox.{{ domain_name | default('robsonhome.cloud') }}`)"
+    #   entryPoints:
+    #     - websecure
+    #   service: proxmox-service
+    #   tls:
+    #     certResolver: {{ traefik_cert_resolver }}
+    #   middlewares:
+    #     - secure-headers
+
+    # Example: Home Assistant
+    # homeassistant:
+    #   rule: "Host(`ha.{{ domain_name | default('robsonhome.cloud') }}`)"
+    #   entryPoints:
+    #     - websecure
+    #   service: homeassistant-service
+    #   tls:
+    #     certResolver: {{ traefik_cert_resolver }}
+
+    # Example: AdGuard Home
+    # adguard:
+    #   rule: "Host(`dns.{{ domain_name | default('robsonhome.cloud') }}`)"
+    #   entryPoints:
+    #     - websecure
+    #   service: adguard-service
+    #   tls:
+    #     certResolver: {{ traefik_cert_resolver }}
+
+  services:
+    # Example: Proxmox service (HTTPS backend)
+    # proxmox-service:
+    #   loadBalancer:
+    #     servers:
+    #       - url: "https://192.168.1.100:8006"
+    #     serversTransport: insecureTransport
+
+    # Example: Home Assistant service
+    # homeassistant-service:
+    #   loadBalancer:
+    #     servers:
+    #       - url: "http://192.168.1.101:8123"
+
+    # Example: AdGuard Home service
+    # adguard-service:
+    #   loadBalancer:
+    #     servers:
+    #       - url: "http://127.0.0.1:3000"
+
+  middlewares:
+    # Security headers middleware
+    secure-headers:
+      headers:
+        browserXssFilter: true
+        contentTypeNosniff: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 31536000
+        customFrameOptionsValue: "SAMEORIGIN"
+
+    # Rate limiting middleware
+    rate-limit:
+      rateLimit:
+        average: 100
+        burst: 50
+
+    # IP whitelist example
+    # local-only:
+    #   ipWhiteList:
+    #     sourceRange:
+    #       - "127.0.0.1/32"
+    #       - "192.168.1.0/24"
+    #       - "10.0.0.0/8"
+
+  serversTransports:
+    # For backends with self-signed certificates
+    insecureTransport:
+      insecureSkipVerify: true
+
+# TCP routers (for non-HTTP services)
+# tcp:
+#   routers:
+#     # Example: SSH proxy
+#     # ssh-router:
+#     #   rule: "HostSNI(`*`)"
+#     #   entryPoints:
+#     #     - ssh
+#     #   service: ssh-service
+#
+#   services:
+#     # ssh-service:
+#     #   loadBalancer:
+#     #     servers:
+#     #       - address: "192.168.1.10:22"

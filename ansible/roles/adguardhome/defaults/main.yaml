@@ -1,49 +1,7 @@
 ---
 # AdGuard Home Configuration
-adguardhome_version: "latest"
-adguardhome_image: "adguard/adguardhome:{{ adguardhome_version }}"
-adguardhome_data_dir: "/home/{{ ansible_user }}/adguardhome"
-adguardhome_work_dir: "{{ adguardhome_data_dir }}/work"
-adguardhome_conf_dir: "{{ adguardhome_data_dir }}/conf"
-
-# AdGuard Home Web Interface
 adguardhome_http_port: 3000
 adguardhome_dns_port: 53
 
-# High Availability Configuration
-adguardhome_vip: "10.1.20.53"
-adguardhome_ha_enabled: true
-
-# Keepalived Configuration
-keepalived_virtual_router_id: 53
-keepalived_auth_pass: "{{ vault_keepalived_auth_pass | default('vault_keepalived_auth_pass') }}"
-keepalived_check_interval: 5
-keepalived_preempt_delay: 900  # 15 minutes
-
-# Role determination (master or backup)
-# Set this in inventory host_vars
-# adguardhome_role: "master"  # or "backup"
-# adguardhome_priority: 200   # master: 200, backup: 100
-
-# AdGuard Home Sync Configuration (for backup servers)
-adguardhome_sync_enabled: true
-adguardhome_sync_cron: "*/10 * * * *"  # Every 10 minutes
-adguardhome_sync_run_on_start: true
-
-# Master server details (for sync on backup)
-adguardhome_master_host: ""  # Set in inventory
-adguardhome_master_url: "http://{{ adguardhome_master_host }}:{{ adguardhome_http_port }}"
-
-# DNS Configuration
-adguardhome_upstream_dns:
-  - "https://dns.cloudflare.com/dns-query"
-  - "https://dns.google/dns-query"
-  - "1.1.1.1"
-  - "8.8.8.8"
-
-# Timezone
-timezone: "America/New_York"
-
 # Network configuration
 disable_systemd_resolved: true
-configure_netplan: true

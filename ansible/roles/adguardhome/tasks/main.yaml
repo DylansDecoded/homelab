@@ -1,24 +1,24 @@
 ---
-- name: Validate required variables
-  assert:
-    that:
-      - adguardhome_role is defined
-      - adguardhome_role in ['master', 'backup']
-      - adguardhome_priority is defined
-      - adguardhome_vip is defined
-    fail_msg: "Required variables not set. Ensure adguardhome_role, adguardhome_priority, and adguardhome_vip are defined"
 
-- name: Install required packages
+- name: Install required system packages
   apt:
     name:
-      - keepalived
-      - dnsutils
       - curl
-      - netplan.io
-      - adguardhome
     state: present
     update_cache: yes
   become: yes
+
+- name: Check if AdGuard Home is already installed
+  stat:
+    path: /opt/AdGuardHome/AdGuardHome
+  register: adguardhome_binary
+
+- name: Install AdGuard Home using official script
+  shell: curl -s -S -L https://raw.githubusercontent.com/AdguardTeam/AdGuardHome/master/scripts/install.sh | sh -s -- -v
+  args:
+    creates: /opt/AdGuardHome/AdGuardHome
+  become: yes
+  when: not adguardhome_binary.stat.exists
 
 - name: Configure systemd-resolved (disable DNS stub listener)
   block:
@@ -29,39 +29,31 @@
         mode: '0755'
       become: yes
 
-    - name: Disable systemd-resolved stub listener
+    - name: Disable resolved stub
       copy:
-        dest: /etc/systemd/resolved.conf.d/resolved-adguardhome.conf
         src: files/resolved-adguardhome.conf
-        mode: '0644'
+        dest: /etc/systemd/resolved.conf.d/adguardhome.conf
+        owner: root
+        mode: "0644"
       become: yes
       notify: restart systemd-resolved
 
-    - name: Update resolv.conf symlink
+    - name: Use resolved resolv.conf
       file:
         src: /run/systemd/resolve/resolv.conf
         dest: /etc/resolv.conf
         state: link
         force: yes
       become: yes
-  when: disable_systemd_resolved
-
-- name: Configure netplan to use localhost DNS
-  template:
-    src: templates/99-netplan.yaml.j2
-    dest: /etc/netplan/99-adguardhome.yaml
-    owner: root
-    group: root
-    mode: '0644'
-  become: yes
-  notify: apply netplan
-  when: configure_netplan
+      notify: restart systemd-resolved
+  when: disable_systemd_resolved | default(true)
 
 - name: Enable and start AdGuard Home service
-  service:
-    name: adguardhome
+  systemd:
+    name: AdGuardHome
     state: started
     enabled: yes
+    daemon_reload: yes
   become: yes
 
 - name: Wait for AdGuard Home to be ready
@@ -74,59 +66,3 @@
   retries: 30
   delay: 5
   failed_when: false
-
-- name: Configure Keepalived
-  block:
-    - name: Create Keepalived scripts directory
-      file:
-        path: /etc/keepalived
-        state: directory
-        mode: '0755'
-      become: yes
-
-    - name: Deploy Keepalived configuration
-      template:
-        src: keepalived.j2
-        dest: /etc/keepalived/keepalived.conf
-        owner: root
-        group: root
-        mode: '0644'
-      become: yes
-      notify: restart keepalived
-
-    - name: Deploy health check script
-      template:
-        src: check_adguardhome.sh.j2
-        dest: /etc/keepalived/check_adguardhome.sh
-        owner: root
-        group: root
-        mode: '0755'
-      become: yes
-
-    - name: Deploy notification script
-      template:
-        src: notify.sh.j2
-        dest: /etc/keepalived/notify.sh
-        owner: root
-        group: root
-        mode: '0755'
-      become: yes
-
-    - name: Enable and start Keepalived
-      service:
-        name: keepalived
-        state: started
-        enabled: yes
-      become: yes
-  when: adguardhome_ha_enabled
-
-- name: Display deployment information
-  debug:
-    msg:
-      - "AdGuard Home deployed successfully!"
-      - "Role: {{ adguardhome_role | upper }}"
-      - "Priority: {{ adguardhome_priority }}"
-      - "Virtual IP: {{ adguardhome_vip }}"
-      - "Web Interface: http://{{ ansible_default_ipv4.address }}:{{ adguardhome_http_port }}"
-      - "Web Interface (VIP): http://{{ adguardhome_vip }}:{{ adguardhome_http_port }}"
-      - "Initial setup: Visit web interface to complete AdGuard Home setup"
